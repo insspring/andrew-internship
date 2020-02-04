@@ -1,0 +1,13 @@
+{
+  "login": "There is nothing but empty space!!!",
+  "signUp": "Sign Up",
+  "signIn": "Sign In",
+  "email": "Email address",
+  "name":  "Name",
+  "password": "Password",
+  "submit": "Submit",
+  "passwordHint1": "Password must contain at least 1 lowercase or uppercase alphabetical character.",
+  "passwordHint2": "Password must contain at least 1 numeric character.",
+  "passwordHint3": "Password must be eight characters or longer.",
+  "passwordConfirm": "Confirm your password"
+}
