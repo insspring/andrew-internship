@@ -5,65 +5,78 @@
         <div v-if="!token">
             <ButtonTemplate
                     :text="$t('signUp')"
+                    @makeVisible="visibleUp = $event"
             ></ButtonTemplate>
-            <button class="signUpBtn"  @click="visibleUp = true">{{ $t('signUp') }}</button>
-            <div class="signUp" v-if="visibleUp">
-                <div class="signUpContent">
-                    <span class="close" @click="closeForm">X</span>
-                    <div class="inputFields" @keyup.enter="createPerson">
-                        <InputTemplate v-model="name"
-                                       :placeholder="$t('name')"
-                                       :error="{error: classErrorName}"
-                                       @startTyping="startPrintingName()"
-                        ></InputTemplate>
-                        <InputTemplate v-model="email"
-                                       :placeholder="$t('email')"
-                                       :error="{error: classErrorEmail}"
-                                       @startTyping="startPrintingEmail()"
-                        ></InputTemplate>
-                        <InputTemplate v-model="password"
-                                       :type = "'password'"
-                                       :placeholder="$t('password')"
-                                       :error="{error: classErrorPassword}"
-                                       @startTyping="startPrintingPassword()"
-                        ></InputTemplate>
-                        <ul class="hint" v-if="modalStatus">
-                            <li>{{ $t('passwordHint1') }}</li>
-                            <li>{{ $t('passwordHint2') }}</li>
-                            <li>{{ $t('passwordHint3') }}</li>
-                        </ul>
-                        <InputTemplate v-model="passwordConfirm"
-                                       :type = "'password'"
-                                       :placeholder="$t('passwordConfirm')"
-                                       :error="{error: classErrorPasswordConfirm}"
-                                       @startTyping="startPrintingPasswordConfirm()"
-                        ></InputTemplate>
-                        <button class="submitBtn" @click="createPerson">{{ $t('submit') }}</button>
+            <ButtonTemplate
+                    :text="$t('signIn')"
+                    @makeVisible="visibleIn = $event"
+            ></ButtonTemplate>
+                <div class="signUp" v-if="visibleUp">
+                    <div class="signUpContent">
+                        <span class="close" @click="closeForm">X</span>
+                        <div class="inputFields" @keyup.enter="createPerson">
+                            <InputTemplate v-model="name"
+                                           :placeholder="$t('name')"
+                                           :error="{error: classErrorName}"
+                                           @startTyping="startPrintingName()"
+                            ></InputTemplate>
+                            <InputTemplate v-model="email"
+                                           :placeholder="$t('email')"
+                                           :error="{error: classErrorEmail}"
+                                           @startTyping="startPrintingEmail()"
+                            ></InputTemplate>
+                            <InputTemplate v-model="password"
+                                           :type = "'password'"
+                                           :placeholder="$t('password')"
+                                           :error="{error: classErrorPassword}"
+                                           @startTyping="startPrintingPassword()"
+                            ></InputTemplate>
+                            <ul class="hint" v-if="modalStatus">
+                                <li>{{ $t('passwordHint1') }}</li>
+                                <li>{{ $t('passwordHint2') }}</li>
+                                <li>{{ $t('passwordHint3') }}</li>
+                            </ul>
+                            <InputTemplate v-model="passwordConfirm"
+                                           :type = "'password'"
+                                           :placeholder="$t('passwordConfirm')"
+                                           :error="{error: classErrorPasswordConfirm}"
+                                           @startTyping="startPrintingPasswordConfirm()"
+                            ></InputTemplate>
+                            <ButtonTemplate
+                                    :text="$t('submit')"
+                                    @createPerson="createPerson"
+                            ></ButtonTemplate>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <button class="signInBtn" @click="visibleIn = true">{{ $t('signIn') }}</button>
-            <div class="signIn" v-if="visibleIn">
-                <div class="signInContent">
-                    <span class="close" @click="closeForm">X</span>
-                    <div class="inputFields" @keyup.enter="logPerson">
-                        <InputTemplate v-model="email"
-                                       :placeholder="$t('email')"
-                                       :error="{error: classErrorEmail}"
-                                       @startTyping="startPrintingEmail()"
-                        ></InputTemplate>
-                        <InputTemplate v-model="password"
-                                       :type = "'password'"
-                                       :placeholder="$t('password')"
-                                       :error="{error: classErrorPassword}"
-                                       @startTyping="startPrintingPassword()"
-                        ></InputTemplate>
-                        <button class="submitBtn" @click="logPerson()">{{ $t('submit') }}</button>
+                <div class="signIn" v-if="visibleIn">
+                    <div class="signInContent">
+                        <span class="close" @click="closeForm">X</span>
+                        <div class="inputFields" @keyup.enter="logPerson">
+                            <InputTemplate v-model="email"
+                                           :placeholder="$t('email')"
+                                           :error="{error: classErrorEmail}"
+                                           @startTyping="startPrintingEmail()"
+                            ></InputTemplate>
+                            <InputTemplate v-model="password"
+                                           :type = "'password'"
+                                           :placeholder="$t('password')"
+                                           :error="{error: classErrorPassword}"
+                                           @startTyping="startPrintingPassword()"
+                            ></InputTemplate>
+                            <ButtonTemplate
+                                    :text="$t('submit')"
+                                    @logPerson="logPerson"
+                            ></ButtonTemplate>
+                        </div>
                     </div>
                 </div>
-            </div>
         </div>
-        <button class="signOutBtn" v-if="token" @click="deleteToken">{{ $t('signOut') }}</button>
+        <ButtonTemplate
+                v-if="token"
+                :text="$t('signOut')"
+                @deleteToken="deleteToken"
+        ></ButtonTemplate>
     </div>
 </template>
 
@@ -211,20 +224,6 @@
         height: 100%;
         overflow: hidden;
         background-color: rgba(0,0,0,0.7);
-    }
-    .signUpBtn, .signInBtn, .submitBtn, .signOutBtn {
-        margin: .5rem;
-        padding: 1rem;
-        border-radius: 1em;
-        font-weight: bold;
-        cursor: pointer;
-        background-color: white;
-        color: rgb(161, 15, 8);
-        border: 3px solid rgb(161, 15, 8);
-    }
-    .signUpBtn:hover, .signInBtn:hover, .submitBtn:hover, .signOutBtn:hover{
-        background-color: rgb(130, 10, 4);
-        color: white;
     }
     .signUpContent, .signInContent {
         background-color: white;

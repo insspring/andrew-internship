@@ -2,10 +2,9 @@
     <button
             class="btn"
             :type="type"
-            :shape="shape"
             :text="text"
-    >
-    </button>
+            @click="handlers()"
+    >{{ text }}</button>
 </template>
 
 <script>
@@ -14,10 +13,31 @@
         props: {
             type: String,
             text: String,
-            shape: String,
+        },
+        data() {
+           return {
+               visible: true,
+           }
         },
         methods: {
-
+            handlers() {
+                this.makeVisible();
+                this.createPerson();
+                this.logPerson();
+                this.deleteToken();
+            },
+            makeVisible() {
+                this.$emit('makeVisible', this.visible);
+            },
+            deleteToken() {
+                this.$emit('deleteToken')
+            },
+            logPerson() {
+                this.$emit('logPerson')
+            },
+            createPerson() {
+                this.$emit('createPerson')
+            }
         }
     }
 </script>
@@ -32,5 +52,9 @@
         background-color: white;
         color: rgb(161, 15, 8);
         border: 3px solid rgb(161, 15, 8);
+    }
+    .btn:hover {
+        background-color: rgb(130, 10, 4);
+        color: white;
     }
 </style>
