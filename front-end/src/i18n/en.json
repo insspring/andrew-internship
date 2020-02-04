@@ -1,7 +1,7 @@
 {
-  "login": "There is nothing but empty space!!!",
   "signUp": "Sign Up",
   "signIn": "Sign In",
+  "signOut": "Sign Out",
   "email": "Email address",
   "name":  "Name",
   "password": "Password",

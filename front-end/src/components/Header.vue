@@ -1,50 +1,86 @@
 <template>
     <div class="header">
-        <button class="signUpBtn" @click="visibleUp = true">{{ $t('signUp') }}</button>
-        <div class="signUp" v-if="visibleUp">
-            <div class="signUpContent">
-                <span class="close" @click="closeForm">X</span>
-                <div class="inputFields" @keyup.enter="createPerson">
-                    <label for="nameUp">{{ $t('name') }}</label>
-                    <input id="nameUp" :class="{error: classErrorName}" @keyup="startPrintingName" v-model="name" placeholder="Name">
-                    <label for="emailUp">{{ $t('email') }}</label>
-                    <input id="emailUp" :class="{error: classErrorEmail}" @keyup="startPrintingEmail" v-model="email" placeholder="your@yours.com">
-                    <label for="passwordUp">{{ $t('password') }}</label>
-                    <input id="passwordUp" :class="{error: classErrorPassword}" @keyup="startPrintingPassword" v-model="password">
-                    <ul class="hint" v-if="classErrorPassword">
-                        <li>{{ $t('passwordHint1') }}</li>
-                        <li>{{ $t('passwordHint2') }}</li>
-                        <li>{{ $t('passwordHint3') }}</li>
-                    </ul>
-                    <label for="passwordConfirm">{{ $t('passwordConfirm') }}</label>
-                    <input id="passwordConfirm" :class="{error: classErrorPasswordConfirm}" @keyup="startPrintingPasswordConfirm" v-model="passwordConfirm">
-                    <button class="submitBtn" @click="createPerson">{{ $t('submit') }}</button>
+        <img class="logo" src="../assets/logo.png">
+        <LocaleChange></LocaleChange>
+        <div v-if="!token">
+            <ButtonTemplate
+                    :text="$t('signUp')"
+            ></ButtonTemplate>
+            <button class="signUpBtn"  @click="visibleUp = true">{{ $t('signUp') }}</button>
+            <div class="signUp" v-if="visibleUp">
+                <div class="signUpContent">
+                    <span class="close" @click="closeForm">X</span>
+                    <div class="inputFields" @keyup.enter="createPerson">
+                        <InputTemplate v-model="name"
+                                       :placeholder="$t('name')"
+                                       :error="{error: classErrorName}"
+                                       @startTyping="startPrintingName()"
+                        ></InputTemplate>
+                        <InputTemplate v-model="email"
+                                       :placeholder="$t('email')"
+                                       :error="{error: classErrorEmail}"
+                                       @startTyping="startPrintingEmail()"
+                        ></InputTemplate>
+                        <InputTemplate v-model="password"
+                                       :type = "'password'"
+                                       :placeholder="$t('password')"
+                                       :error="{error: classErrorPassword}"
+                                       @startTyping="startPrintingPassword()"
+                        ></InputTemplate>
+                        <ul class="hint" v-if="modalStatus">
+                            <li>{{ $t('passwordHint1') }}</li>
+                            <li>{{ $t('passwordHint2') }}</li>
+                            <li>{{ $t('passwordHint3') }}</li>
+                        </ul>
+                        <InputTemplate v-model="passwordConfirm"
+                                       :type = "'password'"
+                                       :placeholder="$t('passwordConfirm')"
+                                       :error="{error: classErrorPasswordConfirm}"
+                                       @startTyping="startPrintingPasswordConfirm()"
+                        ></InputTemplate>
+                        <button class="submitBtn" @click="createPerson">{{ $t('submit') }}</button>
+                    </div>
+                </div>
+            </div>
+            <button class="signInBtn" @click="visibleIn = true">{{ $t('signIn') }}</button>
+            <div class="signIn" v-if="visibleIn">
+                <div class="signInContent">
+                    <span class="close" @click="closeForm">X</span>
+                    <div class="inputFields" @keyup.enter="logPerson">
+                        <InputTemplate v-model="email"
+                                       :placeholder="$t('email')"
+                                       :error="{error: classErrorEmail}"
+                                       @startTyping="startPrintingEmail()"
+                        ></InputTemplate>
+                        <InputTemplate v-model="password"
+                                       :type = "'password'"
+                                       :placeholder="$t('password')"
+                                       :error="{error: classErrorPassword}"
+                                       @startTyping="startPrintingPassword()"
+                        ></InputTemplate>
+                        <button class="submitBtn" @click="logPerson()">{{ $t('submit') }}</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <button class="signInBtn" @click="visibleIn = true">{{ $t('signIn') }}</button>
-        <div class="signIn" v-if="visibleIn">
-            <div class="signInContent">
-                <span class="close" @click="closeForm">X</span>
-                <div class="inputFields">
-                    <label for="nameIn">{{ $t('name') }}</label>
-                    <input id="nameIn" v-model="name" type="text" placeholder="Name">
-                    <label for="emailIn">{{ $t('email') }}</label>
-                    <input id="emailIn" v-model="email" placeholder="your@yours.com">
-                    <label for="passwordIn">{{ $t('password') }}</label>
-                    <input id="passwordIn"  v-model="password">
-                    <button class="submitBtn" @click="logPerson()">{{ $t('submit') }}</button>
-                </div>
-            </div>
-        </div>
+        <button class="signOutBtn" v-if="token" @click="deleteToken">{{ $t('signOut') }}</button>
     </div>
 </template>
 
 <script>
     import {signUpUser} from "../helpers/api";
+    import {signInUser} from "../helpers/api";
+    import {emailValidation} from "../helpers/validation";
+    import {nameValidation} from "../helpers/validation";
+    import {passwordValidation} from "../helpers/validation";
+    import {passwordConfirmFunc} from "../helpers/validation";
+    import LocaleChange from "./LocaleChange";
+    import InputTemplate from "./InputTemplate";
+    import ButtonTemplate from "./ButtonTemplate";
 
     export default {
         name: "Header",
+        components: {ButtonTemplate, InputTemplate, LocaleChange},
         data() {
             return {
                 visibleUp: false,
@@ -55,66 +91,103 @@
                 password: null,
                 passwordConfirm: null,
                 classErrorName: false,
-                classErrorEmail: false,
                 classErrorPassword: false,
-                classErrorPasswordConfirm: false
+                classErrorPasswordConfirm: false,
+                modalStatus: false,
+                token: false,
+            }
+        },
+        created() {
+            if(localStorage.getItem('accessToken')) {
+                this.token = true;
             }
         },
         methods: {
-            startPrintingName() {
-                this.classErrorName = false;
+            deleteToken() {
+              localStorage.removeItem('accessToken');
+              this.token = false;
             },
-            startPrintingEmail() {
-                this.classErrorEmail = false;
+            startPrintingName(title) {
+                this.classErrorName = title;
             },
-            startPrintingPassword() {
-                this.classErrorPassword = false;
+            startPrintingEmail(title) {
+                this.classErrorEmail = title;
             },
-            startPrintingPasswordConfirm() {
-                this.classErrorPasswordConfirm = false;
+            startPrintingPassword(title) {
+                this.classErrorPassword = title;
+            },
+            startPrintingPasswordConfirm(title) {
+                this.classErrorPasswordConfirm = title;
             },
             createPerson() {
-                if(this.nameValidation(this.name) && this.emailValidation(this.email) && this.passwordValidation(this.password) && this.passwordConfirmFunc(this.password,this.passwordConfirm)) {
+                if(nameValidation(this.name) && emailValidation(this.email) && passwordValidation(this.password) && passwordConfirmFunc(this.password,this.passwordConfirm)) {
                     let person = {
                         name: this.name,
                         email: this.email,
                         password: this.password,
                     };
-                    signUpUser(person);
-                    this.name = null;
-                    this.email = null;
-                    this.password = null;
-                    this.passwordConfirm = null;
-                    this.visibleUp = false;
-                    alert("You've been successfully signed up!")
+                    signUpUser(person).then(() => {
+                        this.name = null;
+                        this.email = null;
+                        this.password = null;
+                        this.passwordConfirm = null;
+                        this.visibleUp = false;
+                        alert("You've been successfully signed up!");
+                    }).catch(() => {
+                        this.name = null;
+                        this.email = null;
+                        this.password = null;
+                        this.passwordConfirm = null;
+                        alert('You have already been registered!');
+                    });
                 } else {
-                    if(!this.nameValidation(this.name) || this.name == null) this.classErrorName = true;
-                    if(!this.emailValidation(this.email)) this.classErrorEmail = true;
-                    if(!this.passwordValidation(this.password)) this.classErrorPassword = true;
-                    if(!this.passwordConfirmFunc(this.password,this.passwordConfirm)) this.classErrorPasswordConfirm = true;
+                    if(!nameValidation(this.name) || this.name == null) {
+                        this.classErrorName = true;
+                        this.name = null;
+                    }
+                    if(!emailValidation(this.email)) {
+                        this.classErrorEmail = true;
+                        this.email = null;
+                    }
+                    if(!passwordValidation(this.password)) {
+                        this.classErrorPassword = true;
+                        this.modalStatus = true;
+                        setTimeout(() => {this.modalStatus = false}, 5000);
+                        this.password = null;
+                    }
+                    if(!passwordConfirmFunc(this.password,this.passwordConfirm)) {
+                        this.classErrorPasswordConfirm = true;
+                        this.passwordConfirm = null;
+                    }
                 }
             },
-            emailValidation(email) {
-                let regex = new RegExp('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$');
-                return regex.test(email);
-            },
-            nameValidation(name) {
-                let regex = new RegExp('[A-Za-z]{3,19}$');
-                return regex.test(name);
-            },
-            passwordValidation(password) {
-                let regex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})");
-                return regex.test(password);
-            },
-            passwordConfirmFunc(password,confirm) {
-                return password === confirm;
+
+            logPerson() {
+                let person = {
+                    email: this.email,
+                    password: this.password
+                };
+                signInUser(person).then(result => {
+                    localStorage.setItem('accessToken', result.data.access_token);
+                    this.email = null;
+                    this.password = null;
+                    this.classErrorEmail = false;
+                    this.classErrorPassword = false;
+                    this.visibleIn = false;
+                    this.token = true;
+                    alert('Welcome again!');
+                }).catch(() => {
+                    this.email = null;
+                    this.password = null;
+                    this.classErrorEmail = true;
+                    this.classErrorPassword = true;
+                });
             },
             closeForm() {
                 this.name = null;
                 this.email = null;
                 this.password = null;
                 this.passwordConfirm = null;
-                this.errors = [];
                 this.visibleUp = false;
                 this.visibleIn = false;
                 this.classErrorName = false;
@@ -139,25 +212,19 @@
         overflow: hidden;
         background-color: rgba(0,0,0,0.7);
     }
-    .signUpBtn, .signInBtn, .submitBtn {
+    .signUpBtn, .signInBtn, .submitBtn, .signOutBtn {
         margin: .5rem;
         padding: 1rem;
         border-radius: 1em;
-        border: none;
-        color: white;
         font-weight: bold;
-        font-family: Arial;
-        background-color: rgb(161, 15, 8);
         cursor: pointer;
-    }
-    .signUpBtn:hover, .signInBtn:hover, .submitBtn:hover{
-        background-color: rgb(130, 10, 4);
-        color: white;
-    }
-    .submitBtn {
         background-color: white;
         color: rgb(161, 15, 8);
         border: 3px solid rgb(161, 15, 8);
+    }
+    .signUpBtn:hover, .signInBtn:hover, .submitBtn:hover, .signOutBtn:hover{
+        background-color: rgb(130, 10, 4);
+        color: white;
     }
     .signUpContent, .signInContent {
         background-color: white;
@@ -194,12 +261,18 @@
         right: 30rem;
         top: 11rem
     }
-    input {
-        margin: 1rem 0;
-        border: none;
-        border-bottom: 2px solid;
-    }
     .error {
         border-color: red;
+    }
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex: 1;
+        background-color: black;
+        font-family: Arial;
+    }
+    .logo {
+        align-self: flex-start;
     }
 </style>
