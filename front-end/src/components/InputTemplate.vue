@@ -6,7 +6,7 @@
                 :value="value"
                 @input="$emit('input', $event.target.value)"
                 :placeholder="placeholder"
-                @keydown="handlers()"
+                @keydown="handlers"
         >
 </template>
 
@@ -18,12 +18,15 @@
             error: Object,
             placeholder: String,
             type: String,
-            handler: Function,
-            params: Array
+            method: Function,
+            params: {
+                type: Array,
+                default: () => []
+            }
         },
         methods: {
             handlers() {
-                this.handler(this.params);
+                this.method(...this.params);
             }
         }
     }

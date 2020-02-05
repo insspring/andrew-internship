@@ -13,15 +13,18 @@
         props: {
             type: String,
             text: String,
-            handler: {
+            method: {
                 type: Function,
-                required: true
+                required: true,
             },
-            params: Array
+            params: {
+                type: Array,
+                default: () => []
+            }
         },
         methods: {
             handlers() {
-                this.handler(...this.params);
+                this.method(...this.params);
             },
         }
     }

@@ -5,11 +5,11 @@
         <div v-if="!token">
             <ButtonTemplate
                     :text="$t('signUp')"
-                    :handler="visibleUpFunc"
+                    :method="visibleUpFunc"
             ></ButtonTemplate>
             <ButtonTemplate
                     :text="$t('signIn')"
-                    :handler="visibleInFunc"
+                    :method="visibleInFunc"
             ></ButtonTemplate>
                 <div class="signUp" v-if="visibleUp">
                     <div class="signUpContent">
@@ -18,18 +18,18 @@
                             <InputTemplate v-model="name"
                                            :placeholder="$t('name')"
                                            :error="{error: classErrorName}"
-                                           :handler="startPrintingName"
+                                           :method="startPrintingName"
                             ></InputTemplate>
                             <InputTemplate v-model="email"
                                            :placeholder="$t('email')"
                                            :error="{error: classErrorEmail}"
-                                           :handler="startPrintingEmail"
+                                           :method="startPrintingEmail"
                             ></InputTemplate>
                             <InputTemplate v-model="password"
                                            :type = "'password'"
                                            :placeholder="$t('password')"
                                            :error="{error: classErrorPassword}"
-                                           :handler="startPrintingPassword"
+                                           :method="startPrintingPassword"
                             ></InputTemplate>
                             <ul class="hint" v-if="modalStatus">
                                 <li>{{ $t('passwordHint1') }}</li>
@@ -40,11 +40,11 @@
                                            :type = "'password'"
                                            :placeholder="$t('passwordConfirm')"
                                            :error="{error: classErrorPasswordConfirm}"
-                                           :handler="startPrintingPasswordConfirm"
+                                           :method="startPrintingPasswordConfirm"
                             ></InputTemplate>
                             <ButtonTemplate
                                     :text="$t('submit')"
-                                    :handler="createPerson"
+                                    :method="createPerson"
                             ></ButtonTemplate>
                         </div>
                     </div>
@@ -56,17 +56,17 @@
                             <InputTemplate v-model="email"
                                            :placeholder="$t('email')"
                                            :error="{error: classErrorEmail}"
-                                           :handler="startPrintingEmail"
+                                           :method="startPrintingEmail"
                             ></InputTemplate>
                             <InputTemplate v-model="password"
                                            :type = "'password'"
                                            :placeholder="$t('password')"
                                            :error="{error: classErrorPassword}"
-                                           :handler="startPrintingPassword"
+                                           :method="startPrintingPassword"
                             ></InputTemplate>
                             <ButtonTemplate
                                     :text="$t('submit')"
-                                    :handler="logPerson"
+                                    :method="logPerson"
                             ></ButtonTemplate>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
         <ButtonTemplate
                 v-if="token"
                 :text="$t('signOut')"
-                :handler="deleteToken"
+                :method="deleteToken"
         ></ButtonTemplate>
     </div>
 </template>
