@@ -6,7 +6,7 @@
                 :value="value"
                 @input="$emit('input', $event.target.value)"
                 :placeholder="placeholder"
-                @keydown="startTyping()"
+                @keydown="handlers()"
         >
 </template>
 
@@ -18,16 +18,12 @@
             error: Object,
             placeholder: String,
             type: String,
-
-        },
-        data() {
-            return {
-                typing: true
-            }
+            handler: Function,
+            params: Array
         },
         methods: {
-            startTyping() {
-                this.$emit('startTyping', this.typing)
+            handlers() {
+                this.handler(this.params);
             }
         }
     }

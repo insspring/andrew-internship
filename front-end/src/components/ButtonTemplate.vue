@@ -3,7 +3,7 @@
             class="btn"
             :type="type"
             :text="text"
-            @click="handlers()"
+            @click="handlers"
     >{{ text }}</button>
 </template>
 
@@ -13,31 +13,16 @@
         props: {
             type: String,
             text: String,
-        },
-        data() {
-           return {
-               visible: true,
-           }
+            handler: {
+                type: Function,
+                required: true
+            },
+            params: Array
         },
         methods: {
             handlers() {
-                this.makeVisible();
-                this.createPerson();
-                this.logPerson();
-                this.deleteToken();
+                this.handler(...this.params);
             },
-            makeVisible() {
-                this.$emit('makeVisible', this.visible);
-            },
-            deleteToken() {
-                this.$emit('deleteToken')
-            },
-            logPerson() {
-                this.$emit('logPerson')
-            },
-            createPerson() {
-                this.$emit('createPerson')
-            }
         }
     }
 </script>

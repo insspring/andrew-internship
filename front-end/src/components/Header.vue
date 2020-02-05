@@ -5,31 +5,31 @@
         <div v-if="!token">
             <ButtonTemplate
                     :text="$t('signUp')"
-                    @makeVisible="visibleUp = $event"
+                    :handler="visibleUpFunc"
             ></ButtonTemplate>
             <ButtonTemplate
                     :text="$t('signIn')"
-                    @makeVisible="visibleIn = $event"
+                    :handler="visibleInFunc"
             ></ButtonTemplate>
                 <div class="signUp" v-if="visibleUp">
                     <div class="signUpContent">
                         <span class="close" @click="closeForm">X</span>
-                        <div class="inputFields" @keyup.enter="createPerson">
+                        <div class="inputFields">
                             <InputTemplate v-model="name"
                                            :placeholder="$t('name')"
                                            :error="{error: classErrorName}"
-                                           @startTyping="startPrintingName()"
+                                           :handler="startPrintingName"
                             ></InputTemplate>
                             <InputTemplate v-model="email"
                                            :placeholder="$t('email')"
                                            :error="{error: classErrorEmail}"
-                                           @startTyping="startPrintingEmail()"
+                                           :handler="startPrintingEmail"
                             ></InputTemplate>
                             <InputTemplate v-model="password"
                                            :type = "'password'"
                                            :placeholder="$t('password')"
                                            :error="{error: classErrorPassword}"
-                                           @startTyping="startPrintingPassword()"
+                                           :handler="startPrintingPassword"
                             ></InputTemplate>
                             <ul class="hint" v-if="modalStatus">
                                 <li>{{ $t('passwordHint1') }}</li>
@@ -40,11 +40,11 @@
                                            :type = "'password'"
                                            :placeholder="$t('passwordConfirm')"
                                            :error="{error: classErrorPasswordConfirm}"
-                                           @startTyping="startPrintingPasswordConfirm()"
+                                           :handler="startPrintingPasswordConfirm"
                             ></InputTemplate>
                             <ButtonTemplate
                                     :text="$t('submit')"
-                                    @createPerson="createPerson"
+                                    :handler="createPerson"
                             ></ButtonTemplate>
                         </div>
                     </div>
@@ -52,21 +52,21 @@
                 <div class="signIn" v-if="visibleIn">
                     <div class="signInContent">
                         <span class="close" @click="closeForm">X</span>
-                        <div class="inputFields" @keyup.enter="logPerson">
+                        <div class="inputFields">
                             <InputTemplate v-model="email"
                                            :placeholder="$t('email')"
                                            :error="{error: classErrorEmail}"
-                                           @startTyping="startPrintingEmail()"
+                                           :handler="startPrintingEmail"
                             ></InputTemplate>
                             <InputTemplate v-model="password"
                                            :type = "'password'"
                                            :placeholder="$t('password')"
                                            :error="{error: classErrorPassword}"
-                                           @startTyping="startPrintingPassword()"
+                                           :handler="startPrintingPassword"
                             ></InputTemplate>
                             <ButtonTemplate
                                     :text="$t('submit')"
-                                    @logPerson="logPerson"
+                                    :handler="logPerson"
                             ></ButtonTemplate>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
         <ButtonTemplate
                 v-if="token"
                 :text="$t('signOut')"
-                @deleteToken="deleteToken"
+                :handler="deleteToken"
         ></ButtonTemplate>
     </div>
 </template>
@@ -116,21 +116,27 @@
             }
         },
         methods: {
+            visibleInFunc() {
+                this.visibleIn = true;
+            },
+            visibleUpFunc() {
+                this.visibleUp = true;
+            },
             deleteToken() {
               localStorage.removeItem('accessToken');
               this.token = false;
             },
-            startPrintingName(title) {
-                this.classErrorName = title;
+            startPrintingName() {
+                this.classErrorName = false;
             },
-            startPrintingEmail(title) {
-                this.classErrorEmail = title;
+            startPrintingEmail() {
+                this.classErrorEmail = false;
             },
-            startPrintingPassword(title) {
-                this.classErrorPassword = title;
+            startPrintingPassword() {
+                this.classErrorPassword = false;
             },
-            startPrintingPasswordConfirm(title) {
-                this.classErrorPasswordConfirm = title;
+            startPrintingPasswordConfirm() {
+                this.classErrorPasswordConfirm = false;
             },
             createPerson() {
                 if(nameValidation(this.name) && emailValidation(this.email) && passwordValidation(this.password) && passwordConfirmFunc(this.password,this.passwordConfirm)) {
