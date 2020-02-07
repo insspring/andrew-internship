@@ -32,14 +32,23 @@
     }
 </script>
 
-<style scoped>
-    .input {
-        width: 10rem;
-        margin: 1rem 0;
-        border: none;
-        border-bottom: 2px solid;
-    }
-    .error {
-        border-color: red;
-    }
+<style lang="scss" scoped>
+
+        @import '../scss/mixins.scss';
+
+        input {
+            width: 10rem;
+            margin: 1rem 0;
+            border: none;
+            color: rgb(245, 245, 245);
+            border-bottom: 2px solid rgb(56, 56, 55);
+            background-color: rgb(76, 76, 75);
+
+                @include for-size (phone-only) {
+
+                }
+        }
+        .error {
+                border-color: rgb(166, 40, 40);
+        }
 </style>

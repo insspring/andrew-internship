@@ -1,82 +1,94 @@
 <template>
     <div class="header">
-        <img class="logo" src="../assets/logo.png">
-        <LocaleChange></LocaleChange>
-        <div v-if="!token">
-            <ButtonTemplate
-                    :text="$t('signUp')"
-                    :method="visibleUpFunc"
-            ></ButtonTemplate>
-            <ButtonTemplate
-                    :text="$t('signIn')"
-                    :method="visibleInFunc"
-            ></ButtonTemplate>
-                <div class="signUp" v-if="visibleUp">
-                    <div class="signUpContent">
-                        <span class="close" @click="closeForm">X</span>
-                        <div class="inputFields">
-                            <InputTemplate v-model="name"
-                                           :placeholder="$t('name')"
-                                           :error="{error: classErrorName}"
-                                           :method="startPrintingName"
-                            ></InputTemplate>
-                            <InputTemplate v-model="email"
-                                           :placeholder="$t('email')"
-                                           :error="{error: classErrorEmail}"
-                                           :method="startPrintingEmail"
-                            ></InputTemplate>
-                            <InputTemplate v-model="password"
-                                           :type = "'password'"
-                                           :placeholder="$t('password')"
-                                           :error="{error: classErrorPassword}"
-                                           :method="startPrintingPassword"
-                            ></InputTemplate>
-                            <ul class="hint" v-if="modalStatus">
-                                <li>{{ $t('passwordHint1') }}</li>
-                                <li>{{ $t('passwordHint2') }}</li>
-                                <li>{{ $t('passwordHint3') }}</li>
-                            </ul>
-                            <InputTemplate v-model="passwordConfirm"
-                                           :type = "'password'"
-                                           :placeholder="$t('passwordConfirm')"
-                                           :error="{error: classErrorPasswordConfirm}"
-                                           :method="startPrintingPasswordConfirm"
-                            ></InputTemplate>
-                            <ButtonTemplate
-                                    :text="$t('submit')"
-                                    :method="createPerson"
-                            ></ButtonTemplate>
-                        </div>
-                    </div>
-                </div>
-                <div class="signIn" v-if="visibleIn">
-                    <div class="signInContent">
-                        <span class="close" @click="closeForm">X</span>
-                        <div class="inputFields">
-                            <InputTemplate v-model="email"
-                                           :placeholder="$t('email')"
-                                           :error="{error: classErrorEmail}"
-                                           :method="startPrintingEmail"
-                            ></InputTemplate>
-                            <InputTemplate v-model="password"
-                                           :type = "'password'"
-                                           :placeholder="$t('password')"
-                                           :error="{error: classErrorPassword}"
-                                           :method="startPrintingPassword"
-                            ></InputTemplate>
-                            <ButtonTemplate
-                                    :text="$t('submit')"
-                                    :method="logPerson"
-                            ></ButtonTemplate>
-                        </div>
-                    </div>
-                </div>
+        <div class="logo">
+            <img class="logo__img" src="../assets/logo.png">
         </div>
-        <ButtonTemplate
-                v-if="token"
-                :text="$t('signOut')"
-                :method="deleteToken"
-        ></ButtonTemplate>
+        <div class="menu burgerMenu" :class="{ active: opened }">
+            <div class="menu-content burgerMenuContent">
+                <ButtonTemplate
+                        class="btn-menu"
+                        v-if="!token"
+                        :text="$t('signUp')"
+                        :method="visibleUpFunc"
+                ></ButtonTemplate>
+                <ButtonTemplate
+                        class="btn-menu"
+                        v-if="!token"
+                        :text="$t('signIn')"
+                        :method="visibleInFunc"
+                ></ButtonTemplate>
+                <ButtonTemplate
+                        class="btn-menu"
+                        v-if="token"
+                        :text="$t('signOut')"
+                        :method="deleteToken"
+                ></ButtonTemplate>
+                <LocaleChange></LocaleChange>
+            </div>
+        </div>
+        <div class="menu-btn" @click="openMenu" :class="{ change: opened }"></div>
+        <div class="signUp" v-if="visibleUp">
+            <div class="signUpContent">
+                <span class="close" @click="closeForm">X</span>
+                <div class="inputFields">
+                    <InputTemplate v-model="name"
+                                   :placeholder="$t('name')"
+                                   :error="{error: classErrorName}"
+                                   :method="startPrintingName"
+                    ></InputTemplate>
+                    <InputTemplate v-model="email"
+                                   :placeholder="$t('email')"
+                                   :error="{error: classErrorEmail}"
+                                   :method="startPrintingEmail"
+                    ></InputTemplate>
+                    <InputTemplate v-model="password"
+                                   :type = "'password'"
+                                   :placeholder="$t('password')"
+                                   :error="{error: classErrorPassword}"
+                                   :method="startPrintingPassword"
+                    ></InputTemplate>
+                    <ul class="hint" v-if="modalStatus">
+                        <li>{{ $t('passwordHint1') }}</li>
+                        <li>{{ $t('passwordHint2') }}</li>
+                        <li>{{ $t('passwordHint3') }}</li>
+                    </ul>
+                    <InputTemplate v-model="passwordConfirm"
+                                   :type = "'password'"
+                                   :placeholder="$t('passwordConfirm')"
+                                   :error="{error: classErrorPasswordConfirm}"
+                                   :method="startPrintingPasswordConfirm"
+                    ></InputTemplate>
+                    <ButtonTemplate
+                            :text="$t('submit')"
+                            :method="createPerson"
+                            class="btn-submit"
+                    ></ButtonTemplate>
+                </div>
+            </div>
+        </div>
+        <div class="signIn" v-if="visibleIn">
+            <div class="signInContent">
+                <span class="close" @click="closeForm">X</span>
+                <div class="inputFields">
+                    <InputTemplate v-model="email"
+                                   :placeholder="$t('email')"
+                                   :error="{error: classErrorEmail}"
+                                   :method="startPrintingEmail"
+                    ></InputTemplate>
+                    <InputTemplate v-model="password"
+                                   :type = "'password'"
+                                   :placeholder="$t('password')"
+                                   :error="{error: classErrorPassword}"
+                                   :method="startPrintingPassword"
+                    ></InputTemplate>
+                    <ButtonTemplate
+                            :text="$t('submit')"
+                            :method="logPerson"
+                            class="btn-submit"
+                    ></ButtonTemplate>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -87,15 +99,16 @@
     import {nameValidation} from "../helpers/validation";
     import {passwordValidation} from "../helpers/validation";
     import {passwordConfirmFunc} from "../helpers/validation";
-    import LocaleChange from "./LocaleChange";
     import InputTemplate from "./InputTemplate";
     import ButtonTemplate from "./ButtonTemplate";
+    import LocaleChange from "./LocaleChange";
 
     export default {
         name: "Header",
-        components: {ButtonTemplate, InputTemplate, LocaleChange},
+        components: {LocaleChange, ButtonTemplate, InputTemplate},
         data() {
             return {
+                opened: false,
                 visibleUp: false,
                 visibleIn: false,
                 hint: false,
@@ -116,6 +129,9 @@
             }
         },
         methods: {
+            openMenu() {
+                this.opened = !this.opened;
+            },
             visibleInFunc() {
                 this.visibleIn = true;
             },
@@ -171,7 +187,7 @@
                     if(!passwordValidation(this.password)) {
                         this.classErrorPassword = true;
                         this.modalStatus = true;
-                        setTimeout(() => {this.modalStatus = false}, 5000);
+                        setTimeout(() => {this.modalStatus = false}, 3000);
                         this.password = null;
                     }
                     if(!passwordConfirmFunc(this.password,this.passwordConfirm)) {
@@ -219,34 +235,157 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import '../scss/mixins.scss';
+
+    *{
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+        font-family: sans-serif;
+        font-size: 14px;
+    }
+
+    .header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 5rem;
+        background-color: rgb(36, 36, 35);
+        box-shadow: 0 .1rem 1rem .1rem rgb(36, 36, 35);
+
+        @include for-size (phone-only) {
+            justify-content: space-around;
+        }
+    }
+
+    .logo {
+        padding: 1rem;
+        grid-column: 1 / 2;
+        justify-self: center;
+        width: 20rem;
+        min-width: 10rem;
+    }
+    .logo__img {
+        margin-top: .5rem;
+        width: 100%;
+    }
+
+    .menu-btn {
+        display: none;
+        margin: 1rem;
+        width: 2rem;
+        cursor: pointer;
+        min-width: 1.5rem;
+
+        @include for-size (phone-only) {
+            display: block;
+        }
+    }
+    .menu-btn:hover:before,
+    .menu-btn:hover:after {
+        background-color: rgb(253, 253, 255);
+    }
+    .menu-btn:before,
+    .menu-btn:after {
+        background-color: rgb(213, 213, 215);
+        border-radius: 1rem;
+        content: '';
+        display: block;
+        height: .3rem;
+        transition: all 200ms ease-in-out;
+    }
+    .menu-btn:before {
+        box-shadow: 0 10px 0 rgb(213, 213, 215);
+        margin-bottom: 16px;
+    }
+    .change:before {
+        box-shadow: 0 0 0 #fff;
+        transform: translateY(10px) rotate(45deg);
+        z-index: 2;
+    }
+    .change:after{
+        transform: translateY(-10px) rotate(-45deg);
+        z-index: 2;
+    }
+
+    .menu {
+
+        @include for-size (phone-only) {
+        }
+    }
+    .menu-content {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .burgerMenu {
+
+        @include for-size (phone-only) {
+            display: none;
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.3);
+            overflow: hidden;
+            transition: 1s;
+        }
+    }
+    .burgerMenuContent {
+
+        @include for-size (phone-only) {
+            margin-top: 5rem;
+            float: right;
+            height: 100%;
+            width: 15rem;
+            background-color: rgb(36, 36, 35);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+    }
+    .active {
+
+        @include for-size (phone-only) {
+            display: block;
+        }
+    }
+
     .signUp, .signIn {
         position: fixed;
-        z-index: 1;
+        z-index: 3;
         padding-top: 3rem;
         left: 0;
         top: 0;
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background-color: rgba(0,0,0,0.7);
+        background-color: rgba(0,0,0,0.6);
     }
     .signUpContent, .signInContent {
-        background-color: white;
-        margin: auto;
+        background-color: rgb(76, 76, 75);
+        margin: 0 auto;
         padding: 2rem;
-        border: 1px solid grey;
-        width: 20%;
+        width: 30%;
+        min-width: 10rem;
         border-radius: 1.5rem;
     }
     .close {
-        color: gray;
+        color: rgb(106, 106, 105);;
         float: right;
         font-size: 1rem;
         font-weight: bold;
     }
     .close:hover {
-        color: black;
+        color: rgb(245, 245, 245);
         cursor: pointer;
     }
     .inputFields {
@@ -256,28 +395,40 @@
     }
     .hint {
         position: absolute;
-        display: block;
         text-align: left;
         padding: 1rem;
         border-radius: 1rem;
         background-color: gainsboro;
         font-size: .7rem;
         width: 10%;
-        right: 30rem;
-        top: 11rem
+        min-width: 12rem;
+        top: 5.5rem;
     }
-    .error {
-        border-color: red;
+    .bm-burger-btn {
+        display: none;
+        cursor: pointer;
+        background-image: url("../assets/menu.png");
+        margin-right: 1rem;
+        height: 3rem;
+        width: 3rem;
+        background-size: cover;
+
+        @include for-size (phone-only) {
+            display: block;
+        }
     }
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        flex: 1;
-        background-color: black;
-        font-family: Arial;
+    .bm-close-btn {
+        margin-top: 1.3rem;
+        margin-right: 1.5rem;
+        color: grey;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 2rem;
     }
-    .logo {
-        align-self: flex-start;
+    .bm-close-btn:hover {
+        color: white;
+    }
+    .hidden {
+        display: none;
     }
 </style>
