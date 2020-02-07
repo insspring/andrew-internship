@@ -6,7 +6,7 @@ import ru from './ru.json';
 Vue.use(VueI18n);
 
 const i18n = new VueI18n({
-    locale: localStorage.getItem('locale') || 'ru',
+    locale: localStorage.getItem('locale') || 'en',
     messages: {en, ru},
 });
 
