@@ -30,19 +30,48 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import '../scss/mixins.scss';
+
     .btn {
-        margin: .5rem;
-        padding: 1rem;
-        border-radius: 1em;
+        margin-right: .5rem;
+        padding: .6rem .8rem .6rem .8rem;
+        border-radius: .5rem;
         font-weight: bold;
         cursor: pointer;
-        background-color: white;
-        color: rgb(161, 15, 8);
-        border: 3px solid rgb(161, 15, 8);
+        background-color: rgb(46, 46, 45);
+        color: rgb(213, 213, 215);
+        border: 2px solid rgb(63, 63, 65);
     }
     .btn:hover {
-        background-color: rgb(130, 10, 4);
-        color: white;
+        box-shadow: 0 0 .5rem .1rem rgb(53, 53, 55);
+        color: rgb(243, 243, 245);
+    }
+    .btn-menu {
+        @include for-size(phone-only) {
+            margin-left: .6rem;
+            border-radius: .1rem;
+            border: 1px solid rgb(43, 43, 45);
+            background-color: transparent;
+            width: 100%;
+        }
+    }
+    .btn-menu:hover {
+        @include for-size(phone-only) {
+            box-shadow: 0 .1rem .1rem .2rem rgb(43, 43, 45);
+        }
+    }
+    .btn-submit {
+        padding: .6rem .8rem .6rem .8rem;
+        border-radius: .5rem;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: rgb(83, 83, 85);;
+        color: rgb(203, 203, 205);
+        border: 2px solid rgb(63, 63, 65);
+    }
+    .btn-submit:hover {
+        box-shadow: 0 0 .1rem .05rem rgb(43, 43, 45);
     }
 </style>
