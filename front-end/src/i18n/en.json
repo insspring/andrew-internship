@@ -10,5 +10,6 @@
   "passwordHint2": "Password must contain at least 1 numeric character.",
   "passwordHint3": "Password must be eight characters or longer.",
   "passwordConfirm": "Confirm your password",
-  "profile": "Profile"
+  "profile": "Profile",
+  "home": "Home"
 }

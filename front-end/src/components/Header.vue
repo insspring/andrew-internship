@@ -5,6 +5,8 @@
         </div>
         <div class="menu burgerMenu" :class="{ active: opened }">
             <div class="menu-content burgerMenuContent">
+                <router-link class="router-link" to="/">{{ $t('home') }}</router-link>
+                <router-link v-if="token" class="router-link" to="/profile">{{ $t('profile') }}</router-link>
                 <ButtonTemplate
                         class="btn-menu"
                         v-if="!token"
@@ -95,10 +97,7 @@
 <script>
     import {signUpUser} from "../helpers/api";
     import {signInUser} from "../helpers/api";
-    import {emailValidation} from "../helpers/validation";
-    import {nameValidation} from "../helpers/validation";
-    import {passwordValidation} from "../helpers/validation";
-    import {passwordConfirmFunc} from "../helpers/validation";
+    import {validation} from "../helpers/validation";
     import InputTemplate from "./InputTemplate";
     import ButtonTemplate from "./ButtonTemplate";
     import LocaleChange from "./LocaleChange";
@@ -117,6 +116,7 @@
                 password: null,
                 passwordConfirm: null,
                 classErrorName: false,
+                classErrorEmail: false,
                 classErrorPassword: false,
                 classErrorPasswordConfirm: false,
                 modalStatus: false,
@@ -155,7 +155,7 @@
                 this.classErrorPasswordConfirm = false;
             },
             createPerson() {
-                if(nameValidation(this.name) && emailValidation(this.email) && passwordValidation(this.password) && passwordConfirmFunc(this.password,this.passwordConfirm)) {
+                if(validation('name',this.name) && validation('email',this.email) && validation('password',this.password) && validation('confirm',this.password,this.passwordConfirm)) {
                     let person = {
                         name: this.name,
                         email: this.email,
@@ -176,27 +176,29 @@
                         alert('You have already been registered!');
                     });
                 } else {
-                    if(!nameValidation(this.name) || this.name == null) {
+                    if(!validation('name',this.name) || this.name == null) {
                         this.classErrorName = true;
                         this.name = null;
                     }
-                    if(!emailValidation(this.email)) {
+                    if(!validation('email',this.email)) {
                         this.classErrorEmail = true;
                         this.email = null;
                     }
-                    if(!passwordValidation(this.password)) {
+                    if(!validation('password',this.password)) {
                         this.classErrorPassword = true;
                         this.modalStatus = true;
                         setTimeout(() => {this.modalStatus = false}, 3000);
                         this.password = null;
                     }
-                    if(!passwordConfirmFunc(this.password,this.passwordConfirm)) {
+                    if(!validation('confirm',this.password,this.passwordConfirm)) {
                         this.classErrorPasswordConfirm = true;
                         this.passwordConfirm = null;
                     }
                 }
             },
-
+            getPersonData(data) {
+                this.$store.commit('getPersonData',data);
+            },
             logPerson() {
                 let person = {
                     email: this.email,
@@ -204,6 +206,7 @@
                 };
                 signInUser(person).then(result => {
                     localStorage.setItem('accessToken', result.data.access_token);
+                    this.getPersonData(result.data.user);
                     this.email = null;
                     this.password = null;
                     this.classErrorEmail = false;
@@ -238,14 +241,6 @@
 <style lang="scss" scoped>
 
     @import '../scss/mixins.scss';
-
-    *{
-        margin: 0;
-        padding: 0;
-        text-decoration: none;
-        font-family: sans-serif;
-        font-size: 14px;
-    }
 
     .header {
         position: absolute;
@@ -358,6 +353,27 @@
             display: block;
         }
     }
+    .router-link {
+        margin-right: .5rem;
+        padding: .6rem .8rem .6rem .8rem;
+        border-radius: .5rem;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: rgb(46, 46, 45);
+        color: rgb(213, 213, 215);
+        border: 2px solid rgb(63, 63, 65);
+
+        @include for-size(phone-only) {
+            margin-left: .6rem;
+            border-radius: .1rem;
+            border: 1px solid rgb(43, 43, 45);
+            background-color: transparent;
+            width: 100%;
+            text-align: center;
+        }
+    }
+    .router-link-active {
+    }
 
     .signUp, .signIn {
         position: fixed;
@@ -403,32 +419,5 @@
         width: 10%;
         min-width: 12rem;
         top: 5.5rem;
-    }
-    .bm-burger-btn {
-        display: none;
-        cursor: pointer;
-        background-image: url("../assets/menu.png");
-        margin-right: 1rem;
-        height: 3rem;
-        width: 3rem;
-        background-size: cover;
-
-        @include for-size (phone-only) {
-            display: block;
-        }
-    }
-    .bm-close-btn {
-        margin-top: 1.3rem;
-        margin-right: 1.5rem;
-        color: grey;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 2rem;
-    }
-    .bm-close-btn:hover {
-        color: white;
-    }
-    .hidden {
-        display: none;
     }
 </style>
