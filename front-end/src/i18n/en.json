@@ -11,5 +11,7 @@
   "passwordHint3": "Password must be eight characters or longer.",
   "passwordConfirm": "Confirm your password",
   "profile": "Profile",
-  "home": "Home"
+  "home": "Home",
+  "backHome": "Back home",
+  "editProfile": "Edit profile"
 }

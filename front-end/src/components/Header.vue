@@ -6,22 +6,22 @@
         <div class="menu burgerMenu" :class="{ active: opened }">
             <div class="menu-content burgerMenuContent">
                 <router-link class="router-link" to="/">{{ $t('home') }}</router-link>
-                <router-link v-if="token" class="router-link" to="/profile">{{ $t('profile') }}</router-link>
+                <router-link v-if="flag" class="router-link" to="/profile">{{ $t('profile') }}</router-link>
                 <ButtonTemplate
                         class="btn-menu"
-                        v-if="!token"
+                        v-if="!flag"
                         :text="$t('signUp')"
                         :method="visibleUpFunc"
                 ></ButtonTemplate>
                 <ButtonTemplate
                         class="btn-menu"
-                        v-if="!token"
+                        v-if="!flag"
                         :text="$t('signIn')"
                         :method="visibleInFunc"
                 ></ButtonTemplate>
                 <ButtonTemplate
                         class="btn-menu"
-                        v-if="token"
+                        v-if="flag"
                         :text="$t('signOut')"
                         :method="deleteToken"
                 ></ButtonTemplate>
@@ -98,6 +98,7 @@
     import {signUpUser} from "../helpers/api";
     import {signInUser} from "../helpers/api";
     import {validation} from "../helpers/validation";
+    import {parseJwt} from "../helpers/parsingToken";
     import InputTemplate from "./InputTemplate";
     import ButtonTemplate from "./ButtonTemplate";
     import LocaleChange from "./LocaleChange";
@@ -120,12 +121,11 @@
                 classErrorPassword: false,
                 classErrorPasswordConfirm: false,
                 modalStatus: false,
-                token: false,
             }
         },
-        created() {
-            if(localStorage.getItem('accessToken')) {
-                this.token = true;
+        computed: {
+            flag() {
+                return this.$store.state.flag;
             }
         },
         methods: {
@@ -138,10 +138,7 @@
             visibleUpFunc() {
                 this.visibleUp = true;
             },
-            deleteToken() {
-              localStorage.removeItem('accessToken');
-              this.token = false;
-            },
+
             startPrintingName() {
                 this.classErrorName = false;
             },
@@ -207,12 +204,14 @@
                 signInUser(person).then(result => {
                     localStorage.setItem('accessToken', result.data.access_token);
                     this.getPersonData(result.data.user);
+                    this.$store.commit('flag',true);
+                    this.$store.commit('token',localStorage.getItem('accessToken'));
+                    this.$store.commit('userData', parseJwt(localStorage.getItem('accessToken')));
                     this.email = null;
                     this.password = null;
                     this.classErrorEmail = false;
                     this.classErrorPassword = false;
                     this.visibleIn = false;
-                    this.token = true;
                     alert('Welcome again!');
                 }).catch(() => {
                     this.email = null;
@@ -220,6 +219,10 @@
                     this.classErrorEmail = true;
                     this.classErrorPassword = true;
                 });
+            },
+            deleteToken() {
+                localStorage.removeItem('accessToken');
+                this.$store.commit('flag',false);
             },
             closeForm() {
                 this.name = null;
@@ -261,8 +264,6 @@
 
     .logo {
         padding: 1rem;
-        grid-column: 1 / 2;
-        justify-self: center;
         width: 20rem;
         min-width: 10rem;
     }
@@ -360,19 +361,29 @@
         font-weight: bold;
         cursor: pointer;
         background-color: rgb(46, 46, 45);
-        color: rgb(213, 213, 215);
+        color: rgb(133, 133, 135);
         border: 2px solid rgb(63, 63, 65);
 
         @include for-size(phone-only) {
+            width: 100%;
+            display: block;
             margin-left: .6rem;
             border-radius: .1rem;
             border: 1px solid rgb(43, 43, 45);
             background-color: transparent;
-            width: 100%;
             text-align: center;
+            font-weight: bold;
+            padding: 1rem;
+            cursor: pointer;
+            color: rgb(133, 133, 135);
         }
     }
-    .router-link-active {
+    .router-link:hover {
+        background-color: rgb(36, 36, 35);
+        color: rgb(213, 213, 215);
+    }
+    .router-link-exact-active {
+        color: rgb(213, 213, 215);
     }
 
     .signUp, .signIn {

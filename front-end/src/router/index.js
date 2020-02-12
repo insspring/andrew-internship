@@ -2,6 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../components/Home";
 import Profile from "../components/Profile";
+import ProfileEdit from "../components/editProfile/ProfileEdit";
+import PasswordEdit from "../components/editProfile/PasswordEdit";
 
 Vue.use(VueRouter);
 
@@ -13,6 +15,14 @@ const routes = [
     {
         path: '/profile',
         component: Profile
+    },
+    {
+        path: '/settings/profile',
+        component: ProfileEdit
+    },
+    {
+        path: '/settings/password',
+        component: PasswordEdit
     }
 ];
 

@@ -8,8 +8,17 @@
 
 <script>
     import Header from "./components/Header";
+    import {parseJwt} from "./helpers/parsingToken";
+
     export default {
-        components: {Header}
+        components: {Header},
+        created() {
+            if(localStorage.getItem('accessToken')) {
+                this.$store.commit('flag',true);
+                this.$store.commit('token',localStorage.getItem('accessToken'));
+                this.$store.commit('userData', parseJwt(localStorage.getItem('accessToken')));
+            }
+        },
     }
 </script>
 
@@ -28,7 +37,6 @@
     }
     .router-view {
         margin-top: 7rem;
-        box-shadow: 0 0 1rem .1rem rgb(36, 36, 35);;
     }
 
 </style>
