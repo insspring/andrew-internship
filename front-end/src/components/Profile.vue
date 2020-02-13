@@ -6,8 +6,8 @@
             </div>
             <div class="userData">
                 <div>
-                    <div class="data">{{ $t('name') }}: {{ person.name }}</div>
-                    <div class="data">{{ $t('email') }}: {{ person.email }}</div>
+                    <div class="data">{{ $t('name') }}: {{ user.name }}</div>
+                    <div class="data">{{ $t('email') }}: {{ user.email }}</div>
                 </div>
                 <div class="bar">
                     <div class="stats-li">
@@ -38,8 +38,8 @@
     export default {
         name: "Profile",
         computed: {
-            person() {
-                return this.$store.state.person;
+            user() {
+                return this.$store.getters.setUser;
             }
         }
     }

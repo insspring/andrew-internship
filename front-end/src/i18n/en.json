@@ -13,5 +13,6 @@
   "profile": "Profile",
   "home": "Home",
   "backHome": "Back home",
-  "editProfile": "Edit profile"
+  "editProfile": "Edit profile",
+  "editPassword": "Edit password"
 }

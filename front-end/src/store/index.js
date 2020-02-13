@@ -3,20 +3,21 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-//import  {editUser} from "../helpers/api";
-
 export default new Vuex.Store({
     strict: true,
     state: {
-        person: {},
         flag: false,
         token: '',
-        userData: {}
+        userData: [],
+        users: [],
+        user: {}
+    },
+    getters: {
+        setUser(state) {
+            return state.user;
+        }
     },
     mutations: {
-        getPersonData(state, payload) {
-            state.person = payload;
-        },
         flag(state,payload) {
             state.flag = payload;
         },
@@ -26,20 +27,12 @@ export default new Vuex.Store({
         userData(state,payload) {
             state.userData = payload;
         },
-        /*editPerson(state) {
-            editUser(state.person.id, {
-                name: state.person.name,
-                id: state.person.id,
-                email: state.person.email,
-                password: state.person.password,
-            });
-        },*/
-        changeName (state, name) {
-            state.person.name = name;
+        users(state,payload) {
+            state.users = payload
         },
-        changeEmail (state, email) {
-            state.person.email = email;
-        }
+        user(state,payload) {
+            state.user = payload
+        },
     },
     actions: {},
     modules: {}

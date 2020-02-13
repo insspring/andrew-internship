@@ -4,41 +4,41 @@
 
         <div class="form">
             <h2>{{ $t('editProfile') }}</h2>
-                <form @submit.prevent>
-                    <div class="item">
-                        <label>{{ $t('name') }}</label>
-                        <InputTemplate
-                                v-model="name"
-                                :error="{error: classErrorName}"
-                                :method="startPrintingName"
-                        ></InputTemplate>
-                    </div>
+            <form @submit.prevent>
+                <div class="item">
+                    <label>{{ $t('email') }}</label>
+                    <InputTemplate
+                            v-model="email"
+                            :error="{error: classErrorEmail}"
+                            :method="startPrintingEmail"
+                    ></InputTemplate>
+                </div>
 
-                    <ButtonTemplate
-                            :text="$t('submit')"
-                            :method="changeUser"
-                            class="btn-submit"
-                    ></ButtonTemplate>
-                </form>
+                <ButtonTemplate
+                        :text="$t('submit')"
+                        :method="changeUser"
+                        class="btn-submit"
+                ></ButtonTemplate>
+            </form>
         </div>
     </div>
 </template>
 
 <script>
-    import EditProfileMenu from "./EditProfileMenu";
     import InputTemplate from "../InputTemplate";
     import ButtonTemplate from "../ButtonTemplate";
-    import {editUser} from "../../helpers/api";
+    import EditProfileMenu from "./EditProfileMenu";
     import {validation} from "../../helpers/validation";
+    import {editUser} from "../../helpers/api";
     import {getUser} from "../../helpers/api";
 
     export default {
-        name: "ProfileEdit",
-        components: {ButtonTemplate, InputTemplate, EditProfileMenu},
+        name: "EmailEdit",
+        components: {EditProfileMenu, ButtonTemplate, InputTemplate},
         data() {
             return {
-                name: '',
-                classErrorName: false,
+                email: '',
+                classErrorEmail: false
             }
         },
         computed: {
@@ -47,24 +47,24 @@
             }
         },
         methods: {
-            startPrintingName() {
-                this.classErrorName = false;
+            startPrintingEmail() {
+                this.classErrorEmail = false;
             },
             changeUser() {
-                if(validation('name',this.name)) {
+                if(validation('email',this.email)) {
                     editUser(this.$store.state.user.id, {
-                        name: this.name,
-                        email: this.$store.state.user.email,
+                        name: this.$store.state.user.name,
+                        email: this.email,
                         password: this.$store.state.user.password,
                         id: this.$store.state.user.id,
                     }).then(result => {
                         console.log(result);
                     });
-                    this.name = '';
-                    alert('Changes succeed!');
+                    this.email = '';
+                    alert('Changes succeed! Please, log in with new email.');
                 } else {
-                    this.classErrorName = true;
-                    this.name = '';
+                    this.classErrorEmail = true;
+                    this.email = '';
                 }
                 getUser(this.$store.state.token).then(result => {
                     this.$store.commit('users',result.data);

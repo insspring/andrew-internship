@@ -99,6 +99,7 @@
     import {signInUser} from "../helpers/api";
     import {validation} from "../helpers/validation";
     import {parseJwt} from "../helpers/parsingToken";
+    import {getUser} from "../helpers/api";
     import InputTemplate from "./InputTemplate";
     import ButtonTemplate from "./ButtonTemplate";
     import LocaleChange from "./LocaleChange";
@@ -193,9 +194,6 @@
                     }
                 }
             },
-            getPersonData(data) {
-                this.$store.commit('getPersonData',data);
-            },
             logPerson() {
                 let person = {
                     email: this.email,
@@ -203,10 +201,15 @@
                 };
                 signInUser(person).then(result => {
                     localStorage.setItem('accessToken', result.data.access_token);
-                    this.getPersonData(result.data.user);
                     this.$store.commit('flag',true);
                     this.$store.commit('token',localStorage.getItem('accessToken'));
                     this.$store.commit('userData', parseJwt(localStorage.getItem('accessToken')));
+                    getUser(this.$store.state.token).then(result => {
+                        this.$store.commit('users',result.data);
+                        let user = this.$store.state.users.find(item =>
+                            item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
+                        this.$store.commit('user',user);
+                    });
                     this.email = null;
                     this.password = null;
                     this.classErrorEmail = false;

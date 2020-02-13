@@ -4,6 +4,7 @@ import Home from "../components/Home";
 import Profile from "../components/Profile";
 import ProfileEdit from "../components/editProfile/ProfileEdit";
 import PasswordEdit from "../components/editProfile/PasswordEdit";
+import EmailEdit from '../components/editProfile/EmailEdit';
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,10 @@ const routes = [
     {
         path: '/settings/profile',
         component: ProfileEdit
+    },
+    {
+        path: '/settings/email',
+        component: EmailEdit
     },
     {
         path: '/settings/password',
