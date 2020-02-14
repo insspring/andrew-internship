@@ -5,6 +5,7 @@ import Profile from "../components/Profile";
 import ProfileEdit from "../components/editProfile/ProfileEdit";
 import PasswordEdit from "../components/editProfile/PasswordEdit";
 import EmailEdit from '../components/editProfile/EmailEdit';
+import EditAvatar from '../components/editProfile/EditAvatar';
 
 Vue.use(VueRouter);
 
@@ -20,6 +21,10 @@ const routes = [
     {
         path: '/settings/profile',
         component: ProfileEdit
+    },
+    {
+        path: '/settings/avatar',
+        component: EditAvatar
     },
     {
         path: '/settings/email',

@@ -5,6 +5,9 @@
                 <router-link class="router-link" to="/settings/profile">{{ $t('profile') }}</router-link>
             </div>
             <div class="item">
+                <router-link class="router-link" to="/settings/avatar">{{ $t('avatar') }}</router-link>
+            </div>
+            <div class="item">
                 <router-link class="router-link" to="/settings/email">{{ $t('email') }}</router-link>
             </div>
             <div class="item">

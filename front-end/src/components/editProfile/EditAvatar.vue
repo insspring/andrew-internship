@@ -3,69 +3,60 @@
         <EditProfileMenu></EditProfileMenu>
 
         <div class="form">
-            <h2>{{ $t('editProfile') }}</h2>
-                <form @submit.prevent>
-                    <div class="item">
-                        <label>{{ $t('name') }}</label>
-                        <InputTemplate
-                                v-model="name"
-                                :error="{error: classErrorName}"
-                                :method="startPrintingName"
-                        ></InputTemplate>
-                    </div>
+            <h2>{{ $t('editAvatar') }}</h2>
+            <form @submit.prevent>
+                <div class="item">
+                    <input type="file"
+                           @change="chooseAvatar"
+                    >
+                </div>
 
-                    <ButtonTemplate
-                            :text="$t('submit')"
-                            :method="changeUser"
-                            class="btn-submit"
-                    ></ButtonTemplate>
-                </form>
+                <ButtonTemplate
+                        :text="$t('submit')"
+                        :method="uploadAvatar"
+                        class="btn-submit"
+                ></ButtonTemplate>
+            </form>
         </div>
     </div>
 </template>
 
 <script>
     import EditProfileMenu from "./EditProfileMenu";
-    import InputTemplate from "../InputTemplate";
     import ButtonTemplate from "../ButtonTemplate";
     import {editUser} from "../../helpers/api";
-    import {validation} from "../../helpers/validation";
     import {getUser} from "../../helpers/api";
 
     export default {
-        name: "ProfileEdit",
-        components: {ButtonTemplate, InputTemplate, EditProfileMenu},
+        name: "EditAvatar",
+        components: {ButtonTemplate, EditProfileMenu},
         data() {
             return {
-                name: '',
-                classErrorName: false,
+                selectedFile: null,
             }
         },
-        computed: {
-            user() {
-                return this.$store.getters.setUser;
-            }
-        },
+
         methods: {
-            startPrintingName() {
-                this.classErrorName = false;
+            chooseAvatar(e) {
+                let reader = new FileReader();
+                reader.addEventListener('load', function () {
+                    this.selectedFile = reader.result;
+                }.bind(this), false);
+                reader.readAsDataURL(e.target.files[0]);
             },
-            changeUser() {
-                if(validation('name',this.name)) {
+            uploadAvatar() {
+                if(this.selectedFile) {
                     editUser(this.$store.state.user.id, {
-                        name: this.name,
+                        name: this.$store.state.user.name,
                         email: this.$store.state.user.email,
                         password: this.$store.state.user.password,
-                        avatar: this.$store.state.user.avatar,
+                        avatar: this.selectedFile,
                         id: this.$store.state.user.id,
                     }).then(result => {
                         console.log(result);
                     });
-                    this.name = '';
+                    this.selectedFile = null;
                     alert('Changes succeed!');
-                } else {
-                    this.classErrorName = true;
-                    this.name = '';
                 }
                 getUser(this.$store.state.token).then(result => {
                     this.$store.commit('users',result.data);

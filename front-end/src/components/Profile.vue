@@ -2,7 +2,8 @@
     <div class="profile">
         <div class="main-info">
             <div class="avatar">
-                <img class="avatar-photo" src="../assets/none.png.jpg"/>
+                <img v-if="!user.avatar" class="avatar-photo" src="../assets/none.png.jpg"/>
+                <img class="avatar-photo" :src="user.avatar"/>
             </div>
             <div class="userData">
                 <div>
@@ -37,10 +38,15 @@
 
     export default {
         name: "Profile",
+        data() {
+            return {
+
+            }
+        },
         computed: {
             user() {
                 return this.$store.getters.setUser;
-            }
+            },
         }
     }
 </script>

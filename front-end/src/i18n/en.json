@@ -14,5 +14,7 @@
   "home": "Home",
   "backHome": "Back home",
   "editProfile": "Edit profile",
-  "editPassword": "Edit password"
+  "editPassword": "Edit password",
+  "avatar": "Avatar",
+  "editAvatar": "Change avatar"
 }
