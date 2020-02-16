@@ -52,6 +52,8 @@
     import {validation} from "../../helpers/validation";
     import {editUser} from "../../helpers/api";
     import {getUser} from "../../helpers/api";
+    import {signInUser} from "../../helpers/api";
+    import {parseJwt} from "../../helpers/parsingToken";
 
     export default {
         name: "PasswordEdit",
@@ -87,13 +89,27 @@
                         name: this.$store.state.user.name,
                         email: this.$store.state.user.email,
                         password: this.newPassword,
+                        avatar: this.$store.state.user.avatar,
                         id: this.$store.state.user.id,
-                    }).then(result => {
-                        console.log(result);
+                    }).then(() => {
+                        let person = {
+                            email: this.$store.state.user.email,
+                            password: this.newPassword,
+                        };
+                        signInUser(person).then((result) => {
+                            localStorage.removeItem('accessToken');
+                            localStorage.setItem('accessToken', result.data.access_token);
+                            this.$store.commit('token',localStorage.getItem('accessToken'));
+                            this.$store.commit('userData', parseJwt(localStorage.getItem('accessToken')));
+                            getUser(this.$store.state.token).then(result => {
+                                this.$store.commit('users',result.data);
+                                let user = this.$store.state.users.find(item =>
+                                    item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
+                                this.$store.commit('user',user);
+                            });
+
+                        });
                     });
-                    this.oldPassword = null;
-                    this.newPassword = null;
-                    this.newPasswordConfirm = null;
                     alert('Changes succeed!');
                 } else {
                     if (!validation('confirm', this.oldPassword, this.$store.state.user.password)) {
@@ -109,12 +125,6 @@
                         this.newPasswordConfirm = null;
                     }
                 }
-                getUser(this.$store.state.token).then(result => {
-                    this.$store.commit('users',result.data);
-                    let user = this.$store.state.users.find(item =>
-                        item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                    this.$store.commit('user',user);
-                });
             }
         }
     }

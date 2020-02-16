@@ -58,8 +58,13 @@
                         password: this.$store.state.user.password,
                         avatar: this.$store.state.user.avatar,
                         id: this.$store.state.user.id,
-                    }).then(result => {
-                        console.log(result);
+                    }).then(() => {
+                        getUser(this.$store.state.token).then(result => {
+                            this.$store.commit('users',result.data);
+                            let user = this.$store.state.users.find(item =>
+                                item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
+                            this.$store.commit('user',user);
+                        });
                     });
                     this.name = '';
                     alert('Changes succeed!');
@@ -67,12 +72,6 @@
                     this.classErrorName = true;
                     this.name = '';
                 }
-                getUser(this.$store.state.token).then(result => {
-                    this.$store.commit('users',result.data);
-                    let user = this.$store.state.users.find(item =>
-                        item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                    this.$store.commit('user',user);
-                });
             }
         }
     }

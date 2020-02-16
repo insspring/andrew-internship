@@ -52,18 +52,17 @@
                         password: this.$store.state.user.password,
                         avatar: this.selectedFile,
                         id: this.$store.state.user.id,
-                    }).then(result => {
-                        console.log(result);
+                    }).then(() => {
+                        getUser(this.$store.state.token).then(result => {
+                            this.$store.commit('users',result.data);
+                            let user = this.$store.state.users.find(item =>
+                                item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
+                            this.$store.commit('user',user);
+                        });
                     });
                     this.selectedFile = null;
                     alert('Changes succeed!');
                 }
-                getUser(this.$store.state.token).then(result => {
-                    this.$store.commit('users',result.data);
-                    let user = this.$store.state.users.find(item =>
-                        item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                    this.$store.commit('user',user);
-                });
             }
         }
     }

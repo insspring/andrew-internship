@@ -10,7 +10,9 @@ export default new Vuex.Store({
         token: '',
         userData: [],
         users: [],
-        user: {}
+        user: {},
+        visibleIn: false,
+        visibleUp: false,
     },
     getters: {
         setUser(state) {
@@ -18,6 +20,12 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        visibleIn(state,payload) {
+            state.visibleIn = payload;
+        },
+        visibleUp(state,payload) {
+            state.visibleUp = payload;
+        },
         flag(state,payload) {
             state.flag = payload;
         },

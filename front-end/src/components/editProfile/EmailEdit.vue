@@ -31,6 +31,8 @@
     import {validation} from "../../helpers/validation";
     import {editUser} from "../../helpers/api";
     import {getUser} from "../../helpers/api";
+    import {signInUser} from "../../helpers/api";
+    import {parseJwt} from "../../helpers/parsingToken";
 
     export default {
         name: "EmailEdit",
@@ -56,22 +58,32 @@
                         name: this.$store.state.user.name,
                         email: this.email,
                         password: this.$store.state.user.password,
+                        avatar: this.$store.state.user.avatar,
                         id: this.$store.state.user.id,
-                    }).then(result => {
-                        console.log(result);
+                    }).then(() => {
+                        let person = {
+                            email: this.email,
+                            password: this.$store.state.user.password,
+                        };
+                        signInUser(person).then((result) => {
+                            localStorage.removeItem('accessToken');
+                            localStorage.setItem('accessToken', result.data.access_token);
+                            this.$store.commit('token',localStorage.getItem('accessToken'));
+                            this.$store.commit('userData', parseJwt(localStorage.getItem('accessToken')));
+                            getUser(this.$store.state.token).then(result => {
+                                this.$store.commit('users',result.data);
+                                let user = this.$store.state.users.find(item =>
+                                    item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
+                                this.$store.commit('user',user);
+                            });
+
+                        });
                     });
-                    this.email = '';
-                    alert('Changes succeed! Please, log in with new email.');
+                    alert('Changes succeed!');
                 } else {
                     this.classErrorEmail = true;
                     this.email = '';
                 }
-                getUser(this.$store.state.token).then(result => {
-                    this.$store.commit('users',result.data);
-                    let user = this.$store.state.users.find(item =>
-                        item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                    this.$store.commit('user',user);
-                });
             }
         }
     }
