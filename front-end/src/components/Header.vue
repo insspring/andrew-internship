@@ -3,10 +3,10 @@
         <div class="logo">
             <img class="logo__img" src="../assets/logo.png">
         </div>
+        <SignUpIn></SignUpIn>
         <div class="menu burgerMenu" :class="{ active: opened }">
             <div class="menu-content burgerMenuContent">
                 <router-link class="router-link" to="/">{{ $t('home') }}</router-link>
-                <router-link v-if="flag" class="router-link" to="/profile">{{ $t('profile') }}</router-link>
                 <ButtonTemplate
                         class="btn-menu"
                         v-if="!flag"
@@ -26,9 +26,12 @@
                         :method="deleteToken"
                 ></ButtonTemplate>
                 <LocaleChange></LocaleChange>
+                <router-link v-if="flag" class="profile" to="/profile">
+                    <img class="avatar-photo" :src="user.avatar"/>
+                    <div class="data">{{ user.name }}</div>
+                </router-link>
             </div>
         </div>
-        <SignUpIn></SignUpIn>
         <div class="menu-btn" @click="openMenu" :class="{ change: opened }"></div>
 
     </div>
@@ -50,7 +53,10 @@
         computed: {
             flag() {
                 return this.$store.state.flag;
-            }
+            },
+            user() {
+                return this.$store.getters.setUser;
+            },
         },
         methods: {
             openMenu() {
@@ -217,5 +223,20 @@
     .router-link-exact-active {
         color: rgb(213, 213, 215);
     }
-
+    .avatar-photo {
+        width: 2rem;
+        border-radius: 2rem;
+        padding: .5rem;
+    }
+    .profile {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-weight: bold;
+        color: rgb(193, 193, 195);
+        margin-right: 1rem;
+    }
+    .profile:hover {
+        color: rgb(213, 213, 215);
+    }
 </style>

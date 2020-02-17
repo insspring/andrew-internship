@@ -38,11 +38,6 @@
 
     export default {
         name: "Profile",
-        data() {
-            return {
-
-            }
-        },
         computed: {
             user() {
                 return this.$store.getters.setUser;
