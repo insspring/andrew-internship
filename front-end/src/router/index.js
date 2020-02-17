@@ -6,6 +6,8 @@ import ProfileEdit from "../components/editProfile/ProfileEdit";
 import PasswordEdit from "../components/editProfile/PasswordEdit";
 import EmailEdit from '../components/editProfile/EmailEdit';
 import EditAvatar from '../components/editProfile/EditAvatar';
+import AddBook from '../components/AddBook';
+import UserBooks from '../components/UserBooks';
 
 Vue.use(VueRouter);
 
@@ -33,6 +35,14 @@ const routes = [
     {
         path: '/settings/password',
         component: PasswordEdit
+    },
+    {
+        path: '/books/add',
+        component: AddBook
+    },
+    {
+        path: '/userBooks',
+        component: UserBooks
     }
 ];
 

@@ -17,3 +17,13 @@ export const getUser = (token) => {
         }
     })
 };
+export const addBook = (book) => {
+    return axios.post('/books/add', book);
+};
+export const getBooks = (token) => {
+    return axios.get('/books', {
+        headers: {
+            'authorization': "bearer " + token
+        }
+    });
+};
