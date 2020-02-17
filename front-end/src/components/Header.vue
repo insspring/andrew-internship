@@ -3,233 +3,77 @@
         <div class="logo">
             <img class="logo__img" src="../assets/logo.png">
         </div>
+        <SignUpIn></SignUpIn>
         <div class="menu burgerMenu" :class="{ active: opened }">
             <div class="menu-content burgerMenuContent">
+                <router-link class="router-link" to="/">{{ $t('home') }}</router-link>
                 <ButtonTemplate
                         class="btn-menu"
-                        v-if="!token"
+                        v-if="!flag"
                         :text="$t('signUp')"
                         :method="visibleUpFunc"
                 ></ButtonTemplate>
                 <ButtonTemplate
                         class="btn-menu"
-                        v-if="!token"
+                        v-if="!flag"
                         :text="$t('signIn')"
                         :method="visibleInFunc"
                 ></ButtonTemplate>
                 <ButtonTemplate
                         class="btn-menu"
-                        v-if="token"
+                        v-if="flag"
                         :text="$t('signOut')"
                         :method="deleteToken"
                 ></ButtonTemplate>
                 <LocaleChange></LocaleChange>
+                <router-link v-if="flag" class="profile" to="/profile">
+                    <img class="avatar-photo" :src="user.avatar"/>
+                    <div class="data">{{ user.name }}</div>
+                </router-link>
             </div>
         </div>
         <div class="menu-btn" @click="openMenu" :class="{ change: opened }"></div>
-        <div class="signUp" v-if="visibleUp">
-            <div class="signUpContent">
-                <span class="close" @click="closeForm">X</span>
-                <div class="inputFields">
-                    <InputTemplate v-model="name"
-                                   :placeholder="$t('name')"
-                                   :error="{error: classErrorName}"
-                                   :method="startPrintingName"
-                    ></InputTemplate>
-                    <InputTemplate v-model="email"
-                                   :placeholder="$t('email')"
-                                   :error="{error: classErrorEmail}"
-                                   :method="startPrintingEmail"
-                    ></InputTemplate>
-                    <InputTemplate v-model="password"
-                                   :type = "'password'"
-                                   :placeholder="$t('password')"
-                                   :error="{error: classErrorPassword}"
-                                   :method="startPrintingPassword"
-                    ></InputTemplate>
-                    <ul class="hint" v-if="modalStatus">
-                        <li>{{ $t('passwordHint1') }}</li>
-                        <li>{{ $t('passwordHint2') }}</li>
-                        <li>{{ $t('passwordHint3') }}</li>
-                    </ul>
-                    <InputTemplate v-model="passwordConfirm"
-                                   :type = "'password'"
-                                   :placeholder="$t('passwordConfirm')"
-                                   :error="{error: classErrorPasswordConfirm}"
-                                   :method="startPrintingPasswordConfirm"
-                    ></InputTemplate>
-                    <ButtonTemplate
-                            :text="$t('submit')"
-                            :method="createPerson"
-                            class="btn-submit"
-                    ></ButtonTemplate>
-                </div>
-            </div>
-        </div>
-        <div class="signIn" v-if="visibleIn">
-            <div class="signInContent">
-                <span class="close" @click="closeForm">X</span>
-                <div class="inputFields">
-                    <InputTemplate v-model="email"
-                                   :placeholder="$t('email')"
-                                   :error="{error: classErrorEmail}"
-                                   :method="startPrintingEmail"
-                    ></InputTemplate>
-                    <InputTemplate v-model="password"
-                                   :type = "'password'"
-                                   :placeholder="$t('password')"
-                                   :error="{error: classErrorPassword}"
-                                   :method="startPrintingPassword"
-                    ></InputTemplate>
-                    <ButtonTemplate
-                            :text="$t('submit')"
-                            :method="logPerson"
-                            class="btn-submit"
-                    ></ButtonTemplate>
-                </div>
-            </div>
-        </div>
+
     </div>
 </template>
 
 <script>
-    import {signUpUser} from "../helpers/api";
-    import {signInUser} from "../helpers/api";
-    import {emailValidation} from "../helpers/validation";
-    import {nameValidation} from "../helpers/validation";
-    import {passwordValidation} from "../helpers/validation";
-    import {passwordConfirmFunc} from "../helpers/validation";
-    import InputTemplate from "./InputTemplate";
     import ButtonTemplate from "./ButtonTemplate";
     import LocaleChange from "./LocaleChange";
+    import SignUpIn from "./SignUpIn";
 
     export default {
         name: "Header",
-        components: {LocaleChange, ButtonTemplate, InputTemplate},
+        components: {SignUpIn, LocaleChange, ButtonTemplate},
         data() {
             return {
                 opened: false,
-                visibleUp: false,
-                visibleIn: false,
-                hint: false,
-                name: null,
-                email: null,
-                password: null,
-                passwordConfirm: null,
-                classErrorName: false,
-                classErrorPassword: false,
-                classErrorPasswordConfirm: false,
-                modalStatus: false,
-                token: false,
             }
         },
-        created() {
-            if(localStorage.getItem('accessToken')) {
-                this.token = true;
-            }
+        computed: {
+            flag() {
+                return this.$store.state.flag;
+            },
+            user() {
+                return this.$store.getters.setUser;
+            },
         },
         methods: {
             openMenu() {
                 this.opened = !this.opened;
             },
             visibleInFunc() {
-                this.visibleIn = true;
+                this.$store.commit('visibleIn',true);
             },
             visibleUpFunc() {
-                this.visibleUp = true;
-            },
-            deleteToken() {
-              localStorage.removeItem('accessToken');
-              this.token = false;
-            },
-            startPrintingName() {
-                this.classErrorName = false;
-            },
-            startPrintingEmail() {
-                this.classErrorEmail = false;
-            },
-            startPrintingPassword() {
-                this.classErrorPassword = false;
-            },
-            startPrintingPasswordConfirm() {
-                this.classErrorPasswordConfirm = false;
-            },
-            createPerson() {
-                if(nameValidation(this.name) && emailValidation(this.email) && passwordValidation(this.password) && passwordConfirmFunc(this.password,this.passwordConfirm)) {
-                    let person = {
-                        name: this.name,
-                        email: this.email,
-                        password: this.password,
-                    };
-                    signUpUser(person).then(() => {
-                        this.name = null;
-                        this.email = null;
-                        this.password = null;
-                        this.passwordConfirm = null;
-                        this.visibleUp = false;
-                        alert("You've been successfully signed up!");
-                    }).catch(() => {
-                        this.name = null;
-                        this.email = null;
-                        this.password = null;
-                        this.passwordConfirm = null;
-                        alert('You have already been registered!');
-                    });
-                } else {
-                    if(!nameValidation(this.name) || this.name == null) {
-                        this.classErrorName = true;
-                        this.name = null;
-                    }
-                    if(!emailValidation(this.email)) {
-                        this.classErrorEmail = true;
-                        this.email = null;
-                    }
-                    if(!passwordValidation(this.password)) {
-                        this.classErrorPassword = true;
-                        this.modalStatus = true;
-                        setTimeout(() => {this.modalStatus = false}, 3000);
-                        this.password = null;
-                    }
-                    if(!passwordConfirmFunc(this.password,this.passwordConfirm)) {
-                        this.classErrorPasswordConfirm = true;
-                        this.passwordConfirm = null;
-                    }
-                }
+                this.$store.commit('visibleUp',true);
             },
 
-            logPerson() {
-                let person = {
-                    email: this.email,
-                    password: this.password
-                };
-                signInUser(person).then(result => {
-                    localStorage.setItem('accessToken', result.data.access_token);
-                    this.email = null;
-                    this.password = null;
-                    this.classErrorEmail = false;
-                    this.classErrorPassword = false;
-                    this.visibleIn = false;
-                    this.token = true;
-                    alert('Welcome again!');
-                }).catch(() => {
-                    this.email = null;
-                    this.password = null;
-                    this.classErrorEmail = true;
-                    this.classErrorPassword = true;
-                });
+            deleteToken() {
+                localStorage.removeItem('accessToken');
+                this.$store.commit('flag',false);
             },
-            closeForm() {
-                this.name = null;
-                this.email = null;
-                this.password = null;
-                this.passwordConfirm = null;
-                this.visibleUp = false;
-                this.visibleIn = false;
-                this.classErrorName = false;
-                this.classErrorEmail = false;
-                this.classErrorPassword = false;
-                this.classErrorPasswordConfirm = false;
-            },
+
 
         }
     }
@@ -238,14 +82,6 @@
 <style lang="scss" scoped>
 
     @import '../scss/mixins.scss';
-
-    *{
-        margin: 0;
-        padding: 0;
-        text-decoration: none;
-        font-family: sans-serif;
-        font-size: 14px;
-    }
 
     .header {
         position: absolute;
@@ -266,8 +102,6 @@
 
     .logo {
         padding: 1rem;
-        grid-column: 1 / 2;
-        justify-self: center;
         width: 20rem;
         min-width: 10rem;
     }
@@ -358,77 +192,51 @@
             display: block;
         }
     }
-
-    .signUp, .signIn {
-        position: fixed;
-        z-index: 3;
-        padding-top: 3rem;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background-color: rgba(0,0,0,0.6);
-    }
-    .signUpContent, .signInContent {
-        background-color: rgb(76, 76, 75);
-        margin: 0 auto;
-        padding: 2rem;
-        width: 30%;
-        min-width: 10rem;
-        border-radius: 1.5rem;
-    }
-    .close {
-        color: rgb(106, 106, 105);;
-        float: right;
-        font-size: 1rem;
+    .router-link {
+        margin-right: .5rem;
+        padding: .6rem .8rem .6rem .8rem;
+        border-radius: .5rem;
         font-weight: bold;
-    }
-    .close:hover {
-        color: rgb(245, 245, 245);
         cursor: pointer;
-    }
-    .inputFields {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .hint {
-        position: absolute;
-        text-align: left;
-        padding: 1rem;
-        border-radius: 1rem;
-        background-color: gainsboro;
-        font-size: .7rem;
-        width: 10%;
-        min-width: 12rem;
-        top: 5.5rem;
-    }
-    .bm-burger-btn {
-        display: none;
-        cursor: pointer;
-        background-image: url("../assets/menu.png");
-        margin-right: 1rem;
-        height: 3rem;
-        width: 3rem;
-        background-size: cover;
+        background-color: rgb(46, 46, 45);
+        color: rgb(133, 133, 135);
+        border: 2px solid rgb(63, 63, 65);
 
-        @include for-size (phone-only) {
+        @include for-size(phone-only) {
+            width: 100%;
             display: block;
+            margin-left: .6rem;
+            border-radius: .1rem;
+            border: 1px solid rgb(43, 43, 45);
+            background-color: transparent;
+            text-align: center;
+            font-weight: bold;
+            padding: 1rem;
+            cursor: pointer;
+            color: rgb(133, 133, 135);
         }
     }
-    .bm-close-btn {
-        margin-top: 1.3rem;
-        margin-right: 1.5rem;
-        color: grey;
+    .router-link:hover {
+        background-color: rgb(36, 36, 35);
+        color: rgb(213, 213, 215);
+    }
+    .router-link-exact-active {
+        color: rgb(213, 213, 215);
+    }
+    .avatar-photo {
+        width: 2rem;
+        border-radius: 2rem;
+        padding: .5rem;
+    }
+    .profile {
+        display: flex;
+        align-items: center;
         cursor: pointer;
         font-weight: bold;
-        font-size: 2rem;
+        color: rgb(193, 193, 195);
+        margin-right: 1rem;
     }
-    .bm-close-btn:hover {
-        color: white;
-    }
-    .hidden {
-        display: none;
+    .profile:hover {
+        color: rgb(213, 213, 215);
     }
 </style>
