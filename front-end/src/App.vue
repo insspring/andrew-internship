@@ -10,6 +10,7 @@
     import Header from "./components/Header";
     import {parseJwt} from "./helpers/parsingToken";
     import {getUser} from "./helpers/api";
+    import {getBooks} from "./helpers/api";
 
     export default {
         components: {Header},
@@ -25,6 +26,13 @@
                     this.$store.commit('user',user);
                 });
             }
+            getBooks(this.$store.state.token).then(result => {
+                console.log(result);
+                this.$store.commit('books',result.data);
+                let userBooks = this.$store.state.books.filter(item =>
+                    item.author === this.$store.state.user.name);
+                this.$store.commit('userBooks',userBooks);
+            });
         },
     }
 </script>

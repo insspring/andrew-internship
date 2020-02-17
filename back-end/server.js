@@ -84,11 +84,23 @@ server.post('/auth/register', (req, res) => {
 	db.get('users').push(user)
 		.write()
 	res.status(200).json(id)
-})
+});
+
+server.post('/books/add', (req, res) => {
+    const booksdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'));
+    const id = booksdb.books.length == 0 ? 1 : booksdb.books[booksdb.books.length - 1].id + 1;
+    const book = req.body;
+    book.id = id;
+    db.get('books').push(book)
+        .write()
+    res.status(200).json(id)
+});
 
 server.use('/', (req, res, next) => {
   switch(req.path) {
     case '/users':
+      break;
+    case '/books':
       break;
     default: 
       return next();

@@ -27,7 +27,8 @@
                 ></ButtonTemplate>
                 <LocaleChange></LocaleChange>
                 <router-link v-if="flag" class="profile" to="/profile">
-                    <img class="avatar-photo" :src="user.avatar"/>
+                    <img v-if="!user.avatar" class="avatar-photo" src="../assets/none.png.jpg"/>
+                    <img v-if="user.avatar" class="avatar-photo" :src="user.avatar"/>
                     <div class="data">{{ user.name }}</div>
                 </router-link>
             </div>

@@ -3,7 +3,7 @@
         <div class="main-info">
             <div class="avatar">
                 <img v-if="!user.avatar" class="avatar-photo" src="../assets/none.png.jpg"/>
-                <img class="avatar-photo" :src="user.avatar"/>
+                <img v-if="user.avatar" class="avatar-photo" :src="user.avatar"/>
             </div>
             <div class="userData">
                 <div>
@@ -12,10 +12,10 @@
                 </div>
                 <div class="bar">
                     <div class="stats-li">
-                        <div class="item">
+                        <router-link class="item" to="/userBooks">
                             <div class="header">Books</div>
-                            <div class="content">0</div>
-                        </div>
+                            <div class="content">{{ $store.state.userBooks.length }}</div>
+                        </router-link>
                         <div class="item">
                             <div class="header">Followers</div>
                             <div class="content">0</div>
@@ -27,6 +27,7 @@
                     </div>
                     <div>
                         <router-link class="router-link" to="/settings/profile">{{ $t('editProfile') }}</router-link>
+                        <router-link class="router-link" to="/books/add">{{ $t('addBook') }}</router-link>
                     </div>
                 </div>
             </div>
@@ -84,6 +85,12 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        cursor: pointer;
+        font-weight: bold;
+        color: rgb(193, 193, 195);
+    }
+    .item:hover {
+        color: rgb(213, 213, 215);
     }
     .userData {
         display: flex;

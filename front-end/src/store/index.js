@@ -11,13 +11,15 @@ export default new Vuex.Store({
         userData: [],
         users: [],
         user: {},
+        books: [],
+        userBooks: [],
         visibleIn: false,
         visibleUp: false,
     },
     getters: {
         setUser(state) {
             return state.user;
-        }
+        },
     },
     mutations: {
         visibleIn(state,payload) {
@@ -36,10 +38,16 @@ export default new Vuex.Store({
             state.userData = payload;
         },
         users(state,payload) {
-            state.users = payload
+            state.users = payload;
         },
         user(state,payload) {
-            state.user = payload
+            state.user = payload;
+        },
+        books(state,payload) {
+            state.books = payload;
+        },
+        userBooks(state,payload) {
+            state.userBooks = payload;
         },
     },
     actions: {},
