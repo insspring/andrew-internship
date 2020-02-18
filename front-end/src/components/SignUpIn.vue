@@ -154,6 +154,7 @@
                     password: this.password
                 };
                 signInUser(person).then(result => {
+                    console.log(result);
                     localStorage.setItem('accessToken', result.data.access_token);
                     this.$store.commit('flag',true);
                     this.$store.commit('token',localStorage.getItem('accessToken'));
