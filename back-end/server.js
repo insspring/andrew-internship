@@ -99,7 +99,6 @@ server.post('/books/add', (req, res) => {
 server.use('/', (req, res, next) => {
   switch(req.path) {
     case '/users':
-      break;
     case '/books':
       break;
     default: 
