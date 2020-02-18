@@ -73,6 +73,7 @@
     import {signInUser} from "../helpers/api";
     import {getUser} from "../helpers/api";
     import {parseJwt} from "../helpers/parsingToken";
+    import {getBooks} from "../helpers/api";
 
     export default {
         name: "SignUpIn",
@@ -162,6 +163,13 @@
                         let user = this.$store.state.users.find(item =>
                             item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
                         this.$store.commit('user',user);
+                    });
+                    getBooks(this.$store.state.token).then(result => {
+                        console.log(result);
+                        this.$store.commit('books',result.data);
+                        let userBooks = this.$store.state.books.filter(item =>
+                            item.author === this.$store.state.user.name);
+                        this.$store.commit('userBooks',userBooks);
                     });
                     this.email = null;
                     this.password = null;

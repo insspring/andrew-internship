@@ -25,14 +25,14 @@
                         item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
                     this.$store.commit('user',user);
                 });
+                getBooks(this.$store.state.token).then(result => {
+                    console.log(result);
+                    this.$store.commit('books',result.data);
+                    let userBooks = this.$store.state.books.filter(item =>
+                        item.author === this.$store.state.user.name);
+                    this.$store.commit('userBooks',userBooks);
+                });
             }
-            getBooks(this.$store.state.token).then(result => {
-                console.log(result);
-                this.$store.commit('books',result.data);
-                let userBooks = this.$store.state.books.filter(item =>
-                    item.author === this.$store.state.user.name);
-                this.$store.commit('userBooks',userBooks);
-            });
         },
     }
 </script>

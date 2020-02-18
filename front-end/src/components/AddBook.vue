@@ -27,6 +27,7 @@
 
 <script>
     import {addBook} from "../helpers/api";
+    import {getBooks} from "../helpers/api";
     import InputTemplate from "./InputTemplate";
     import ButtonTemplate from "./ButtonTemplate";
 
@@ -51,13 +52,20 @@
                     name: this.name,
                     description: this.description,
                     author: this.$store.state.user.name,
-                    publicationDate: Date.now(),
+                    publicationDate: Date().toString().split('').slice(0, Date().toString().split('').length - 36).join(''),
                 };
                 addBook(book).then(() => {
                     this.name = '';
                     this.description = '';
                     this.classErrorName = false;
                     this.publicationDate = null;
+                    getBooks(this.$store.state.token).then(result => {
+                        console.log(result);
+                        this.$store.commit('books',result.data);
+                        let userBooks = this.$store.state.books.filter(item =>
+                            item.author === this.$store.state.user.name);
+                        this.$store.commit('userBooks',userBooks);
+                    });
                 });
 
             }
