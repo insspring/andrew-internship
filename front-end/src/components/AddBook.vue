@@ -13,7 +13,16 @@
 
             <div class="item">
                 <label>Description</label>
-                <textarea cols="40" rows="10" v-model="description"></textarea>
+                <TextArea
+                        v-model="description"
+                        :value="description"
+                ></TextArea>
+            </div>
+
+            <div class="item">
+                <input type="file"
+                       @change="chooseBookCover"
+                >
             </div>
 
             <ButtonTemplate
@@ -28,22 +37,32 @@
 <script>
     import {addBook} from "../helpers/api";
     import {getBooks} from "../helpers/api";
-    import InputTemplate from "./InputTemplate";
-    import ButtonTemplate from "./ButtonTemplate";
+    import InputTemplate from "./templates/InputTemplate";
+    import ButtonTemplate from "./templates/ButtonTemplate";
+    import TextArea from "./templates/TextArea";
+    //import ChooseImg from "./ChooseImg";
 
 
     export default {
         name: "AddBook",
-        components: {ButtonTemplate, InputTemplate},
+        components: {TextArea, ButtonTemplate, InputTemplate},
         data() {
             return {
                 name: '',
                 description: '',
                 classErrorName: false,
-                publicationDate: null
+                publicationDate: null,
+                selectedFile: null
             }
         },
         methods: {
+            chooseBookCover(e) {
+                let reader = new FileReader();
+                reader.addEventListener('load', function () {
+                    this.selectedFile = reader.result;
+                }.bind(this), false);
+                reader.readAsDataURL(e.target.files[0]);
+            },
             startPrintingName() {
                 this.classErrorName = false;
             },
@@ -52,6 +71,7 @@
                     name: this.name,
                     description: this.description,
                     author: this.$store.state.user.name,
+                    bookCover: this.selectedFile,
                     publicationDate: Date().toString().split('').slice(0, Date().toString().split('').length - 36).join(''),
                 };
                 addBook(book).then(() => {
@@ -59,6 +79,7 @@
                     this.description = '';
                     this.classErrorName = false;
                     this.publicationDate = null;
+                    this.selectedFile = null;
                     getBooks(this.$store.state.token).then(result => {
                         console.log(result);
                         this.$store.commit('books',result.data);
@@ -87,11 +108,5 @@
     .item {
         display: flex;
         flex-direction: column;
-    }
-    textarea {
-        border: none;
-        color: rgb(245, 245, 245);
-        border-bottom: 2px solid rgb(56, 56, 55);
-        background-color: rgb(76, 76, 75);
     }
 </style>

@@ -4,7 +4,6 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    strict: true,
     state: {
         flag: false,
         token: '',
@@ -17,9 +16,15 @@ export default new Vuex.Store({
         visibleUp: false,
     },
     getters: {
-        setUser(state) {
+        getUser(state) {
             return state.user;
         },
+        getUsers(state) {
+            return state.users;
+        },
+        getFlag(state) {
+            return state.flag;
+        }
     },
     mutations: {
         visibleIn(state,payload) {
@@ -28,10 +33,10 @@ export default new Vuex.Store({
         visibleUp(state,payload) {
             state.visibleUp = payload;
         },
-        flag(state,payload) {
+        setFlag(state,payload) {
             state.flag = payload;
         },
-        token(state,payload) {
+        setToken(state,payload) {
             state.token = payload;
         },
         userData(state,payload) {
@@ -50,6 +55,34 @@ export default new Vuex.Store({
             state.userBooks = payload;
         },
     },
-    actions: {},
+    actions: {
+        visibleIn({commit},payload) {
+            commit('visibleIn',payload);
+        },
+        visibleUp({commit},payload) {
+            commit('visibleUp',payload);
+        },
+        setFlag({commit},payload) {
+            commit('setFlag',payload);
+        },
+        setToken({commit},payload) {
+            commit('setToken', payload);
+        },
+        userData({commit},payload) {
+            commit('userData', payload);
+        },
+        users({commit},payload) {
+            commit('users', payload);
+        },
+        user({commit},payload) {
+            commit('user', payload);
+        },
+        books({commit},payload) {
+            commit('books', payload);
+        },
+        userBooks({commit},payload) {
+            commit('userBooks', payload);
+        },
+    },
     modules: {}
 });

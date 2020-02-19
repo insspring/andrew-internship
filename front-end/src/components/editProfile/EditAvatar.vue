@@ -23,7 +23,7 @@
 
 <script>
     import EditProfileMenu from "./EditProfileMenu";
-    import ButtonTemplate from "../ButtonTemplate";
+    import ButtonTemplate from "../templates/ButtonTemplate";
     import {editUser} from "../../helpers/api";
     import {getUser} from "../../helpers/api";
 

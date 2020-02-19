@@ -17,8 +17,11 @@ const routes = [
         component: Home
     },
     {
-        path: '/profile',
-        component: Profile
+        path: '/user/:id',
+        component: Profile,
+        children: [
+
+        ]
     },
     {
         path: '/settings/profile',
@@ -41,7 +44,7 @@ const routes = [
         component: AddBook
     },
     {
-        path: '/userBooks',
+        path: '/user/books',
         component: UserBooks
     }
 ];

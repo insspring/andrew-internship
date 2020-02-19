@@ -25,8 +25,8 @@
 </template>
 
 <script>
-    import InputTemplate from "../InputTemplate";
-    import ButtonTemplate from "../ButtonTemplate";
+    import InputTemplate from "../templates/InputTemplate";
+    import ButtonTemplate from "../templates/ButtonTemplate";
     import EditProfileMenu from "./EditProfileMenu";
     import {validation} from "../../helpers/validation";
     import {editUser} from "../../helpers/api";
@@ -45,36 +45,36 @@
         },
         computed: {
             user() {
-                return this.$store.getters.setUser;
+                return this.$store.getters.getUser;
             }
         },
         methods: {
             startPrintingEmail() {
                 this.classErrorEmail = false;
             },
-            changeUser() {
-                if(validation('email',this.email)) {
-                    editUser(this.$store.state.user.id, {
-                        name: this.$store.state.user.name,
+            changeUser: function () {
+                if (validation('email', this.email)) {
+                    editUser(this.user.id, {
+                        name: this.user.name,
                         email: this.email,
-                        password: this.$store.state.user.password,
-                        avatar: this.$store.state.user.avatar,
-                        id: this.$store.state.user.id,
+                        password: this.user.password,
+                        avatar: this.user.avatar,
+                        id: this.user.id,
                     }).then(() => {
                         let person = {
                             email: this.email,
-                            password: this.$store.state.user.password,
+                            password: this.user.password,
                         };
                         signInUser(person).then((result) => {
                             localStorage.removeItem('accessToken');
                             localStorage.setItem('accessToken', result.data.access_token);
-                            this.$store.commit('token',localStorage.getItem('accessToken'));
-                            this.$store.commit('userData', parseJwt(localStorage.getItem('accessToken')));
+                            this.$store.dispatch('setToken', localStorage.getItem('accessToken'));
+                            this.$store.dispatch('userData', parseJwt(localStorage.getItem('accessToken')));
                             getUser(this.$store.state.token).then(result => {
-                                this.$store.commit('users',result.data);
+                                this.$store.dispatch('users', result.data);
                                 let user = this.$store.state.users.find(item =>
                                     item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                                this.$store.commit('user',user);
+                                this.$store.dispatch('user', user);
                             });
 
                         });

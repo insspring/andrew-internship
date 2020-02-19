@@ -12,7 +12,7 @@
                 </div>
                 <div class="bar">
                     <div class="stats-li">
-                        <router-link class="item" to="/userBooks">
+                        <router-link class="item" to="/user/books">
                             <div class="header">Books</div>
                             <div class="content">{{ $store.state.userBooks.length }}</div>
                         </router-link>
@@ -41,7 +41,7 @@
         name: "Profile",
         computed: {
             user() {
-                return this.$store.getters.setUser;
+                return this.$store.getters.getUser;
             },
         }
     }

@@ -34,7 +34,7 @@
 
 <style lang="scss" scoped>
 
-        @import '../scss/mixins.scss';
+        @import '../../scss/mixins';
 
         input {
             width: 10rem;

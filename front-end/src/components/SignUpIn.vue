@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="signUp" v-if="this.$store.state.visibleUp">
+        <div class="signUp" v-if="visibleUp">
             <div class="signUpContent">
                 <span class="close" @click="closeForm">X</span>
                 <div class="inputFields">
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="signIn" v-if="this.$store.state.visibleIn">
+        <div class="signIn" v-if="visibleIn">
             <div class="signInContent">
                 <span class="close" @click="closeForm">X</span>
                 <div class="inputFields">
@@ -66,14 +66,15 @@
 </template>
 
 <script>
-    import ButtonTemplate from "../components/ButtonTemplate";
-    import InputTemplate from "../components/InputTemplate";
+    import ButtonTemplate from "./templates/ButtonTemplate";
+    import InputTemplate from "./templates/InputTemplate";
     import {validation} from "../helpers/validation";
     import {signUpUser} from "../helpers/api";
     import {signInUser} from "../helpers/api";
     import {getUser} from "../helpers/api";
     import {parseJwt} from "../helpers/parsingToken";
     import {getBooks} from "../helpers/api";
+    import {mapState} from "vuex";
 
     export default {
         name: "SignUpIn",
@@ -93,6 +94,9 @@
             }
         },
         components: {InputTemplate, ButtonTemplate},
+        computed: {
+            ...mapState(['visibleIn', 'visibleUp'])
+        },
         methods: {
             startPrintingName() {
                 this.classErrorName = false;
@@ -154,23 +158,22 @@
                     password: this.password
                 };
                 signInUser(person).then(result => {
-                    console.log(result);
                     localStorage.setItem('accessToken', result.data.access_token);
-                    this.$store.commit('flag',true);
-                    this.$store.commit('token',localStorage.getItem('accessToken'));
-                    this.$store.commit('userData', parseJwt(localStorage.getItem('accessToken')));
+                    this.$store.dispatch('setFlag',true);
+                    this.$store.dispatch('setToken',localStorage.getItem('accessToken'));
+                    this.$store.dispatch('userData', parseJwt(localStorage.getItem('accessToken')));
                     getUser(this.$store.state.token).then(result => {
-                        this.$store.commit('users',result.data);
+                        this.$store.dispatch('users',result.data);
                         let user = this.$store.state.users.find(item =>
                             item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                        this.$store.commit('user',user);
+                        this.$store.dispatch('user',user);
                     });
                     getBooks(this.$store.state.token).then(result => {
                         console.log(result);
-                        this.$store.commit('books',result.data);
+                        this.$store.dispatch('books',result.data);
                         let userBooks = this.$store.state.books.filter(item =>
                             item.author === this.$store.state.user.name);
-                        this.$store.commit('userBooks',userBooks);
+                        this.$store.dispatch('userBooks',userBooks);
                     });
                     this.email = null;
                     this.password = null;
@@ -190,8 +193,8 @@
                 this.email = null;
                 this.password = null;
                 this.passwordConfirm = null;
-                this.$store.commit('visibleIn',false);
-                this.$store.commit('visibleUp',false);
+                this.$store.dispatch('visibleIn',false);
+                this.$store.dispatch('visibleUp',false);
                 this.classErrorName = false;
                 this.classErrorEmail = false;
                 this.classErrorPassword = false;

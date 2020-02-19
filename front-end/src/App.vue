@@ -16,21 +16,21 @@
         components: {Header},
         created() {
             if(localStorage.getItem('accessToken')) {
-                this.$store.commit('flag',true);
-                this.$store.commit('token',localStorage.getItem('accessToken'));
-                this.$store.commit('userData', parseJwt(localStorage.getItem('accessToken')));
+                this.$store.dispatch('setFlag',true);
+                this.$store.dispatch('setToken',localStorage.getItem('accessToken'));
+                this.$store.dispatch('userData', parseJwt(localStorage.getItem('accessToken')));
                 getUser(this.$store.state.token).then(result => {
-                    this.$store.commit('users',result.data);
+                    this.$store.dispatch('users',result.data);
                     let user = this.$store.state.users.find(item =>
                         item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                    this.$store.commit('user',user);
+                    this.$store.dispatch('user',user);
                 });
                 getBooks(this.$store.state.token).then(result => {
                     console.log(result);
-                    this.$store.commit('books',result.data);
+                    this.$store.dispatch('books',result.data);
                     let userBooks = this.$store.state.books.filter(item =>
                         item.author === this.$store.state.user.name);
-                    this.$store.commit('userBooks',userBooks);
+                    this.$store.dispatch('userBooks',userBooks);
                 });
             }
         },

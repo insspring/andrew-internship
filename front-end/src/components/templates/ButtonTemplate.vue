@@ -32,7 +32,7 @@
 
 <style lang="scss" scoped>
 
-    @import '../scss/mixins.scss';
+    @import '../../scss/mixins';
 
     .btn {
         margin-right: .5rem;

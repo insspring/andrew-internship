@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import i18n from "../i18n/index"
+    import i18n from "../../i18n/index"
 
     export default {
         name: "localeChange",
@@ -29,7 +29,7 @@
 
 <style lang="scss" scoped>
 
-    @import '../scss/mixins.scss';
+    @import '../../scss/mixins';
 
     select {
         cursor: pointer;

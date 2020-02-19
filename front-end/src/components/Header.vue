@@ -11,13 +11,13 @@
                         class="btn-menu"
                         v-if="!flag"
                         :text="$t('signUp')"
-                        :method="visibleUpFunc"
+                        :method="visibleUp"
                 ></ButtonTemplate>
                 <ButtonTemplate
                         class="btn-menu"
                         v-if="!flag"
                         :text="$t('signIn')"
-                        :method="visibleInFunc"
+                        :method="visibleIn"
                 ></ButtonTemplate>
                 <ButtonTemplate
                         class="btn-menu"
@@ -26,7 +26,7 @@
                         :method="deleteToken"
                 ></ButtonTemplate>
                 <LocaleChange></LocaleChange>
-                <router-link v-if="flag" class="profile" to="/profile">
+                <router-link v-if="flag" class="profile" :to="'/user/' + user.id">
                     <img v-if="!user.avatar" class="avatar-photo" src="../assets/none.png.jpg"/>
                     <img v-if="user.avatar" class="avatar-photo" :src="user.avatar"/>
                     <div class="data">{{ user.name }}</div>
@@ -39,9 +39,10 @@
 </template>
 
 <script>
-    import ButtonTemplate from "./ButtonTemplate";
-    import LocaleChange from "./LocaleChange";
+    import ButtonTemplate from "./templates/ButtonTemplate";
+    import LocaleChange from "./templates/LocaleChange";
     import SignUpIn from "./SignUpIn";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "Header",
@@ -52,27 +53,26 @@
             }
         },
         computed: {
-            flag() {
-                return this.$store.state.flag;
-            },
-            user() {
-                return this.$store.getters.setUser;
-            },
+            ...mapGetters({
+                flag: 'getFlag',
+                user: 'getUser'
+            })
         },
         methods: {
             openMenu() {
                 this.opened = !this.opened;
             },
-            visibleInFunc() {
-                this.$store.commit('visibleIn',true);
+            visibleIn() {
+                this.$store.dispatch('visibleIn',true);
             },
-            visibleUpFunc() {
-                this.$store.commit('visibleUp',true);
+            visibleUp() {
+                this.$store.dispatch('visibleIn',true);
             },
 
             deleteToken() {
                 localStorage.removeItem('accessToken');
-                this.$store.commit('flag',false);
+                this.$store.commit('setFlag',false);
+                this.$router.push({path: '/'});
             },
 
 

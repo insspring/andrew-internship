@@ -26,8 +26,8 @@
 
 <script>
     import EditProfileMenu from "./EditProfileMenu";
-    import InputTemplate from "../InputTemplate";
-    import ButtonTemplate from "../ButtonTemplate";
+    import InputTemplate from "../templates/InputTemplate";
+    import ButtonTemplate from "../templates/ButtonTemplate";
     import {editUser} from "../../helpers/api";
     import {validation} from "../../helpers/validation";
     import {getUser} from "../../helpers/api";
