@@ -1,12 +1,12 @@
 <template>
     <div class="component">
         <ul class="library">
-            <li class="book" v-for="book in $store.state.userBooks" :key="book.id">
+            <li class="book" v-for="book in books" :key="book.id">
                 <img class="bookCover" :src="book.bookCover">
                 <div class="desc">
                     <div class="item name">{{ book.name }}</div>
                     <div class="item description">
-                        <span v-if="!checkReadMoreActivated(book.id)">{{ book.description.slice(0,200) }}</span>
+                        <span v-if="!checkReadMoreActivated(book.id)">{{ book.description.slice(0,150) }}</span>
                         <a class="readMore" v-if="!checkReadMoreActivated(book.id)" @click.prevent="activateReadMore(book.id)" href="#">  (Read more...)</a>
                         <span v-if="checkReadMoreActivated(book.id)">{{ book.description }}</span>
                         <a class="readMore" v-if="checkReadMoreActivated(book.id)" @click.prevent="deactivateReadMore" href="#">  (...less)</a>
@@ -21,9 +21,15 @@
 <script>
     export default {
         name: "UserBooks",
+        props: ['userId'],
         data() {
             return {
                 readMoreActivated: null
+            }
+        },
+        computed: {
+            books() {
+                return this.$store.getters.getBooks.filter(item => item.authorId.toString() === this.userId);
             }
         },
         methods: {
@@ -35,7 +41,7 @@
             },
             checkReadMoreActivated(id) {
                 return this.readMoreActivated === id;
-            }
+            },
         }
     }
 </script>

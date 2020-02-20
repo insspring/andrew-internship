@@ -27,3 +27,10 @@ export const getBooks = (token) => {
         }
     });
 };
+export const booksPagination = (token,page,limit) => {
+    return axios.get(`/books?_page=${page}&_limit=${limit}`, {
+        headers: {
+            'authorization': "bearer " + token
+        },
+    });
+};

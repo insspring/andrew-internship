@@ -171,9 +171,6 @@
                     getBooks(this.$store.state.token).then(result => {
                         console.log(result);
                         this.$store.dispatch('books',result.data);
-                        let userBooks = this.$store.state.books.filter(item =>
-                            item.author === this.$store.state.user.name);
-                        this.$store.dispatch('userBooks',userBooks);
                     });
                     this.email = null;
                     this.password = null;

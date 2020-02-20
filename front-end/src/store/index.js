@@ -11,7 +11,6 @@ export default new Vuex.Store({
         users: [],
         user: {},
         books: [],
-        userBooks: [],
         visibleIn: false,
         visibleUp: false,
     },
@@ -24,6 +23,9 @@ export default new Vuex.Store({
         },
         getFlag(state) {
             return state.flag;
+        },
+        getBooks(state) {
+            return state.books;
         }
     },
     mutations: {
@@ -51,9 +53,6 @@ export default new Vuex.Store({
         books(state,payload) {
             state.books = payload;
         },
-        userBooks(state,payload) {
-            state.userBooks = payload;
-        },
     },
     actions: {
         visibleIn({commit},payload) {
@@ -79,9 +78,6 @@ export default new Vuex.Store({
         },
         books({commit},payload) {
             commit('books', payload);
-        },
-        userBooks({commit},payload) {
-            commit('userBooks', payload);
         },
     },
     modules: {}

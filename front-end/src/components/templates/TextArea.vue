@@ -14,7 +14,7 @@
     export default {
         name: "ResizeByMixin",
         props: {
-            value: String,
+            value: String
         },
         mixins: [mixinAutoResize],
     };

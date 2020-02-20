@@ -8,6 +8,7 @@ import EmailEdit from '../components/editProfile/EmailEdit';
 import EditAvatar from '../components/editProfile/EditAvatar';
 import AddBook from '../components/AddBook';
 import UserBooks from '../components/UserBooks';
+import BookPage from '../components/BookPage';
 
 Vue.use(VueRouter);
 
@@ -17,11 +18,15 @@ const routes = [
         component: Home
     },
     {
-        path: '/user/:id',
+        path: '/user/:userId',
         component: Profile,
-        children: [
-
-        ]
+        props: true,
+    },
+    {
+        path: '/book/:bookId',
+        component: BookPage,
+        name: 'book',
+        props: true
     },
     {
         path: '/settings/profile',
@@ -44,9 +49,10 @@ const routes = [
         component: AddBook
     },
     {
-        path: '/user/books',
-        component: UserBooks
-    }
+        path: '/user/:userId/books',
+        component: UserBooks,
+        props: true
+    },
 ];
 
 const router = new VueRouter({

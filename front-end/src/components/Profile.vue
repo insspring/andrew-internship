@@ -12,9 +12,9 @@
                 </div>
                 <div class="bar">
                     <div class="stats-li">
-                        <router-link class="item" to="/user/books">
+                        <router-link class="item" :to="'/user/'+ userId + '/books'">
                             <div class="header">Books</div>
-                            <div class="content">{{ $store.state.userBooks.length }}</div>
+                            <div class="content">{{ countBooks }}</div>
                         </router-link>
                         <div class="item">
                             <div class="header">Followers</div>
@@ -25,7 +25,7 @@
                             <div class="content">0</div>
                         </div>
                     </div>
-                    <div>
+                    <div v-if="userCheck">
                         <router-link class="router-link" to="/settings/profile">{{ $t('editProfile') }}</router-link>
                         <router-link class="router-link" to="/books/add">{{ $t('addBook') }}</router-link>
                     </div>
@@ -36,14 +36,27 @@
 </template>
 
 <script>
+    import {mapGetters} from 'vuex';
 
     export default {
         name: "Profile",
+        props: ['userId'],
         computed: {
+            ...mapGetters({
+                getUsers: 'getUsers',
+                getUser: 'getUser',
+                getBooks: 'getBooks'
+            }),
             user() {
-                return this.$store.getters.getUser;
+                return this.getUsers.find(item => item.id.toString() === this.userId);
             },
-        }
+            userCheck() {
+                return this.getUser.id.toString() === this.userId;
+            },
+            countBooks() {
+                return this.getBooks.filter(item => item.authorId.toString() === this.userId).length;
+            }
+        },
     }
 </script>
 

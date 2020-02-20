@@ -71,6 +71,7 @@
                     name: this.name,
                     description: this.description,
                     author: this.$store.state.user.name,
+                    authorId: this.$store.state.user.id,
                     bookCover: this.selectedFile,
                     publicationDate: Date().toString().split('').slice(0, Date().toString().split('').length - 36).join(''),
                 };
