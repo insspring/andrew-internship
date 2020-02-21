@@ -240,4 +240,7 @@
     .profile:hover {
         color: rgb(213, 213, 215);
     }
+    .btn-menu {
+        margin-right: .5rem;
+    }
 </style>

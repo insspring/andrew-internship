@@ -1,7 +1,12 @@
 <template>
     <div class="component">
-        <ul class="library">
-            <li class="book" v-for="book in booksPerPage" :key="book.id">
+        <transition name="fade">
+            <div class="loading" v-show="loading">
+                <span class="fa fa-spinner fa-spin"></span> Loading
+            </div>
+        </transition>
+        <ul class="library" id="infinite">
+            <li class="book" v-for="book in books" :key="book.id">
                 <div class="header">
                     <div class="cover">
                         <img class="bookCover" :src="book.bookCover">
@@ -18,61 +23,68 @@
                 <div class="item date">Uploaded: {{ book.publicationDate }}</div>
             </li>
         </ul>
-        <ButtonTemplate v-if="page > 1"
-                :method="previousPage"
-                :text="'Previous'"
-        ></ButtonTemplate>
-        <ButtonTemplate v-if="page < Math.ceil(books.length/booksPerPage.length)"
-                :method="nextPage"
-                :text="'Next'"
-        ></ButtonTemplate>
     </div>
 </template>
 
 <script>
     import {mapGetters} from 'vuex';
-    import {booksPagination} from "../helpers/api";
-    import ButtonTemplate from "./templates/ButtonTemplate";
+    import {getBooks} from "../helpers/api";
 
     export default {
-        components: {ButtonTemplate},
-        created() {
-            if(localStorage.getItem('accessToken')) {
-                booksPagination(this.$store.state.token,this.page,this.limit).then(result => {
-                    this.booksPerPage = result.data;
-                })
-            }
-        },
         name: "Home",
         data() {
             return {
-                booksPerPage: [],
-                page: 1,
-                limit: 1
+                bottom: false,
+                nextItem: 0,
+                books: [],
+                loading: false,
+            }
+        },
+        created() {
+            window.addEventListener('scroll', () => {
+                this.bottom = this.bottomVisible()
+            });
+            this.loadMore();
+        },
+        watch: {
+            bottom(bottom) {
+                if (bottom) {
+                    this.loadMore();
+                }
             }
         },
         computed: {
             ...mapGetters({
                 users: 'getUsers',
-                books: 'getBooks'
             }),
         },
         methods: {
             clicked(bd,searcher) {
                 return bd[bd.findIndex(item => item.id === searcher)];
             },
-            nextPage(){
-                this.page++;
-                booksPagination(this.$store.state.token,this.page,this.limit).then(result => {
-                    this.booksPerPage = result.data;
-                })
+            loadMore () {
+                this.loading = true;
+                getBooks(this.$store.state.token).then(result => {
+                    setTimeout(() => {
+                        let x = this.nextItem;
+                        for (this.nextItem; this.nextItem < x + 10; this.nextItem++) {
+                            if(this.nextItem < result.data.length) {
+                                this.books.push(result.data[this.nextItem]);
+                            } else {
+                                break;
+                            }
+                        }
+                        this.loading = false;
+                    }, 200);
+                });
             },
-            previousPage(){
-                this.page--;
-                booksPagination(this.$store.state.token,this.page,this.limit).then(result => {
-                    this.booksPerPage = result.data;
-                })
-            }
+            bottomVisible() {
+                const scrollY = window.scrollY;
+                const visible = document.documentElement.clientHeight;
+                const pageHeight = document.documentElement.scrollHeight;
+                const bottomOfPage = visible + scrollY >= pageHeight;
+                return bottomOfPage || pageHeight < visible;
+            },
         }
     }
 </script>
@@ -80,6 +92,23 @@
 <style lang="scss" scoped>
     @import '../scss/mixins.scss';
 
+    .loading {
+        text-align: center;
+        position: absolute;
+        color: #fff;
+        z-index: 9;
+        padding: 8px 18px;
+        border-radius: 5px;
+        left: calc(50% - 3rem);
+        top: calc(50% - 1rem);
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0
+    }
     .library {
         display: flex;
         flex-wrap: wrap;
@@ -153,5 +182,21 @@
         @include for-size (phone-only) {
             font-size: .7rem;
         }
+    }
+    .pageNavigation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .pageNum {
+        margin: 0 1rem;
+        color: rgb(233,233,235);
+
+    }
+    .setLimit {
+        color: rgb(203,203,205);
+    }
+    .radio {
+        margin: .5rem;
     }
 </style>

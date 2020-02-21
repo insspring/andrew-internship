@@ -35,7 +35,6 @@
     @import '../../scss/mixins';
 
     .btn {
-        margin-right: .5rem;
         padding: .6rem .8rem .6rem .8rem;
         border-radius: .5rem;
         font-weight: bold;
