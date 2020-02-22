@@ -14,7 +14,7 @@
                     <div class="stats-li">
                         <router-link class="item" :to="'/user/'+ userId + '/books'">
                             <div class="header">Books</div>
-                            <div class="content">{{ countBooks }}</div>
+                            <div class="content">{{ booksNum() }}</div>
                         </router-link>
                         <div class="item">
                             <div class="header">Followers</div>
@@ -37,26 +37,36 @@
 
 <script>
     import {mapGetters} from 'vuex';
+    import {getBooks} from "../helpers/api";
 
     export default {
         name: "Profile",
         props: ['userId'],
+        data() {
+            return {
+                countBooks: 0
+            }
+        },
         computed: {
             ...mapGetters({
                 getUsers: 'getUsers',
                 getUser: 'getUser',
-                getBooks: 'getBooks'
             }),
             user() {
-                return this.getUsers.find(item => item.id.toString() === this.userId);
+                return this.getUsers.find(item => item.id+'' === this.userId);
             },
             userCheck() {
-                return this.getUser.id.toString() === this.userId;
+                return this.getUser.id+'' === this.userId;
             },
-            countBooks() {
-                return this.getBooks.filter(item => item.authorId.toString() === this.userId).length;
-            }
         },
+        methods: {
+            booksNum() {
+                getBooks(this.$store.state.token,this.user.id).then(result => {
+                    this.countBooks = result.headers["x-total-count"];
+                });
+                return this.countBooks;
+            }
+        }
     }
 </script>
 

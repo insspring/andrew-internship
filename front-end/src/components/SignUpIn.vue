@@ -73,7 +73,6 @@
     import {signInUser} from "../helpers/api";
     import {getUser} from "../helpers/api";
     import {parseJwt} from "../helpers/parsingToken";
-    import {getBooks} from "../helpers/api";
     import {mapState} from "vuex";
 
     export default {
@@ -167,10 +166,6 @@
                         let user = this.$store.state.users.find(item =>
                             item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
                         this.$store.dispatch('user',user);
-                    });
-                    getBooks(this.$store.state.token).then(result => {
-                        console.log(result);
-                        this.$store.dispatch('books',result.data);
                     });
                     this.email = null;
                     this.password = null;

@@ -1,5 +1,5 @@
 <template>
-    <div class="book" v-if="book">
+    <div class="book">
         <div class="cover">
             <img class="bookCover" :src="book.bookCover">
         </div>
@@ -18,11 +18,11 @@
             <div class="item date">Uploaded: {{ book.publicationDate }}</div>
         </div>
     </div>
-    <div v-else class="loading">Loading...</div>
 </template>
 
 <script>
     import {mapGetters} from 'vuex';
+    import {getBook} from "../helpers/api";
 
     export default {
         name: "BookPage",
@@ -30,16 +30,19 @@
         data() {
             return {
                 readMoreActivated: null,
+                book: {}
             }
         },
         computed: {
             ...mapGetters({
                 users: 'getUsers',
-                getBooks: 'getBooks'
             }),
-            book() {
-                return this.getBooks[this.getBooks.findIndex(item => item.id === this.bookId*1)];
-            }
+        },
+        created() {
+            getBook(this.$store.state.token,this.bookId).then(result => {
+                this.book = result.data[0];
+            });
+            return this.book;
         },
         methods: {
             activateReadMore(id) {
@@ -50,7 +53,7 @@
             },
             clickedUser(author) {
                 return this.users.find(item => item.name === author);
-            }
+            },
         }
     }
 </script>

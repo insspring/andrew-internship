@@ -19,18 +19,22 @@
 </template>
 
 <script>
+    import  {getBooks} from "../helpers/api";
+
     export default {
         name: "UserBooks",
         props: ['userId'],
         data() {
             return {
-                readMoreActivated: null
+                readMoreActivated: null,
+                books: []
             }
         },
-        computed: {
-            books() {
-                return this.$store.getters.getBooks.filter(item => item.authorId.toString() === this.userId);
-            }
+        created() {
+            getBooks(this.$store.state.token,this.userId).then(result => {
+                this.books.push(...result.data);
+            });
+            return this.books;
         },
         methods: {
             activateReadMore(id) {

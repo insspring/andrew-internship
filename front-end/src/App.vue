@@ -10,7 +10,6 @@
     import Header from "./components/Header";
     import {parseJwt} from "./helpers/parsingToken";
     import {getUser} from "./helpers/api";
-    import {getBooks} from "./helpers/api";
 
     export default {
         components: {Header},
@@ -24,10 +23,6 @@
                     let user = this.$store.state.users.find(item =>
                         item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
                     this.$store.dispatch('user',user);
-                });
-                getBooks(this.$store.state.token).then(result => {
-                    console.log(result);
-                    this.$store.dispatch('books',result.data);
                 });
             }
         },
