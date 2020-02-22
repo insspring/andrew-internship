@@ -2,7 +2,7 @@
     <div class="component">
         <transition name="fade">
             <div class="loading" v-show="loading">
-                <span class="fa fa-spinner fa-spin"></span> Loading
+                Loading...
             </div>
         </transition>
         <ul class="library" id="infinite">
@@ -28,14 +28,14 @@
 
 <script>
     import {mapGetters} from 'vuex';
-    import {getBooks} from "../helpers/api";
+    import {booksPagination} from "../helpers/api";
 
     export default {
         name: "Home",
         data() {
             return {
                 bottom: false,
-                nextItem: 0,
+                page: 1,
                 books: [],
                 loading: false,
             }
@@ -64,26 +64,18 @@
             },
             loadMore () {
                 this.loading = true;
-                getBooks(this.$store.state.token).then(result => {
-                    setTimeout(() => {
-                        let x = this.nextItem;
-                        for (this.nextItem; this.nextItem < x + 10; this.nextItem++) {
-                            if(this.nextItem < result.data.length) {
-                                this.books.push(result.data[this.nextItem]);
-                            } else {
-                                break;
-                            }
-                        }
+                booksPagination(this.$store.state.token,this.page).then(result => {
+                    if(this.page <= Math.ceil(result.headers["x-total-count"]/10)) {
+                        this.books.push(...result.data);
+                        this.page++;
                         this.loading = false;
-                    }, 200);
+                    }
+                    this.loading = false;
                 });
             },
             bottomVisible() {
-                const scrollY = window.scrollY;
-                const visible = document.documentElement.clientHeight;
-                const pageHeight = document.documentElement.scrollHeight;
-                const bottomOfPage = visible + scrollY >= pageHeight;
-                return bottomOfPage || pageHeight < visible;
+                const bottomOfPage = document.documentElement.clientHeight + window.scrollY >= document.documentElement.scrollHeight;
+                return bottomOfPage || document.documentElement.scrollHeight < document.documentElement.clientHeight;
             },
         }
     }
@@ -94,13 +86,12 @@
 
     .loading {
         text-align: center;
-        position: absolute;
-        color: #fff;
+        position: fixed;
+        color: rgb(195, 195, 195);
         z-index: 9;
-        padding: 8px 18px;
         border-radius: 5px;
-        left: calc(50% - 3rem);
-        top: calc(50% - 1rem);
+        left: calc(50% - 1rem);
+        top: calc(50% - .1rem);
     }
 
     .fade-enter-active, .fade-leave-active {

@@ -27,11 +27,11 @@ export const getBooks = (token) => {
         }
     });
 };
-/*
-export const booksPagination = (token) => {
-    return axios.get(`/books?_page&_limit=1`, {
+
+export const booksPagination = (token,page) => {
+    return axios.get(`/books?_page=${page}&_limit=10`, {
         headers: {
             'authorization': "bearer " + token
         },
     });
-};*/
+};
