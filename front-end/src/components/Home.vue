@@ -5,7 +5,7 @@
                 Loading...
             </div>
         </transition>
-        <ul class="library" id="infinite">
+        <ul class="library" id="infinite" v-if="books && users">
             <li class="book" v-for="book in books" :key="book.id">
                 <div class="header">
                     <div class="cover">
@@ -15,9 +15,9 @@
                         <div class="name">{{ book.name }}</div>
                         <div class="author">
                             Author:
-                            <router-link class="linkToProfile" :to="'/user/' + clicked(users,book.authorId).id">{{ book.author }}</router-link>
+                            <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
                         </div>
-                        <router-link class="linkToProfile" :to="{ name: 'book', params: { bookId: clicked(books,book.id).id }}">Learn More</router-link>
+                        <router-link class="linkToProfile" :to="'/book/' + book.id">Learn More</router-link>
                     </div>
                 </div>
                 <div class="item date">Uploaded: {{ book.publicationDate }}</div>
@@ -40,7 +40,7 @@
                 loading: false,
             }
         },
-        created() {
+        mounted() {
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
             });
@@ -59,23 +59,21 @@
             }),
         },
         methods: {
-            clicked(bd,searcher) {
-                return bd[bd.findIndex(item => item.id === searcher)];
-            },
             loadMore () {
                 this.loading = true;
-                booksPagination(this.$store.state.token,this.page).then(result => {
-                    if(this.page <= Math.ceil(result.headers["x-total-count"]/10)) {
-                        this.books.push(...result.data);
-                        this.page++;
+                setTimeout(() => {
+                    booksPagination(this.$store.state.token,this.page).then(result => {
+                        if(this.page <= Math.ceil(result.headers["x-total-count"]/10)) {
+                            this.books.push(...result.data);
+                            this.page++;
+                            this.loading = false;
+                        }
                         this.loading = false;
-                    }
-                    this.loading = false;
-                });
+                    });
+                },200);
             },
             bottomVisible() {
-                const bottomOfPage = document.documentElement.clientHeight + window.scrollY >= document.documentElement.scrollHeight;
-                return bottomOfPage || document.documentElement.scrollHeight < document.documentElement.clientHeight;
+                return document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
             },
         }
     }

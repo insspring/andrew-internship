@@ -1,5 +1,5 @@
 <template>
-    <div class="book">
+    <div class="book" v-if="book.description">
         <div class="cover">
             <img class="bookCover" :src="book.bookCover">
         </div>
@@ -7,7 +7,7 @@
             <div class="item name">{{ book.name }}</div>
             <div class="item author">
                 Author:
-                <router-link class="linkToProfile" :to="'/user/' + clickedUser(book.author).id">{{ book.author }}</router-link>
+                <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
             </div>
             <div class="item description">
                 <span v-if="!readMoreActivated">{{ book.description.slice(0,200) }}</span>
@@ -30,7 +30,7 @@
         data() {
             return {
                 readMoreActivated: null,
-                book: {}
+                book: {},
             }
         },
         computed: {
@@ -41,8 +41,8 @@
         created() {
             getBook(this.$store.state.token,this.bookId).then(result => {
                 this.book = result.data[0];
+                return this.book;
             });
-            return this.book;
         },
         methods: {
             activateReadMore(id) {
@@ -50,9 +50,6 @@
             },
             deactivateReadMore() {
                 this.readMoreActivated = null;
-            },
-            clickedUser(author) {
-                return this.users.find(item => item.name === author);
             },
         }
     }
