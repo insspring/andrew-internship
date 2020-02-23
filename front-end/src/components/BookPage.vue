@@ -41,7 +41,6 @@
         created() {
             getBook(this.$store.state.token,this.bookId).then(result => {
                 this.book = result.data[0];
-                return this.book;
             });
         },
         methods: {

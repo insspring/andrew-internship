@@ -36,7 +36,6 @@
 
 <script>
     import {addBook} from "../helpers/api";
-    import {getBooks} from "../helpers/api";
     import InputTemplate from "./templates/InputTemplate";
     import ButtonTemplate from "./templates/ButtonTemplate";
     import TextArea from "./templates/TextArea";
@@ -81,13 +80,6 @@
                     this.classErrorName = false;
                     this.publicationDate = null;
                     this.selectedFile = null;
-                    getBooks(this.$store.state.token).then(result => {
-                        console.log(result);
-                        this.$store.commit('books',result.data);
-                        let userBooks = this.$store.state.books.filter(item =>
-                            item.author === this.$store.state.user.name);
-                        this.$store.commit('userBooks',userBooks);
-                    });
                 });
 
             }

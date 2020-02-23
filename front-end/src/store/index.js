@@ -34,17 +34,14 @@ export default new Vuex.Store({
         setFlag(state,payload) {
             state.flag = payload;
         },
-        setToken(state,payload) {
-            state.token = payload;
+        setTokenData(state,{flag,token,userData}) {
+            state.flag = flag;
+            state.token = token;
+            state.userData = userData;
         },
-        userData(state,payload) {
-            state.userData = payload;
-        },
-        users(state,payload) {
-            state.users = payload;
-        },
-        user(state,payload) {
-            state.user = payload;
+        setUsers(state,{users,user}) {
+            state.users = users;
+            state.user = user;
         },
     },
     actions: {
@@ -57,17 +54,11 @@ export default new Vuex.Store({
         setFlag({commit},payload) {
             commit('setFlag',payload);
         },
-        setToken({commit},payload) {
-            commit('setToken', payload);
+        setTokenData({commit},{flag,token,userData}) {
+            commit('setTokenData',{flag,token,userData});
         },
-        userData({commit},payload) {
-            commit('userData', payload);
-        },
-        users({commit},payload) {
-            commit('users', payload);
-        },
-        user({commit},payload) {
-            commit('user', payload);
+        setUsers({commit},{users,user}) {
+            commit('setUsers',{users,user});
         },
     },
     modules: {}

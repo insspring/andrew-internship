@@ -94,7 +94,7 @@
         },
         components: {InputTemplate, ButtonTemplate},
         computed: {
-            ...mapState(['visibleIn', 'visibleUp'])
+            ...mapState(['visibleIn', 'visibleUp']),
         },
         methods: {
             startPrintingName() {
@@ -158,14 +158,18 @@
                 };
                 signInUser(person).then(result => {
                     localStorage.setItem('accessToken', result.data.access_token);
-                    this.$store.dispatch('setFlag',true);
-                    this.$store.dispatch('setToken',localStorage.getItem('accessToken'));
-                    this.$store.dispatch('userData', parseJwt(localStorage.getItem('accessToken')));
+                    this.$store.dispatch('setTokenData', {
+                        flag: true,
+                        token: localStorage.getItem('accessToken'),
+                        userData: parseJwt(localStorage.getItem('accessToken'))
+                    });
                     getUser(this.$store.state.token).then(result => {
-                        this.$store.dispatch('users',result.data);
-                        let user = this.$store.state.users.find(item =>
+                        let user = result.data.find(item =>
                             item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                        this.$store.dispatch('user',user);
+                        this.$store.dispatch('setUsers',{
+                            users: result.data,
+                            user
+                        });
                     });
                     this.email = null;
                     this.password = null;
