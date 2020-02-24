@@ -30,7 +30,7 @@
     import ButtonTemplate from "../templates/ButtonTemplate";
     import {editUser} from "../../helpers/api";
     import {validation} from "../../helpers/validation";
-    import {getUser} from "../../helpers/api";
+    import {parseJwt} from "../../helpers/parsingToken";
 
     export default {
         name: "ProfileEdit",
@@ -43,7 +43,7 @@
         },
         computed: {
             user() {
-                return this.$store.getters.setUser;
+                return this.$store.getters.getUser;
             }
         },
         methods: {
@@ -59,11 +59,11 @@
                         avatar: this.$store.state.user.avatar,
                         id: this.$store.state.user.id,
                     }).then(() => {
-                        getUser(this.$store.state.token).then(result => {
-                            this.$store.commit('users',result.data);
-                            let user = this.$store.state.users.find(item =>
-                                item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                            this.$store.commit('user',user);
+                        this.$store.dispatch('setTokenData', {
+                            flag: true,
+                            token: localStorage.getItem('accessToken'),
+                            userData: parseJwt(localStorage.getItem('accessToken')),
+                            stop: true
                         });
                     });
                     this.name = '';

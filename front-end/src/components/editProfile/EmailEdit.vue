@@ -30,9 +30,9 @@
     import EditProfileMenu from "./EditProfileMenu";
     import {validation} from "../../helpers/validation";
     import {editUser} from "../../helpers/api";
-    import {getUser} from "../../helpers/api";
     import {signInUser} from "../../helpers/api";
     import {parseJwt} from "../../helpers/parsingToken";
+    import {mapGetters} from 'vuex';
 
     export default {
         name: "EmailEdit",
@@ -44,16 +44,20 @@
             }
         },
         computed: {
-            user() {
-                return this.$store.getters.getUser;
-            }
+            ...mapGetters({
+                user: 'getUser',
+                users: 'getUsers'
+            }),
+            validEmail() {
+                return this.users.findIndex(item => item.email === this.email);
+            },
         },
         methods: {
             startPrintingEmail() {
                 this.classErrorEmail = false;
             },
-            changeUser: function () {
-                if (validation('email', this.email)) {
+            changeUser () {
+                if (validation('email', this.email) && this.validEmail === -1) {
                     editUser(this.user.id, {
                         name: this.user.name,
                         email: this.email,
@@ -68,15 +72,12 @@
                         signInUser(person).then((result) => {
                             localStorage.removeItem('accessToken');
                             localStorage.setItem('accessToken', result.data.access_token);
-                            this.$store.dispatch('setToken', localStorage.getItem('accessToken'));
-                            this.$store.dispatch('userData', parseJwt(localStorage.getItem('accessToken')));
-                            getUser(this.$store.state.token).then(result => {
-                                this.$store.dispatch('users', result.data);
-                                let user = this.$store.state.users.find(item =>
-                                    item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                                this.$store.dispatch('user', user);
+                            this.$store.dispatch('setTokenData', {
+                                flag: true,
+                                token: localStorage.getItem('accessToken'),
+                                userData: parseJwt(localStorage.getItem('accessToken')),
+                                stop: true
                             });
-
                         });
                     });
                     alert('Changes succeed!');
