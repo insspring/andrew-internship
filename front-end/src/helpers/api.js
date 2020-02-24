@@ -28,15 +28,15 @@ export const booksPagination = (token,page) => {
         },
     });
 };
-export const getBooks = (token,id) => {
-    return axios.get("/books?authorId="+id+"&_page=1&_limit=10&", {
+export const getBooks = (token,id,page) => {
+    return axios.get("/books?authorId="+id+"&_page="+page+"&_limit=5&", {
         headers: {
             'authorization': "bearer " + token
         },
     });
 };
 export const getBook = (token,id) => {
-    return axios.get("/books?id="+id+"&_page=1&_limit=10&", {
+    return axios.get("/books?id="+id, {
         headers: {
             'authorization': "bearer " + token
         },

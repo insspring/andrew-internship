@@ -17,7 +17,8 @@
                 this.$store.dispatch('setTokenData', {
                     flag: true,
                     token: localStorage.getItem('accessToken'),
-                    userData: parseJwt(localStorage.getItem('accessToken'))
+                    userData: parseJwt(localStorage.getItem('accessToken')),
+                    stop: true
                 });
             }
         },

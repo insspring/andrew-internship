@@ -1,5 +1,6 @@
 <template>
     <div class="component">
+        <Loader></Loader>
         <ul class="library">
             <li class="book" v-for="book in books" :key="book.id">
                 <img class="bookCover" :src="book.bookCover">
@@ -20,23 +21,49 @@
 
 <script>
     import  {getBooks} from "../helpers/api";
+    import Loader from "./Loader";
 
     export default {
         name: "UserBooks",
+        components: {Loader},
         props: ['userId'],
         data() {
             return {
                 readMoreActivated: null,
-                books: []
+                bottom: false,
+                books: [],
+                page: 1,
+                totalCount: 1
             }
         },
         created() {
-            getBooks(this.$store.state.token,this.userId).then(result => {
-                this.books.push(...result.data);
+            window.addEventListener('scroll', () => {
+                this.bottom = this.bottomVisible()
             });
-            return this.books;
+            this.loadMore();
+        },
+        watch: {
+            bottom(bottom) {
+                if (bottom) {
+                    this.loadMore();
+                }
+            }
         },
         methods: {
+            loadMore () {
+                if(this.totalCount > this.books.length) {
+                    this.$store.dispatch('loadingProcess', true);
+                    getBooks(this.$store.state.token, this.userId, this.page).then(result => {
+                        this.totalCount = result.headers["x-total-count"];
+                        this.books.push(...result.data);
+                        this.page++;
+                        this.$store.dispatch('loadingProcess', false);
+                    });
+                }
+            },
+            bottomVisible() {
+                return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
+            },
             activateReadMore(id) {
                 this.readMoreActivated = id;
             },

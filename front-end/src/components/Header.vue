@@ -55,7 +55,8 @@
         computed: {
             ...mapGetters({
                 flag: 'getFlag',
-                user: 'getUser'
+                user: 'getUser',
+                loading: 'getLoading'
             })
         },
         methods: {
@@ -71,7 +72,8 @@
 
             deleteToken() {
                 localStorage.removeItem('accessToken');
-                this.$store.commit('setFlag',false);
+                this.$store.dispatch('setFlag',false);
+                this.$store.dispatch('setBooks', []);
                 this.$router.push({path: '/'});
             },
 

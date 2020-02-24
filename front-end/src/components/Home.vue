@@ -1,11 +1,7 @@
 <template>
     <div class="component">
-        <transition name="fade">
-            <div class="loading" v-show="loading">
-                Loading...
-            </div>
-        </transition>
-        <ul class="library" id="infinite" v-if="books && users">
+        <Loader v-if="flag"></Loader>
+        <ul class="library" id="infinite" v-if="books">
             <li class="book" v-for="book in books" :key="book.id">
                 <div class="header">
                     <div class="cover">
@@ -29,18 +25,18 @@
 <script>
     import {mapGetters} from 'vuex';
     import {booksPagination} from "../helpers/api";
+    import Loader from "./Loader";
 
     export default {
         name: "Home",
+        components: {Loader},
         data() {
             return {
                 bottom: false,
-                page: 1,
-                books: [],
-                loading: false,
+                totalCount: 11,
             }
         },
-        mounted() {
+        created() {
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
             });
@@ -56,21 +52,23 @@
         computed: {
             ...mapGetters({
                 users: 'getUsers',
+                flag: 'getFlag',
+                page: 'getPage',
+                books: 'getBooks',
+                loading: 'getLoading',
             }),
         },
         methods: {
             loadMore () {
-                this.loading = true;
-                setTimeout(() => {
-                    booksPagination(this.$store.state.token,this.page).then(result => {
-                        if(this.page <= Math.ceil(result.headers["x-total-count"]/10)) {
-                            this.books.push(...result.data);
-                            this.page++;
-                            this.loading = false;
-                        }
-                        this.loading = false;
-                    });
-                },200);
+                if(this.totalCount > this.books.length) {
+                    this.$store.dispatch('loadingProcess', true);
+                    if (this.flag) {
+                        booksPagination(this.$store.state.token, this.page).then(result => {
+                            this.totalCount = result.headers["x-total-count"];
+                            this.$store.dispatch('setBooks', result.data);
+                        });
+                    }
+                }
             },
             bottomVisible() {
                 return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
@@ -81,22 +79,16 @@
 
 <style lang="scss" scoped>
     @import '../scss/mixins.scss';
-
-    .loading {
-        text-align: center;
+    .loader {
         position: fixed;
-        color: rgb(195, 195, 195);
         z-index: 9;
-        border-radius: 5px;
         left: calc(50% - 1rem);
-        top: calc(50% - .1rem);
+        top: calc(50% - 1rem);
     }
-
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s
-    }
-    .fade-enter, .fade-leave-to {
-        opacity: 0
+    .error {
+        color: rgb(175, 175, 175);
+        font-weight: bold;
+        font-size: 3rem;
     }
     .library {
         display: flex;
