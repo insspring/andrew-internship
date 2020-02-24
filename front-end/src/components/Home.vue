@@ -73,7 +73,7 @@
                 },200);
             },
             bottomVisible() {
-                return document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+                return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
             },
         }
     }

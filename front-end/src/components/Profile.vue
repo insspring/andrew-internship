@@ -1,5 +1,5 @@
 <template>
-    <div class="profile">
+    <div class="profile" v-if="user">
         <div class="main-info">
             <div class="avatar">
                 <img v-if="!user.avatar" class="avatar-photo" src="../assets/none.png.jpg"/>

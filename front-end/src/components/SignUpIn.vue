@@ -71,7 +71,6 @@
     import {validation} from "../helpers/validation";
     import {signUpUser} from "../helpers/api";
     import {signInUser} from "../helpers/api";
-    import {getUser} from "../helpers/api";
     import {parseJwt} from "../helpers/parsingToken";
     import {mapState} from "vuex";
 
@@ -121,7 +120,7 @@
                         this.email = null;
                         this.password = null;
                         this.passwordConfirm = null;
-                        this.$store.commit('visibleUp',false);
+                        this.$store.dispatch('visibleUp',false);
                         alert("You've been successfully signed up!");
                     }).catch(() => {
                         this.name = null;
@@ -163,19 +162,11 @@
                         token: localStorage.getItem('accessToken'),
                         userData: parseJwt(localStorage.getItem('accessToken'))
                     });
-                    getUser(this.$store.state.token).then(result => {
-                        let user = result.data.find(item =>
-                            item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                        this.$store.dispatch('setUsers',{
-                            users: result.data,
-                            user
-                        });
-                    });
                     this.email = null;
                     this.password = null;
                     this.classErrorEmail = false;
                     this.classErrorPassword = false;
-                    this.$store.commit('visibleIn',false);
+                    this.$store.dispatch('visibleIn',false);
                     alert('Welcome again!');
                 }).catch(() => {
                     this.email = null;

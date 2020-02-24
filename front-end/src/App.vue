@@ -9,7 +9,6 @@
 <script>
     import Header from "./components/Header";
     import {parseJwt} from "./helpers/parsingToken";
-    import {getUser} from "./helpers/api";
 
     export default {
         components: {Header},
@@ -19,14 +18,6 @@
                     flag: true,
                     token: localStorage.getItem('accessToken'),
                     userData: parseJwt(localStorage.getItem('accessToken'))
-                });
-                getUser(this.$store.state.token).then(result => {
-                    let user = result.data.find(item =>
-                        item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                    this.$store.dispatch('setUsers',{
-                        users: result.data,
-                        user
-                    });
                 });
             }
         },
