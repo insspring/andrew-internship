@@ -79,17 +79,7 @@
 
 <style lang="scss" scoped>
     @import '../scss/mixins.scss';
-    .loader {
-        position: fixed;
-        z-index: 9;
-        left: calc(50% - 1rem);
-        top: calc(50% - 1rem);
-    }
-    .error {
-        color: rgb(175, 175, 175);
-        font-weight: bold;
-        font-size: 3rem;
-    }
+
     .library {
         display: flex;
         flex-wrap: wrap;

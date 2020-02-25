@@ -18,8 +18,10 @@
                 <span v-if="readMoreActivated">{{ book.description }}</span>
                 <a class="readMore" v-if="readMoreActivated && checkLength" @click.prevent="deactivateReadMore" href="#">  (...less)</a>
             </div>
-            <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
-            <div class="item date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
+            <div class="date">
+                <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
+                <div class="item date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -63,25 +65,39 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .book {
-        color: rgb(193,193,195);
         display: flex;
+        padding: 2rem;
+        margin-right: 1rem;
+        margin-left: 1rem;
+        border-radius: 2rem;
+        color: rgb(193,193,195);
+        background-color: rgb(77, 81, 80);
+        box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
     }
     .desc {
         box-sizing: border-box;
         flex-direction: column;
+        justify-content: space-between;
     }
     .bookCover {
         margin-right: 1rem;
         width: 10rem;
         height: 16rem;
+        border: 2px solid rgb(52, 56, 55);
+        box-shadow: 0 0 .7rem .1rem rgb(60,60,60);
+    }
+    .author {
+        font-size: 1.5rem;
+        color: rgb(193,193,195);
     }
     .item {
         margin: 1rem 0;
     }
-    header {
+    .header {
         display: flex;
+        justify-content: space-between;
     }
     .name {
         margin: 0;
@@ -89,9 +105,12 @@
         font-weight: bold;
         color: rgb(212, 126, 15);
     }
+    .date {
+        margin: .2rem 0;
+    }
     .linkToProfile{
-        font-size: 1.2rem;
-        color: rgb(193,193,195);
+
+        @extend .author;
     }
     .linkToProfile:hover {
         color: rgb(233,233,235);
@@ -111,9 +130,9 @@
         cursor: pointer;
         background-color: rgb(96, 96, 95);
         color: rgb(203, 203, 205);
-        border: 2px solid rgb(63, 63, 65);
+        border: 2px solid rgb(73, 73, 75);
     }
     .router-link:hover {
-        background-color: rgb(86, 86, 85);
+        background-color: rgb(66, 66, 65);
     }
 </style>
