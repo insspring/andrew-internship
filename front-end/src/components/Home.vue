@@ -1,52 +1,22 @@
 <template>
-    <div class="component">
-        <Loader v-if="flag"></Loader>
-        <ul class="library" id="infinite" v-if="books">
-            <li class="book" v-for="book in books" :key="book.id">
-                <div class="header">
-                    <div class="cover">
-                        <img class="bookCover" :src="book.bookCover">
-                    </div>
-                    <div class="desc">
-                        <div class="name">{{ book.name }}</div>
-                        <div class="author">
-                            {{ $t('author') }}:
-                            <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
-                        </div>
-                        <router-link class="linkToProfile" :to="'/book/' + book.id">{{ $t('learnMore') }}</router-link>
-                    </div>
-                </div>
-                <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
-            </li>
-        </ul>
-    </div>
+    <BooksFeed
+            :loadMore="loadMore"
+            :books="books"
+    ></BooksFeed>
 </template>
 
 <script>
     import {mapGetters} from 'vuex';
     import {booksPagination} from "../helpers/api";
-    import Loader from "./Loader";
+    import BooksFeed from "./BooksFeed";
 
     export default {
         name: "Home",
-        components: {Loader},
+        components: {BooksFeed},
         data() {
             return {
                 bottom: false,
                 totalCount: 11,
-            }
-        },
-        created() {
-            window.addEventListener('scroll', () => {
-                this.bottom = this.bottomVisible()
-            });
-            this.loadMore();
-        },
-        watch: {
-            bottom(bottom) {
-                if (bottom) {
-                    this.loadMore();
-                }
             }
         },
         computed: {
@@ -69,9 +39,6 @@
                         });
                     }
                 }
-            },
-            bottomVisible() {
-                return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
             },
         }
     }
