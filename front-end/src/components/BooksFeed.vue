@@ -7,6 +7,10 @@
                     <img class="bookCover" :src="book.bookCover">
                     <div class="desc">
                         <div class="item name">{{ book.name }}</div>
+                        <div v-if="!userBooks" class="item author">
+                            {{ $t('author') }}:
+                            <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
+                        </div>
                         <div class="item description">
                             <span>{{ book.description.slice(0,150) }}</span>
                             <router-link class="router-link" :to="'/book/' + book.id">(Read more...)</router-link>
@@ -29,7 +33,8 @@
         name: "BooksFeed",
         props: {
             loadMore: Function,
-            books: Array
+            books: Array,
+            userBooks: Boolean
         },
         components: {Loader},
         data() {
@@ -86,7 +91,6 @@
         color: rgb(193,193,195);
         background-color: rgb(77, 81, 80);
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
-
     }
     .book-body {
         display: flex;
@@ -113,6 +117,17 @@
         font-size: 2rem;
         font-weight: bold;
         color: rgb(212, 126, 15);
+    }
+    .author {
+        font-size: 1.5rem;
+        color: rgb(193,193,195);
+    }
+    .linkToProfile{
+
+        @extend .author;
+    }
+    .linkToProfile:hover {
+        color: rgb(233,233,235);
     }
     .date {
         margin-top: .1rem;

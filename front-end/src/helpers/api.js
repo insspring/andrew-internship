@@ -29,7 +29,7 @@ export const booksPagination = (token,page) => {
     });
 };
 export const getBooks = (token,id,page) => {
-    return axios.get("/books?authorId="+id+"&_page="+page+"&_limit=6&", {
+    return axios.get("/books?authorId="+id+"&_page="+page+"&_limit=10&", {
         headers: {
             'authorization': "bearer " + token
         },
