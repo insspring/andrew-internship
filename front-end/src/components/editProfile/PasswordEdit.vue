@@ -51,7 +51,6 @@
     import ButtonTemplate from "../templates/ButtonTemplate";
     import {validation} from "../../helpers/validation";
     import {editUser} from "../../helpers/api";
-    import {getUser} from "../../helpers/api";
     import {signInUser} from "../../helpers/api";
     import {parseJwt} from "../../helpers/parsingToken";
 

@@ -10,13 +10,13 @@
                     <div class="desc">
                         <div class="name">{{ book.name }}</div>
                         <div class="author">
-                            Author:
+                            {{ $t('author') }}:
                             <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
                         </div>
-                        <router-link class="linkToProfile" :to="'/book/' + book.id">Learn More</router-link>
+                        <router-link class="linkToProfile" :to="'/book/' + book.id">{{ $t('learnMore') }}</router-link>
                     </div>
                 </div>
-                <div class="item date">Uploaded: {{ book.publicationDate }}</div>
+                <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
             </li>
         </ul>
     </div>

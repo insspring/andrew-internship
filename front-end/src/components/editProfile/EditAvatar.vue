@@ -25,7 +25,7 @@
     import EditProfileMenu from "./EditProfileMenu";
     import ButtonTemplate from "../templates/ButtonTemplate";
     import {editUser} from "../../helpers/api";
-    import {getUser} from "../../helpers/api";
+    import {parseJwt} from "../../helpers/parsingToken";
 
     export default {
         name: "EditAvatar",
@@ -53,11 +53,11 @@
                         avatar: this.selectedFile,
                         id: this.$store.state.user.id,
                     }).then(() => {
-                        getUser(this.$store.state.token).then(result => {
-                            this.$store.commit('users',result.data);
-                            let user = this.$store.state.users.find(item =>
-                                item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
-                            this.$store.commit('user',user);
+                        this.$store.dispatch('setTokenData', {
+                            flag: true,
+                            token: localStorage.getItem('accessToken'),
+                            userData: parseJwt(localStorage.getItem('accessToken')),
+                            stop: true
                         });
                     });
                     this.selectedFile = null;

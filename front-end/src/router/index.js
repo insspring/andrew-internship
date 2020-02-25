@@ -6,9 +6,10 @@ import ProfileEdit from "../components/editProfile/ProfileEdit";
 import PasswordEdit from "../components/editProfile/PasswordEdit";
 import EmailEdit from '../components/editProfile/EmailEdit';
 import EditAvatar from '../components/editProfile/EditAvatar';
-import AddBook from '../components/AddBook';
-import UserBooks from '../components/UserBooks';
-import BookPage from '../components/BookPage';
+import AddBook from '../components/books/AddBook';
+import UserBooks from '../components/books/UserBooks';
+import BookPage from '../components/books/BookPage';
+import BookEdit from '../components/books/BookEdit';
 
 Vue.use(VueRouter);
 
@@ -53,6 +54,11 @@ const routes = [
         component: UserBooks,
         props: true
     },
+    {
+        path: '/book/:bookId/edit',
+        component: BookEdit,
+        props: true
+    }
 ];
 
 const router = new VueRouter({

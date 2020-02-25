@@ -13,7 +13,7 @@
                 <div class="bar">
                     <div class="stats-li">
                         <router-link class="item" :to="'/user/'+ userId + '/books'">
-                            <div class="header">Books</div>
+                            <div class="header">{{ $t('books') }}</div>
                             <div class="content">{{ booksNum() }}</div>
                         </router-link>
                         <div class="item">

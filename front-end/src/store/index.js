@@ -74,9 +74,16 @@ export default new Vuex.Store({
             state.booksFeed.push(...payload);
             state.page++;
             state.loading = false;
+        },
+        discardBooksFeed(state) {
+            state.booksFeed = [];
+            state.page = 1;
         }
     },
     actions: {
+        discardBooksFeed({commit}) {
+            commit('discardBooksFeed');
+        },
         visibleIn({commit},payload) {
             commit('visibleIn',payload);
         },

@@ -1,11 +1,12 @@
 <template>
-    <div class="wrapper">
     <textarea
+            :class="error"
             :value="value"
+            :placeholder="placeholder"
             @input="$emit('input', $event.target.value)"
             @keyup="mixin_autoResize_resize"
+            @keydown="handlers"
     ></textarea>
-    </div>
 </template>
 
 <script>
@@ -14,7 +15,19 @@
     export default {
         name: "ResizeByMixin",
         props: {
-            value: String
+            value: String,
+            error: Object,
+            placeholder: String,
+            method: Function,
+            params: {
+                type: Array,
+                default: () => []
+            }
+        },
+        methods: {
+            handlers() {
+                this.method(...this.params);
+            }
         },
         mixins: [mixinAutoResize],
     };
@@ -25,10 +38,13 @@
         resize: none;
         overflow: hidden;
         min-width: 20rem;
-        min-height: 10rem;
+        min-height: 5rem;
         border: none;
         color: rgb(245, 245, 245);
         border-bottom: 2px solid rgb(56, 56, 55);
         background-color: rgb(76, 76, 75);
+    }
+    .error {
+        border-color: rgb(166, 40, 40);
     }
 </style>

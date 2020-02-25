@@ -5,14 +5,17 @@
             <li class="book" v-for="book in books" :key="book.id">
                 <img class="bookCover" :src="book.bookCover">
                 <div class="desc">
-                    <div class="item name">{{ book.name }}</div>
+                    <router-link class="router-link" :to="'/book/' + book.id">
+                        <div class="item name">{{ book.name }}</div>
+                    </router-link>
                     <div class="item description">
                         <span v-if="!checkReadMoreActivated(book.id)">{{ book.description.slice(0,150) }}</span>
-                        <a class="readMore" v-if="!checkReadMoreActivated(book.id)" @click.prevent="activateReadMore(book.id)" href="#">  (Read more...)</a>
+                        <a class="readMore" v-if="!checkReadMoreActivated(book.id) && checkLength(book.description)" @click.prevent="activateReadMore(book.id)" href="#">  (Read more...)</a>
                         <span v-if="checkReadMoreActivated(book.id)">{{ book.description }}</span>
-                        <a class="readMore" v-if="checkReadMoreActivated(book.id)" @click.prevent="deactivateReadMore" href="#">  (...less)</a>
+                        <a class="readMore" v-if="checkReadMoreActivated(book.id) && checkLength(book.description)" @click.prevent="deactivateReadMore" href="#">  (...less)</a>
                     </div>
-                    <div class="item date">Uploaded: {{ book.publicationDate }}</div>
+                    <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
+                    <div class="item date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
                 </div>
             </li>
         </ul>
@@ -20,13 +23,13 @@
 </template>
 
 <script>
-    import  {getBooks} from "../helpers/api";
-    import Loader from "./Loader";
+    import  {getBooks} from "../../helpers/api";
+    import Loader from "../Loader";
 
     export default {
         name: "UserBooks",
+        props: ['userId','bookId'],
         components: {Loader},
-        props: ['userId'],
         data() {
             return {
                 readMoreActivated: null,
@@ -48,6 +51,11 @@
                     this.loadMore();
                 }
             }
+        },
+        computed: {
+            user() {
+                return this.$store.getters.getUser;
+            },
         },
         methods: {
             loadMore () {
@@ -73,6 +81,9 @@
             checkReadMoreActivated(id) {
                 return this.readMoreActivated === id;
             },
+            checkLength(desc) {
+                return desc.slice(200).length > 0;
+            }
         }
     }
 </script>
@@ -111,5 +122,12 @@
     }
     .readMore:hover {
         color: rgb(192, 196, 195);
+    }
+    .router-link {
+        display: block;
+        cursor: pointer;
+    }
+    .router-link:hover {
+        color: rgb(222, 146, 35);
     }
 </style>

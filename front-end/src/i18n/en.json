@@ -17,5 +17,12 @@
   "editPassword": "Edit password",
   "avatar": "Avatar",
   "editAvatar": "Change avatar",
-  "addBook": "Add book"
+  "addBook": "Add book",
+  "title": "Title",
+  "description": "Description",
+  "author": "Author",
+  "learnMore": "Learn More",
+  "uploaded": "Uploaded",
+  "updated": "Updated",
+  "books": "books"
 }

@@ -42,3 +42,6 @@ export const getBook = (token,id) => {
         },
     });
 };
+export const editBook = (id, data) => {
+    return axios.put('/books/' + id, data);
+};

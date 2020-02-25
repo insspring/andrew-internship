@@ -17,5 +17,12 @@
   "editPassword": "Редактировать пароль",
   "editAvatar": "Сменить аватар",
   "avatar": "Аватар",
-  "addBook": "Добавить книгу"
+  "addBook": "Добавить книгу",
+  "title": "Название",
+  "description": "Описание",
+  "author": "Автор",
+  "learnMore": "Подробней",
+  "uploaded": "Загружено",
+  "updated": "Обновлено",
+  "books": "Книги"
 }

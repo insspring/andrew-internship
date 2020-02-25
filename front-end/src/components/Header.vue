@@ -73,7 +73,7 @@
             deleteToken() {
                 localStorage.removeItem('accessToken');
                 this.$store.dispatch('setFlag',false);
-                this.$store.dispatch('setBooks', []);
+                this.$store.dispatch('discardBooksFeed');
                 this.$router.push({path: '/'});
             },
 
