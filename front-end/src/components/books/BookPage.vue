@@ -50,6 +50,7 @@
             getBook(this.$store.state.token,this.bookId).then(result => {
                 this.book = result.data[0];
             });
+            this.$store.dispatch('discardBooksFeed');
         },
         methods: {
             activateReadMore(id) {

@@ -47,6 +47,9 @@
                 countBooks: 0
             }
         },
+        created() {
+            this.$store.dispatch('discardBooksFeed');
+        },
         computed: {
             ...mapGetters({
                 getUsers: 'getUsers',

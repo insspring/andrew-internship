@@ -122,5 +122,7 @@
     .item {
         display: flex;
         flex-direction: column;
+        width: 30rem;
+        padding: 1rem 0;
     }
 </style>

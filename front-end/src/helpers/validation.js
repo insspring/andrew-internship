@@ -14,10 +14,10 @@ export const validation  = (select, param, confirm) => {
 };
 export const validationBooks = (select, param) => {
     if(select === 'name') {
-        let regex = new RegExp('[A-Za-z0-9\\s\\-_,.;:()]{3,50}$');
+        let regex = /[A-Za-z0-9\s\d-_,'".;:()]{3,50}$/;
         return regex.test(param);
     } else if(select === 'description') {
-        let regex = new RegExp('[A-Za-z0-9\\s\\-_,.;:()]{50,500}$');
+        let regex = /[A-Za-z0-9\s\d-_,'".;:()]{3,50}$/;
         return regex.test(param);
     }
 };
