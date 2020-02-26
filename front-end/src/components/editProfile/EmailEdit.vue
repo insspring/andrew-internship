@@ -33,6 +33,7 @@
     import {signInUser} from "../../helpers/api";
     import {parseJwt} from "../../helpers/parsingToken";
     import {mapGetters} from 'vuex';
+    import {User} from "../../helpers/constuctors";
 
     export default {
         name: "EmailEdit",
@@ -58,13 +59,9 @@
             },
             changeUser () {
                 if (validation('email', this.email) && this.validEmail === -1) {
-                    editUser(this.user.id, {
-                        name: this.user.name,
-                        email: this.email,
-                        password: this.user.password,
-                        avatar: this.user.avatar,
-                        id: this.user.id,
-                    }).then(() => {
+                    editUser(this.user.id,
+                        new User(this.user.name,this.email,this.user.password,this.user.avatar,this.user.subscribes,this.user.id)
+                    ).then(() => {
                         let person = {
                             email: this.email,
                             password: this.user.password,

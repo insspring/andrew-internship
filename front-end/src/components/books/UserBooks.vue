@@ -8,13 +8,12 @@
 
 <script>
     import  {getBooks} from "../../helpers/api";
-    import Loader from "../Loader";
     import BooksFeed from "../BooksFeed";
 
     export default {
         name: "UserBooks",
         props: ['userId','bookId'],
-        components: {BooksFeed, Loader},
+        components: {BooksFeed},
         data() {
             return {
                 page: 1,

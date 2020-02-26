@@ -53,6 +53,7 @@
     import {editUser} from "../../helpers/api";
     import {signInUser} from "../../helpers/api";
     import {parseJwt} from "../../helpers/parsingToken";
+    import {User} from "../../helpers/constuctors";
 
     export default {
         name: "PasswordEdit",
@@ -84,13 +85,7 @@
             },
             changeUser() {
                 if(validation('confirm',this.oldPassword, this.user.password) && validation('password',this.newPassword) && validation('confirm',this.newPassword, this.newPasswordConfirm)) {
-                    editUser(this.user.id, {
-                        name: this.user.name,
-                        email: this.user.email,
-                        password: this.newPassword,
-                        avatar: this.user.avatar,
-                        id: this.user.id,
-                    }).then(() => {
+                    editUser(this.user.id, new User(this.user.name, this.user.email,this.newPassword,this.user.avatar,this.user.subscribes,this.user.id)).then(() => {
                         let person = {
                             email: this.user.email,
                             password: this.newPassword,

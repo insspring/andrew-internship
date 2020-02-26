@@ -73,6 +73,7 @@
     import {signInUser} from "../helpers/api";
     import {parseJwt} from "../helpers/parsingToken";
     import {mapState} from "vuex";
+    import {User} from "../helpers/constuctors";
 
     export default {
         name: "SignUpIn",
@@ -110,11 +111,7 @@
             },
             createPerson() {
                 if(validation('name',this.name) && validation('email',this.email) && validation('password',this.password) && validation('confirm',this.password,this.passwordConfirm)) {
-                    let person = {
-                        name: this.name,
-                        email: this.email,
-                        password: this.password,
-                    };
+                    let person = new User(this.name,this.email,this.password);
                     signUpUser(person).then(() => {
                         this.name = null;
                         this.email = null;

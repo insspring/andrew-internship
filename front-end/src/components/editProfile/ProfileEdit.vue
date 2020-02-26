@@ -31,6 +31,8 @@
     import {editUser} from "../../helpers/api";
     import {validation} from "../../helpers/validation";
     import {parseJwt} from "../../helpers/parsingToken";
+    import {User} from "../../helpers/constuctors";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "ProfileEdit",
@@ -42,9 +44,9 @@
             }
         },
         computed: {
-            user() {
-                return this.$store.getters.getUser;
-            }
+            ...mapGetters({
+                user: 'getUser'
+            }),
         },
         methods: {
             startPrintingName() {
@@ -52,13 +54,9 @@
             },
             changeUser() {
                 if(validation('name',this.name)) {
-                    editUser(this.$store.state.user.id, {
-                        name: this.name,
-                        email: this.$store.state.user.email,
-                        password: this.$store.state.user.password,
-                        avatar: this.$store.state.user.avatar,
-                        id: this.$store.state.user.id,
-                    }).then(() => {
+                    editUser(this.user.id,
+                        new User(this.name,this.user.email,this.user.password,this.user.avatar,this.user.subscribes,this.user.id)).
+                    then(() => {
                         this.$store.dispatch('setTokenData', {
                             flag: true,
                             token: localStorage.getItem('accessToken'),

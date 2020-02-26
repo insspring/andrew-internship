@@ -44,7 +44,7 @@
         border: 2px solid rgb(63, 63, 65);
     }
     .btn:hover {
-        box-shadow: 0 0 .5rem .1rem rgb(53, 53, 55);
+        box-shadow: 0 0 .5rem .1rem rgb(83, 83, 85);
         color: rgb(243, 243, 245);
     }
     .btn-menu {

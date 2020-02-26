@@ -2,16 +2,16 @@
     <div class="edit">
         <div class="settings-menu">
             <div class="item">
-                <router-link class="router-link" to="/settings/profile">{{ $t('profile') }}</router-link>
+                <router-link class="router-link" to="/settings/profile">{{ $t("profile") }}</router-link>
             </div>
             <div class="item">
-                <router-link class="router-link" to="/settings/avatar">{{ $t('avatar') }}</router-link>
+                <router-link class="router-link" to="/settings/avatar">{{ $t("avatar") }}</router-link>
             </div>
             <div class="item">
-                <router-link class="router-link" to="/settings/email">{{ $t('email') }}</router-link>
+                <router-link class="router-link" to="/settings/email">{{ $t("email") }}</router-link>
             </div>
             <div class="item">
-                <router-link class="router-link" to="/settings/password">{{ $t('password') }}</router-link>
+                <router-link class="router-link" to="/settings/password">{{ $t("password") }}</router-link>
             </div>
         </div>
     </div>
@@ -20,13 +20,10 @@
 <script>
     export default {
         name: "EditProfileMenu"
-    }
+    };
 </script>
 
 <style scoped>
-    .edit {
-
-    }
     .settings-menu {
         display: flex;
         flex-direction: column;
@@ -36,7 +33,7 @@
         display: block;
         padding: 1rem;
         background-color: rgb(76, 76, 75);
-        margin-bottom: .1rem;
+        margin-bottom: 0.1rem;
         cursor: pointer;
         font-weight: bold;
         color: rgb(133, 133, 135);

@@ -26,6 +26,7 @@
     import ButtonTemplate from "../templates/ButtonTemplate";
     import {editUser} from "../../helpers/api";
     import {parseJwt} from "../../helpers/parsingToken";
+    import {User} from "../../helpers/constuctors";
 
     export default {
         name: "EditAvatar",
@@ -35,7 +36,11 @@
                 selectedFile: null,
             }
         },
-
+        computed: {
+            user() {
+                return this.$store.getters.getUser;
+            }
+        },
         methods: {
             chooseAvatar(e) {
                 let reader = new FileReader();
@@ -46,22 +51,17 @@
             },
             uploadAvatar() {
                 if(this.selectedFile) {
-                    editUser(this.$store.state.user.id, {
-                        name: this.$store.state.user.name,
-                        email: this.$store.state.user.email,
-                        password: this.$store.state.user.password,
-                        avatar: this.selectedFile,
-                        id: this.$store.state.user.id,
-                    }).then(() => {
+                    editUser(this.user.id,
+                        new User(this.user.name,this.user.email,this.user.password,this.selectedFile,this.user.subscribes,this.user.id)
+                    ).then(() => {
                         this.$store.dispatch('setTokenData', {
                             flag: true,
                             token: localStorage.getItem('accessToken'),
                             userData: parseJwt(localStorage.getItem('accessToken')),
                             stop: true
                         });
+                        alert('Changes succeed!');
                     });
-                    this.selectedFile = null;
-                    alert('Changes succeed!');
                 }
             }
         }

@@ -1,33 +1,43 @@
 <template>
-    <div class="profile" v-if="user">
-        <div class="main-info">
-            <div class="avatar">
-                <img v-if="!user.avatar" class="avatar-photo" src="../assets/none.png.jpg"/>
-                <img v-if="user.avatar" class="avatar-photo" :src="user.avatar"/>
-            </div>
-            <div class="userData">
-                <div>
-                    <div class="data">{{ $t('name') }}: {{ user.name }}</div>
-                    <div class="data">{{ $t('email') }}: {{ user.email }}</div>
+    <div class="profile" v-if="profile">
+        <div class="main">
+            <div class="profile-info">
+                <div class="avatar">
+                    <img v-if="!profile.avatar" class="avatar-photo" src="../assets/none.png.jpg"/>
+                    <img v-if="profile.avatar" class="avatar-photo" :src="profile.avatar"/>
                 </div>
-                <div class="bar">
-                    <div class="stats-li">
-                        <router-link class="item" :to="'/user/'+ userId + '/books'">
-                            <div class="header">{{ $t('books') }}</div>
-                            <div class="content">{{ booksNum() }}</div>
-                        </router-link>
-                        <div class="item">
-                            <div class="header">Followers</div>
-                            <div class="content">0</div>
-                        </div>
-                        <div class="item">
-                            <div class="header">Followed</div>
-                            <div class="content">0</div>
-                        </div>
+                <div class="userData">
+                    <div>
+                        <div class="data">{{ $t('name') }}: {{ profile.name }}</div>
+                        <div class="data">{{ $t('email') }}: {{ profile.email }}</div>
                     </div>
-                    <div v-if="userCheck">
-                        <router-link class="router-link" to="/settings/profile">{{ $t('editProfile') }}</router-link>
-                        <router-link class="router-link" to="/books/add">{{ $t('addBook') }}</router-link>
+                    <div class="bar">
+                        <div class="stats-li">
+                            <router-link class="item" :to="'/user/'+ userId + '/books'">
+                                <div class="header">{{ $t('books') }}</div>
+                                <div class="content">{{ booksNum() }}</div>
+                            </router-link>
+                            <div class="item">
+                                <div class="header">Subscribers</div>
+                                <div class="content">{{ subscribersNum() }}</div>
+                            </div>
+                            <div class="item">
+                                <div class="header">Subscriptions</div>
+                                <div class="content">{{ subscriptionsNum }}</div>
+                            </div>
+                        </div>
+                        <div v-if="userCheck">
+                            <router-link class="router-link" to="/settings/profile">{{ $t('editProfile') }}</router-link>
+                            <router-link class="router-link" to="/books/add">{{ $t('addBook') }}</router-link>
+                        </div>
+                        <ButtonTemplate v-if="!userCheck && !subscribeCheck"
+                                        :text="'Subscribe'"
+                                        :method="subscribe"
+                        ></ButtonTemplate>
+                        <ButtonTemplate v-if="!userCheck && subscribeCheck"
+                                        :text="'Unsubscribe'"
+                                        :method="unsubscribe"
+                        ></ButtonTemplate>
                     </div>
                 </div>
             </div>
@@ -38,13 +48,19 @@
 <script>
     import {mapGetters} from 'vuex';
     import {getBooks} from "../helpers/api";
+    import {editUser} from "../helpers/api";
+    import {parseJwt} from "../helpers/parsingToken";
+    import {User} from "../helpers/constuctors";
+    import ButtonTemplate from "./templates/ButtonTemplate";
 
     export default {
         name: "Profile",
+        components: {ButtonTemplate},
         props: ['userId'],
         data() {
             return {
-                countBooks: 0
+                countBooks: 0,
+                count: 0,
             }
         },
         created() {
@@ -52,23 +68,58 @@
         },
         computed: {
             ...mapGetters({
-                getUsers: 'getUsers',
-                getUser: 'getUser',
+                users: 'getUsers',
+                user: 'getUser',
             }),
-            user() {
-                return this.getUsers.find(item => item.id+'' === this.userId);
+            profile() {
+                return this.users.find(item => item.id+'' === this.userId);
             },
             userCheck() {
-                return this.getUser.id+'' === this.userId;
+                return this.user.id+'' === this.userId;
+            },
+            subscribeCheck() {
+                return this.user.subscribes.find(item => item === this.profile.id);
+            },
+            subscriptionsNum() {
+                return this.profile.subscribes.length;
             },
         },
         methods: {
             booksNum() {
-                getBooks(this.$store.state.token,this.user.id).then(result => {
+                getBooks(this.$store.state.token,this.profile.id).then(result => {
                     this.countBooks = result.headers["x-total-count"];
                 });
                 return this.countBooks;
-            }
+            },
+            subscribersNum() {
+                return this.users.filter(item => item.subscribes.find(item => item === this.profile.id)).length;
+            },
+            subscribe() {
+                let user = new User(this.user.name,this.user.email,this.user.password,this.user.avatar,this.user.subscribes,this.user.id);
+                user.addSubscription(this.profile.id);
+                editUser(this.user.id, user).then(() => {
+                    this.$store.dispatch('setTokenData', {
+                        flag: true,
+                        token: localStorage.getItem('accessToken'),
+                        userData: parseJwt(localStorage.getItem('accessToken')),
+                        stop: true
+                    });
+                    alert('Subscribed!');
+                });
+            },
+            unsubscribe() {
+                editUser(this.user.id,
+                    new User(this.user.name,this.user.email,this.user.password,this.user.avatar,this.user.subscribes.filter(item => item !== this.profile.id),this.user.id)
+                ).then(() => {
+                    this.$store.dispatch('setTokenData', {
+                        flag: true,
+                        token: localStorage.getItem('accessToken'),
+                        userData: parseJwt(localStorage.getItem('accessToken')),
+                        stop: true
+                    });
+                    alert('Unsubscribed!');
+                });
+            },
         }
     }
 </script>
@@ -82,11 +133,13 @@
         justify-content: space-between;
         color: rgb(175,175,175);
     }
-    .main-info {
+    .main {
         border-radius: 1rem;
         box-shadow: 0 0 1rem .1rem rgb(45, 45, 45);
         padding: 1rem;
         background-color: rgb(76, 76, 75);
+    }
+    .profile-info {
         display: flex;
     }
     .avatar {

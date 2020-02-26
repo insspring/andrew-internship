@@ -1,6 +1,6 @@
 <template>
     <div class="component">
-        <Loader></Loader>
+        <Loader v-if="flag"></Loader>
         <ul class="library">
             <li class="book" v-for="book in books" :key="book.id">
                 <div class="book-body">
@@ -28,6 +28,7 @@
 
 <script>
     import Loader from "./Loader";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "BooksFeed",
@@ -56,9 +57,10 @@
             }
         },
         computed: {
-            user() {
-                return this.$store.getters.getUser;
-            },
+            ...mapGetters({
+                user: 'getUser',
+                flag: 'getFlag'
+            })
         },
         methods: {
             bottomVisible() {

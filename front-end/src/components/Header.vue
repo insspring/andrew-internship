@@ -67,7 +67,7 @@
                 this.$store.dispatch('visibleIn',true);
             },
             visibleUp() {
-                this.$store.dispatch('visibleIn',true);
+                this.$store.dispatch('visibleUp',true);
             },
 
             deleteToken() {

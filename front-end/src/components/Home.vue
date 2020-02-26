@@ -2,7 +2,6 @@
     <BooksFeed
             :loadMore="loadMore"
             :books="books"
-            :userBooks="false"
     ></BooksFeed>
 </template>
 
