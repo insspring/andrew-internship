@@ -8,7 +8,7 @@
 
 <script>
     import  {getBooks} from "../../helpers/api";
-    import BooksFeed from "../BooksFeed";
+    import BooksFeed from "./BooksFeed";
 
     export default {
         name: "UserBooks",

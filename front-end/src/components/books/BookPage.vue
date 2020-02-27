@@ -6,7 +6,13 @@
         <div class="desc">
             <div class="header">
                 <div class="item name">{{ book.name }}</div>
-                <router-link v-if="user.id === book.authorId" class="router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
+                <div>
+                    <router-link v-if="user.id === book.authorId" class="router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
+                    <ButtonTemplate
+                            :text="'Add to favorites'"
+                            :method="toFavorites"
+                    ></ButtonTemplate>
+                </div>
             </div>
             <div class="item author">
                 {{ $t('author') }}:
@@ -29,9 +35,12 @@
 <script>
     import {mapGetters} from 'vuex';
     import {getBook} from "../../helpers/api";
+    import {editBook} from "../../helpers/api";
+    import ButtonTemplate from "../templates/ButtonTemplate";
 
     export default {
         name: "BookPage",
+        components: {ButtonTemplate},
         props: ['bookId'],
         data() {
             return {
@@ -61,6 +70,11 @@
             deactivateReadMore() {
                 this.readMoreActivated = null;
             },
+            toFavorites() {
+                editBook(this.book.id, {
+
+                }).then();
+            }
         }
     }
 </script>

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import Loader from "./Loader";
+    import Loader from "../Loader";
     import {mapGetters} from "vuex";
 
     export default {
@@ -71,7 +71,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../scss/mixins.scss';
+    @import '../../scss/mixins';
 
     .library {
         display: flex;

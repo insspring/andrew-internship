@@ -11,3 +11,20 @@ export class User {
         this.subscribes.push(subId);
     };
 }
+
+export class Book {
+    constructor(name,description,author,authorId,bookCover,publicationDate,updateDate,users,id) {
+        this.name = name;
+        this.description = description;
+        this.author = author;
+        this.authorId = authorId;
+        this.bookCover = bookCover;
+        this.publicationDate = publicationDate;
+        this.updateDate = updateDate ? updateDate : "";
+        this.favorites = users ? [...users] : [];
+        this.id = id;
+    }
+    addToFavorites(userId) {
+        this.favorites.push(userId);
+    };
+}

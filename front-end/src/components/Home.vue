@@ -8,7 +8,7 @@
 <script>
     import {mapGetters} from 'vuex';
     import {booksPagination} from "../helpers/api";
-    import BooksFeed from "./BooksFeed";
+    import BooksFeed from "./books/BooksFeed";
 
     export default {
         name: "Home",

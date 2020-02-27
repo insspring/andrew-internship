@@ -41,6 +41,7 @@
 <script>
     import {addBook} from "../../helpers/api";
     import {validationBooks} from "../../helpers/validation";
+    import {Book} from "../../helpers/constuctors";
     import ButtonTemplate from "../templates/ButtonTemplate";
     import TextArea from "../templates/TextArea";
 
@@ -53,7 +54,6 @@
                 description: '',
                 classErrorName: false,
                 classErrorDesc: false,
-                publicationDate: null,
                 selectedFile: null
             }
         },
@@ -73,14 +73,7 @@
             },
             createBook() {
                 if(validationBooks('name',this.name) && validationBooks('description',this.description) && this.selectedFile !== null) {
-                    let book = {
-                        name: this.name.trim(),
-                        description: this.description.trim(),
-                        author: this.$store.state.user.name,
-                        authorId: this.$store.state.user.id,
-                        bookCover: this.selectedFile,
-                        publicationDate: Date().toString().split('').slice(4, Date().toString().split('').length - 37).join('').trim(),
-                    };
+                    let book = new Book(this.name.trim(),this.description.trim(),this.$store.state.user.name,this.$store.state.user.id,this.selectedFile,Date().toString().split('').slice(4, Date().toString().split('').length - 36).join('').trim());
                     addBook(book).then(() => {
                         alert('Book Added!');
                         this.name = '';
@@ -99,7 +92,7 @@
                         this.description = '';
                         this.classErrorDesc = true;
                     }
-                    if(this.selectedFile !== null) {
+                    if(this.selectedFile === null) {
                         alert('Add book cover!');
                     }
                 }

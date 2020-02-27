@@ -42,6 +42,7 @@
     import {getBook} from "../../helpers/api";
     import {editBook} from "../../helpers/api";
     import {validationBooks} from "../../helpers/validation";
+    import {Book} from "../../helpers/constuctors";
     import ButtonTemplate from "../templates/ButtonTemplate";
     import TextArea from "../templates/TextArea";
     import Loader from "../Loader";
@@ -79,15 +80,7 @@
                 reader.readAsDataURL(e.target.files[0]);
             },
             changeBook() {
-                let book = {
-                    name: this.book.name,
-                    description: this.book.description,
-                    author: this.book.author,
-                    authorId: this.book.authorId,
-                    bookCover: this.selectedFile ? this.selectedFile : this.book.bookCover,
-                    publicationDate: this.book.publicationDate,
-                    updateDate: Date().toString().split('').slice(4, Date().toString().split('').length - 36).join(''),
-                };
+                let book = new Book(this.book.name.trim(),this.book.description.trim(),this.book.author,this.book.authorId,this.selectedFile ? this.selectedFile : this.book.bookCover,this.book.publicationDate,Date().toString().split('').slice(4, Date().toString().split('').length - 36).join('').trim(),this.book.favorites,this.book.id);
                 if(validationBooks('name',this.book.name) && validationBooks('description',this.book.description)) {
                     editBook(this.bookId, book).then(() => {
                         alert('Changes succeed!');

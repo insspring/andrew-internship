@@ -20,7 +20,7 @@
                             </router-link>
                             <router-link class="item" :to="'/user/'+ userId + '/subscribers'">
                                 <div class="header">Subscribers</div>
-                                <div class="content">{{ subscribersNum() }}</div>
+                                <div class="content">{{ subscribersNum }}</div>
                             </router-link>
                             <router-link class="item" :to="'/user/'+ userId + '/subscriptions'">
                                 <div class="header">Subscriptions</div>
@@ -86,6 +86,9 @@
             subscriptionsNum() {
                 return this.profile.subscribes.length;
             },
+            subscribersNum() {
+                return this.users.filter(item => item.subscribes.find(item => item === this.profile.id)).length;
+            },
         },
         methods: {
             booksNum() {
@@ -94,9 +97,6 @@
                     this.$store.dispatch('loadingProcess', false);
                 });
                 return this.countBooks;
-            },
-            subscribersNum() {
-                return this.users.filter(item => item.subscribes.find(item => item === this.profile.id)).length;
             },
             subscribe() {
                 let user = new User(this.user.name,this.user.email,this.user.password,this.user.avatar,this.user.subscribes,this.user.id);
