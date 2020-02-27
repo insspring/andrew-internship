@@ -10,6 +10,8 @@ import AddBook from '../components/books/AddBook';
 import UserBooks from '../components/books/UserBooks';
 import BookPage from '../components/books/BookPage';
 import BookEdit from '../components/books/BookEdit';
+import Subscribers from '../components/subs/Subscribers';
+import Subscriptions from '../components/subs/Subscriptions';
 
 Vue.use(VueRouter);
 
@@ -57,6 +59,16 @@ const routes = [
     {
         path: '/book/:bookId/edit',
         component: BookEdit,
+        props: true
+    },
+    {
+        path: '/user/:userId/subscribers',
+        component: Subscribers,
+        props: true
+    },
+    {
+        path: '/user/:userId/Subscriptions',
+        component: Subscriptions,
         props: true
     }
 ];

@@ -26,11 +26,7 @@
                         :method="deleteToken"
                 ></ButtonTemplate>
                 <LocaleChange></LocaleChange>
-                <router-link v-if="flag" class="profile" :to="'/user/' + user.id">
-                    <img v-if="!user.avatar" class="avatar-photo" src="../assets/none.png.jpg"/>
-                    <img v-if="user.avatar" class="avatar-photo" :src="user.avatar"/>
-                    <div class="data">{{ user.name }}</div>
-                </router-link>
+                <UserMiniature :user="user"></UserMiniature>
             </div>
         </div>
         <div class="menu-btn" @click="openMenu" :class="{ change: opened }"></div>
@@ -43,10 +39,11 @@
     import LocaleChange from "./templates/LocaleChange";
     import SignUpIn from "./SignUpIn";
     import {mapGetters} from "vuex";
+    import UserMiniature from "./UserMiniature";
 
     export default {
         name: "Header",
-        components: {SignUpIn, LocaleChange, ButtonTemplate},
+        components: {UserMiniature, SignUpIn, LocaleChange, ButtonTemplate},
         data() {
             return {
                 opened: false,
@@ -224,22 +221,6 @@
         color: rgb(213, 213, 215);
     }
     .router-link-exact-active {
-        color: rgb(213, 213, 215);
-    }
-    .avatar-photo {
-        width: 2rem;
-        border-radius: 2rem;
-        padding: .5rem;
-    }
-    .profile {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        font-weight: bold;
-        color: rgb(193, 193, 195);
-        margin-right: 1rem;
-    }
-    .profile:hover {
         color: rgb(213, 213, 215);
     }
     .btn-menu {

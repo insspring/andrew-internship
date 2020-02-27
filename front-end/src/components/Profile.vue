@@ -1,5 +1,6 @@
 <template>
     <div class="profile" v-if="profile">
+        <Loader></Loader>
         <div class="main">
             <div class="profile-info">
                 <div class="avatar">
@@ -17,14 +18,14 @@
                                 <div class="header">{{ $t('books') }}</div>
                                 <div class="content">{{ booksNum() }}</div>
                             </router-link>
-                            <div class="item">
+                            <router-link class="item" :to="'/user/'+ userId + '/subscribers'">
                                 <div class="header">Subscribers</div>
                                 <div class="content">{{ subscribersNum() }}</div>
-                            </div>
-                            <div class="item">
+                            </router-link>
+                            <router-link class="item" :to="'/user/'+ userId + '/subscriptions'">
                                 <div class="header">Subscriptions</div>
                                 <div class="content">{{ subscriptionsNum }}</div>
-                            </div>
+                            </router-link>
                         </div>
                         <div v-if="userCheck">
                             <router-link class="router-link" to="/settings/profile">{{ $t('editProfile') }}</router-link>
@@ -52,10 +53,11 @@
     import {parseJwt} from "../helpers/parsingToken";
     import {User} from "../helpers/constuctors";
     import ButtonTemplate from "./templates/ButtonTemplate";
+    import Loader from "./Loader";
 
     export default {
         name: "Profile",
-        components: {ButtonTemplate},
+        components: {Loader, ButtonTemplate},
         props: ['userId'],
         data() {
             return {
@@ -65,6 +67,7 @@
         },
         created() {
             this.$store.dispatch('discardBooksFeed');
+            this.$store.dispatch('loadingProcess', true);
         },
         computed: {
             ...mapGetters({
@@ -88,6 +91,7 @@
             booksNum() {
                 getBooks(this.$store.state.token,this.profile.id).then(result => {
                     this.countBooks = result.headers["x-total-count"];
+                    this.$store.dispatch('loadingProcess', false);
                 });
                 return this.countBooks;
             },
