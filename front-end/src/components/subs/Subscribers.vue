@@ -7,17 +7,24 @@
 
 <script>
     import SubsFeed from "./SubsFeed";
-    import {mapGetters} from "vuex";
     import SubsMenu from "./SubsMenu";
+    import {getUser} from "../../helpers/api";
 
     export default {
         name: "Subscribers",
         props: ['userId'],
         components: {SubsMenu, SubsFeed},
+        data() {
+            return {
+                users: []
+            }
+        },
+        created() {
+            getUser(this.$store.state.token).then(result => {
+                this.users = result.data;
+            });
+        },
         computed: {
-            ...mapGetters({
-                users: 'getUsers',
-            }),
             profile() {
                 return this.users.find(item => item.id+'' === this.userId);
             },

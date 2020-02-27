@@ -32,6 +32,7 @@
     import {editUser} from "../../helpers/api";
     import {signInUser} from "../../helpers/api";
     import {parseJwt} from "../../helpers/parsingToken";
+    import {getUser} from "../../helpers/api";
     import {mapGetters} from 'vuex';
     import {User} from "../../helpers/constuctors";
 
@@ -41,13 +42,18 @@
         data() {
             return {
                 email: '',
-                classErrorEmail: false
+                classErrorEmail: false,
+                users: []
             }
+        },
+        created() {
+            getUser(this.$store.state.token).then(result => {
+                this.users = result.data;
+            });
         },
         computed: {
             ...mapGetters({
                 user: 'getUser',
-                users: 'getUsers'
             }),
             validEmail() {
                 return this.users.findIndex(item => item.email === this.email);

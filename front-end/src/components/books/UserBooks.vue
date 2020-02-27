@@ -9,6 +9,7 @@
 <script>
     import  {getBooks} from "../../helpers/api";
     import BooksFeed from "./BooksFeed";
+    import {mapGetters} from 'vuex';
 
     export default {
         name: "UserBooks",
@@ -22,9 +23,9 @@
             }
         },
         computed: {
-            user() {
-                return this.$store.getters.getUser;
-            },
+            ...mapGetters({
+                user: 'getUser'
+            })
         },
         methods: {
             loadMore () {

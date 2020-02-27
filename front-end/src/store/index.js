@@ -11,7 +11,6 @@ export default new Vuex.Store({
         flag: false,
         token: '',
         userData: [],
-        users: [],
         user: {},
         visibleIn: false,
         visibleUp: false,
@@ -55,7 +54,6 @@ export default new Vuex.Store({
             state.token = token;
             state.userData = userData;
             getUser(state.token).then(result => {
-                state.users = result.data;
                 state.user = result.data.find(item =>
                     item.email === Object.values(state.userData)[0] && item.password === Object.values(state.userData)[1]);
             });

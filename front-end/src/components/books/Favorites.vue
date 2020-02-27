@@ -8,6 +8,7 @@
 <script>
     import {getFavorites} from "../../helpers/api";
     import BooksFeed from "./BooksFeed";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "Favorites",
@@ -23,9 +24,9 @@
             this.$store.dispatch('discardBooksFeed');
         },
         computed: {
-            user() {
-                return this.$store.getters.getUser;
-            },
+            ...mapGetters({
+                user: 'getUser'
+            }),
         },
         methods: {
             loadMore () {

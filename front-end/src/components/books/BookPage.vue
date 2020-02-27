@@ -39,6 +39,7 @@
 <script>
     import {mapGetters} from 'vuex';
     import {getBook} from "../../helpers/api";
+    import {getUser} from "../../helpers/api";
     import {editBook} from "../../helpers/api";
     import {Book} from "../../helpers/constuctors";
     import ButtonTemplate from "../templates/ButtonTemplate";
@@ -51,11 +52,20 @@
             return {
                 readMoreActivated: null,
                 book: {},
+                users: []
             }
+        },
+        created() {
+            getBook(this.$store.state.token,this.bookId).then(result => {
+                this.book = result.data[0];
+            });
+            getUser(this.$store.state.token).then(result => {
+                this.users = result.data;
+            });
+            this.$store.dispatch('discardBooksFeed');
         },
         computed: {
             ...mapGetters({
-                users: 'getUsers',
                 user: 'getUser'
             }),
             checkLength() {
@@ -67,12 +77,6 @@
             favoritesCheck() {
                 return this.book.favorites ? this.book.favorites.find(item => item === this.user.id) : null;
             },
-        },
-        created() {
-            getBook(this.$store.state.token,this.bookId).then(result => {
-                this.book = result.data[0];
-            });
-            this.$store.dispatch('discardBooksFeed');
         },
         methods: {
             activateReadMore(id) {

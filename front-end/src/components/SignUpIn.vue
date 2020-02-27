@@ -152,6 +152,7 @@
                     email: this.email,
                     password: this.password
                 };
+                this.$store.dispatch('loadingProcess', true);
                 signInUser(person).then(result => {
                     localStorage.setItem('accessToken', result.data.access_token);
                     this.$store.dispatch('setTokenData', {

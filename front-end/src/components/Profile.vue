@@ -51,6 +51,7 @@
     import {getBooks} from "../helpers/api";
     import {editUser} from "../helpers/api";
     import {parseJwt} from "../helpers/parsingToken";
+    import {getUser} from "../helpers/api";
     import {User} from "../helpers/constuctors";
     import ButtonTemplate from "./templates/ButtonTemplate";
     import Loader from "./Loader";
@@ -63,15 +64,18 @@
             return {
                 countBooks: 0,
                 count: 0,
+                users: []
             }
         },
         created() {
             this.$store.dispatch('discardBooksFeed');
             this.$store.dispatch('loadingProcess', true);
+            getUser(this.$store.state.token).then(result => {
+                this.users = result.data;
+            });
         },
         computed: {
             ...mapGetters({
-                users: 'getUsers',
                 user: 'getUser',
             }),
             profile() {

@@ -1,5 +1,5 @@
 <template>
-    <div class="main" v-if="profile">
+    <div class="main">
         <SubsMenu :userId="userId"></SubsMenu>
         <SubsFeed :subs="subs"></SubsFeed>
     </div>
@@ -9,15 +9,25 @@
     import SubsFeed from "./SubsFeed";
     import SubsMenu from "./SubsMenu";
     import {mapGetters} from "vuex";
+    import {getUser} from "../../helpers/api";
 
     export default {
         name: "Subscriptions",
         props: ['userId'],
         components: {SubsFeed, SubsMenu},
+        data() {
+            return {
+                users: []
+            }
+        },
+        created() {
+            getUser(this.$store.state.token).then(result => {
+                this.users = result.data;
+            });
+        },
         computed: {
             ...mapGetters({
                 user: 'getUser',
-                users: 'getUsers'
             }),
             profile() {
                 return this.users.find(item => item.id+'' === this.userId);
