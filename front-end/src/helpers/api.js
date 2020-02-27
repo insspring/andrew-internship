@@ -35,6 +35,13 @@ export const getBooks = (token,id,page) => {
         },
     });
 };
+export const getFavorites = (token,id,page) => {
+    return axios.get("/books?favorites_like="+id+"&_page="+page+"&_limit=10&", {
+        headers: {
+            'authorization': "bearer " + token
+        },
+    });
+};
 export const getBook = (token,id) => {
     return axios.get("/books?id="+id, {
         headers: {

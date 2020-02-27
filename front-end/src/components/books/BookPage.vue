@@ -8,9 +8,13 @@
                 <div class="item name">{{ book.name }}</div>
                 <div>
                     <router-link v-if="user.id === book.authorId" class="router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
-                    <ButtonTemplate
+                    <ButtonTemplate v-if="!checkUser && !favoritesCheck"
                             :text="'Add to favorites'"
                             :method="toFavorites"
+                    ></ButtonTemplate>
+                    <ButtonTemplate v-if="!checkUser && favoritesCheck"
+                                    :text="'Remove from favorites'"
+                                    :method="fromFavorites"
                     ></ButtonTemplate>
                 </div>
             </div>
@@ -36,6 +40,7 @@
     import {mapGetters} from 'vuex';
     import {getBook} from "../../helpers/api";
     import {editBook} from "../../helpers/api";
+    import {Book} from "../../helpers/constuctors";
     import ButtonTemplate from "../templates/ButtonTemplate";
 
     export default {
@@ -55,7 +60,13 @@
             }),
             checkLength() {
                 return this.book.description.slice(200).length > 0;
-            }
+            },
+            checkUser() {
+                return this.user.id === this.book.authorId;
+            },
+            favoritesCheck() {
+                return this.book.favorites ? this.book.favorites.find(item => item === this.user.id) : null;
+            },
         },
         created() {
             getBook(this.$store.state.token,this.bookId).then(result => {
@@ -71,9 +82,23 @@
                 this.readMoreActivated = null;
             },
             toFavorites() {
-                editBook(this.book.id, {
-
-                }).then();
+                let book = new Book(this.book.name, this.book.description, this.book.author, this.book.authorId, this.book.bookCover, this.book.publicationDate, this.book.updateDate, this.book.favorites, this.book.id);
+                book.addToFavorites(this.user.id);
+                editBook(this.book.id, book).then(() => {
+                    getBook(this.$store.state.token,this.bookId).then(result => {
+                        this.book = result.data[0];
+                    });
+                    alert('Added to favorites!');
+                });
+            },
+            fromFavorites() {
+                let book = new Book(this.book.name, this.book.description, this.book.author, this.book.authorId, this.book.bookCover, this.book.publicationDate, this.book.updateDate, this.book.favorites.filter(item => item !== this.user.id), this.book.id);
+                editBook(this.book.id, book).then(() => {
+                    getBook(this.$store.state.token,this.bookId).then(result => {
+                        this.book = result.data[0];
+                    });
+                    alert('Removed from favorites!');
+                });
             }
         }
     }

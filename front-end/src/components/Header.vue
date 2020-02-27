@@ -26,6 +26,7 @@
                         :method="deleteToken"
                 ></ButtonTemplate>
                 <LocaleChange></LocaleChange>
+                <router-link v-if="flag" class="router-link" to="/favorites">Favorites</router-link>
                 <UserMiniature :user="user"></UserMiniature>
             </div>
         </div>

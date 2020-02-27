@@ -12,6 +12,7 @@ import BookPage from '../components/books/BookPage';
 import BookEdit from '../components/books/BookEdit';
 import Subscribers from '../components/subs/Subscribers';
 import Subscriptions from '../components/subs/Subscriptions';
+import Favorites from '../components/books/Favorites';
 
 Vue.use(VueRouter);
 
@@ -70,6 +71,10 @@ const routes = [
         path: '/user/:userId/Subscriptions',
         component: Subscriptions,
         props: true
+    },
+    {
+        path: '/favorites',
+        component: Favorites
     }
 ];
 
