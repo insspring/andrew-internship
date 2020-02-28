@@ -30,6 +30,7 @@ export class Book {
                     publicationDate = '',
                     updateDate = '',
                     favorites = [],
+                    rating = [],
                     id = null
                 }={})
     {
@@ -41,9 +42,13 @@ export class Book {
         this.publicationDate = publicationDate.trim();
         this.updateDate = updateDate.trim();
         this.favorites = [...favorites];
+        this.rating = [...rating];
         this.id = id;
     }
     addToFavorites(userId) {
         this.favorites.push(userId);
     };
+    addRate(data) {
+        this.rating.push(data)
+    }
 }

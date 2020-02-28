@@ -17,7 +17,7 @@ export default new Vuex.Store({
         page: 1,
         booksFeed: [],
         loading: false,
-        stop: false
+        stop: false,
     },
     getters: {
         getUser(state) {
@@ -76,7 +76,7 @@ export default new Vuex.Store({
         discardBooksFeed(state) {
             state.booksFeed = [];
             state.page = 1;
-        }
+        },
     },
     actions: {
         discardBooksFeed({commit}) {

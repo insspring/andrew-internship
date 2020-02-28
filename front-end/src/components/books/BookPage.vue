@@ -2,6 +2,9 @@
     <div class="book" v-if="book.description">
         <div class="cover">
             <img class="bookCover" :src="book.bookCover">
+            <Rating v-if="!checkUser"
+                    :book="book"
+            ></Rating>
         </div>
         <div class="desc">
             <div class="header">
@@ -43,16 +46,17 @@
     import {editBook} from "../../helpers/api";
     import {Book} from "../../helpers/constuctors";
     import ButtonTemplate from "../templates/ButtonTemplate";
+    import Rating from "../Rating";
 
     export default {
         name: "BookPage",
-        components: {ButtonTemplate},
+        components: {Rating, ButtonTemplate},
         props: ['bookId'],
         data() {
             return {
                 readMoreActivated: null,
                 book: {},
-                users: []
+                users: [],
             }
         },
         created() {
@@ -95,6 +99,7 @@
                     publicationDate: this.book.publicationDate,
                     updateDate: this.book.updateDate,
                     favorites: this.book.favorites,
+                    rating: this.book.rating,
                     id: this.book.id
                 });
                 book.addToFavorites(this.user.id);
@@ -115,6 +120,7 @@
                     publicationDate: this.book.publicationDate,
                     updateDate: this.book.updateDate,
                     favorites: this.book.favorites.filter(item => item !== this.user.id),
+                    rating: this.book.rating,
                     id: this.book.id
                 })).then(() => {
                     getBook(this.$store.state.token,this.bookId).then(result => {
@@ -149,6 +155,9 @@
         height: 16rem;
         border: 2px solid rgb(52, 56, 55);
         box-shadow: 0 0 .7rem .1rem rgb(60,60,60);
+    }
+    .rating {
+        display: flex;
     }
     .author {
         font-size: 1.5rem;

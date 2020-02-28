@@ -17,6 +17,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="rate-stats" v-if="checkRate(book)">
+                    <span  class="rate">Rating: {{ averageRate(book) }} / 5</span>
+                    <span class="votes">Votes: {{ averageVotes(book) }}</span>
+                </div>
                 <div class="book-footer">
                     <div class="date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
                     <div class="date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
@@ -60,11 +64,22 @@
             ...mapGetters({
                 user: 'getUser',
                 flag: 'getFlag'
-            })
+            }),
         },
         methods: {
             bottomVisible() {
                 return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
+            },
+            averageRate(book) {
+                let initialValue = 0;
+                return Math.trunc(book.rating.reduce(
+                    (accumulator, currentValue) => accumulator + currentValue.rate / '1', initialValue)/book.rating.length * 100)/ 100;
+            },
+            averageVotes(book) {
+                return book.rating.length;
+            },
+            checkRate(book) {
+                return book.rating.length;
             },
         }
     }
@@ -72,7 +87,18 @@
 
 <style lang="scss" scoped>
     @import '../../scss/mixins';
-
+    .rate-stats {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .rate {
+        font-weight: bold;
+        font-size: 1.6rem;
+    }
+    .votes {
+        font-size: 1.2rem;
+    }
     .library {
         display: flex;
         flex-wrap: wrap;
