@@ -52,7 +52,14 @@
             uploadAvatar() {
                 if(this.selectedFile) {
                     editUser(this.user.id,
-                        new User(this.user.name,this.user.email,this.user.password,this.selectedFile,this.user.subscribes,this.user.id)
+                        new User({
+                            name: this.user.name,
+                            email: this.user.email,
+                            password: this.user.password,
+                            avatar: this.selectedFile,
+                            subscribes: this.user.subscribes,
+                            id: this.user.id
+                        })
                     ).then(() => {
                         this.$store.dispatch('setTokenData', {
                             flag: true,
@@ -61,6 +68,12 @@
                             stop: true
                         });
                         alert('Changes succeed!');
+                    }).catch((error) => {
+                        if(error.response) {
+                            if(error.response.status === 413) {
+                                alert ('Sorry, but image is too large');
+                            }
+                        }
                     });
                 }
             }

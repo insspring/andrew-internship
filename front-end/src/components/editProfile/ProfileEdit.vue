@@ -55,8 +55,15 @@
             changeUser() {
                 if(validation('name',this.name)) {
                     editUser(this.user.id,
-                        new User(this.name,this.user.email,this.user.password,this.user.avatar,this.user.subscribes,this.user.id)).
-                    then(() => {
+                        new User({
+                            name: this.name,
+                            email: this.user.email,
+                            password: this.user.password,
+                            avatar: this.user.avatar,
+                            subscribes: this.user.subscribes,
+                            id: this.user.id
+                        })
+                    ).then(() => {
                         this.$store.dispatch('setTokenData', {
                             flag: true,
                             token: localStorage.getItem('accessToken'),

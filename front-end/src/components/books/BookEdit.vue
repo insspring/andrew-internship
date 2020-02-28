@@ -80,9 +80,18 @@
                 reader.readAsDataURL(e.target.files[0]);
             },
             changeBook() {
-                let book = new Book(this.book.name.trim(),this.book.description.trim(),this.book.author,this.book.authorId,this.selectedFile ? this.selectedFile : this.book.bookCover,this.book.publicationDate,Date().toString().split('').slice(4, Date().toString().split('').length - 36).join('').trim(),this.book.favorites,this.book.id);
                 if(validationBooks('name',this.book.name) && validationBooks('description',this.book.description)) {
-                    editBook(this.bookId, book).then(() => {
+                    editBook(this.bookId, new Book ({
+                        name: this.book.name,
+                        description: this.book.description,
+                        author: this.book.author,
+                        authorId: this.book.authorId,
+                        bookCover: this.selectedFile ? this.selectedFile : this.book.bookCover,
+                        publicationDate: this.book.publicationDate,
+                        updateDate: Date().toString().split('').slice(4, Date().toString().split('').length - 36).join(''),
+                        favorites: this.book.favorites,
+                        id: this.book.id
+                    })).then(() => {
                         alert('Changes succeed!');
                         this.selectedFile = null;
                         this.$router.push({path: '/book/' + this.book.id});

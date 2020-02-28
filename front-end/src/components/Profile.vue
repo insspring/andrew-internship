@@ -47,7 +47,6 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
     import {getBooks} from "../helpers/api";
     import {editUser} from "../helpers/api";
     import {parseJwt} from "../helpers/parsingToken";
@@ -64,7 +63,8 @@
             return {
                 countBooks: 0,
                 count: 0,
-                users: []
+                users: [],
+                user: {}
             }
         },
         created() {
@@ -72,12 +72,11 @@
             this.$store.dispatch('loadingProcess', true);
             getUser(this.$store.state.token).then(result => {
                 this.users = result.data;
+                this.user = result.data.find(item =>
+                    item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
             });
         },
         computed: {
-            ...mapGetters({
-                user: 'getUser',
-            }),
             profile() {
                 return this.users.find(item => item.id+'' === this.userId);
             },
@@ -103,7 +102,14 @@
                 return this.countBooks;
             },
             subscribe() {
-                let user = new User(this.user.name,this.user.email,this.user.password,this.user.avatar,this.user.subscribes,this.user.id);
+                let user = new User({
+                    name: this.user.name,
+                    email: this.user.email,
+                    password: this.user.password,
+                    avatar: this.user.avatar,
+                    subscribes: this.subscribes,
+                    id: this.user.id
+                });
                 user.addSubscription(this.profile.id);
                 editUser(this.user.id, user).then(() => {
                     this.$store.dispatch('setTokenData', {
@@ -112,18 +118,35 @@
                         userData: parseJwt(localStorage.getItem('accessToken')),
                         stop: true
                     });
+                    getUser(this.$store.state.token).then(result => {
+                        this.users = result.data;
+                        this.user = result.data.find(item =>
+                            item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
+                    });
                     alert('Subscribed!');
                 });
             },
             unsubscribe() {
                 editUser(this.user.id,
-                    new User(this.user.name,this.user.email,this.user.password,this.user.avatar,this.user.subscribes.filter(item => item !== this.profile.id),this.user.id)
+                    new User({
+                        name: this.user.name,
+                        email: this.user.email,
+                        password: this.user.password,
+                        avatar: this.user.avatar,
+                        subscribes: this.user.subscribes.filter(item => item !== this.profile.id),
+                        id: this.user.id
+                    })
                 ).then(() => {
                     this.$store.dispatch('setTokenData', {
                         flag: true,
                         token: localStorage.getItem('accessToken'),
                         userData: parseJwt(localStorage.getItem('accessToken')),
                         stop: true
+                    });
+                    getUser(this.$store.state.token).then(result => {
+                        this.users = result.data;
+                        this.user = result.data.find(item =>
+                            item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
                     });
                     alert('Unsubscribed!');
                 });

@@ -66,7 +66,14 @@
             changeUser () {
                 if (validation('email', this.email) && this.validEmail === -1) {
                     editUser(this.user.id,
-                        new User(this.user.name,this.email,this.user.password,this.user.avatar,this.user.subscribes,this.user.id)
+                        new User({
+                            name: this.user.name,
+                            email: this.email,
+                            password: this.user.password,
+                            avatar: this.user.avatar,
+                            subscribes: this.user.subscribes,
+                            id: this.user.id
+                        })
                     ).then(() => {
                         let person = {
                             email: this.email,

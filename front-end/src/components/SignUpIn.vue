@@ -111,7 +111,11 @@
             },
             createPerson() {
                 if(validation('name',this.name) && validation('email',this.email) && validation('password',this.password) && validation('confirm',this.password,this.passwordConfirm)) {
-                    let person = new User(this.name,this.email,this.password);
+                    let person = new User({
+                        name: this.user.name,
+                        email: this.user.email,
+                        password: this.user.password
+                    });
                     signUpUser(person).then(() => {
                         this.name = null;
                         this.email = null;

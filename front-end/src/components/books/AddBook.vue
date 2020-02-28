@@ -73,8 +73,14 @@
             },
             createBook() {
                 if(validationBooks('name',this.name) && validationBooks('description',this.description) && this.selectedFile !== null) {
-                    let book = new Book(this.name.trim(),this.description.trim(),this.$store.state.user.name,this.$store.state.user.id,this.selectedFile,Date().toString().split('').slice(4, Date().toString().split('').length - 36).join('').trim());
-                    addBook(book).then(() => {
+                    addBook(new Book({
+                        name: this.name,
+                        description: this.description,
+                        author: this.$store.state.user.name,
+                        authorId: this.$store.state.user.id,
+                        bookCover: this.selectedFile,
+                        publicationDate: Date().toString().split('').slice(4, Date().toString().split('').length - 36).join('')
+                    })).then(() => {
                         alert('Book Added!');
                         this.name = '';
                         this.description = '';

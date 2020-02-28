@@ -25,7 +25,7 @@
 <style scoped>
     .avatar-photo {
         width: 2rem;
-        border-radius: 2rem;
+        border-radius: 50%;
         padding: .5rem;
     }
     .profile {

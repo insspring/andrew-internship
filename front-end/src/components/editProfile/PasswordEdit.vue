@@ -85,7 +85,16 @@
             },
             changeUser() {
                 if(validation('confirm',this.oldPassword, this.user.password) && validation('password',this.newPassword) && validation('confirm',this.newPassword, this.newPasswordConfirm)) {
-                    editUser(this.user.id, new User(this.user.name, this.user.email,this.newPassword,this.user.avatar,this.user.subscribes,this.user.id)).then(() => {
+                    editUser(this.user.id,
+                        new User({
+                            name: this.user.name,
+                            email: this.user.email,
+                            password: this.newPassword,
+                            avatar: this.user.avatar,
+                            subscribes: this.user.subscribes,
+                            id: this.user.id
+                        })
+                    ).then(() => {
                         let person = {
                             email: this.user.email,
                             password: this.newPassword,

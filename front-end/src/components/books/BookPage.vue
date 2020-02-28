@@ -86,7 +86,17 @@
                 this.readMoreActivated = null;
             },
             toFavorites() {
-                let book = new Book(this.book.name, this.book.description, this.book.author, this.book.authorId, this.book.bookCover, this.book.publicationDate, this.book.updateDate, this.book.favorites, this.book.id);
+                let book = new Book({
+                    name: this.book.name,
+                    description: this.book.description,
+                    author: this.book.author,
+                    authorId: this.book.authorId,
+                    bookCover: this.book.bookCover,
+                    publicationDate: this.book.publicationDate,
+                    updateDate: this.book.updateDate,
+                    favorites: this.book.favorites,
+                    id: this.book.id
+                });
                 book.addToFavorites(this.user.id);
                 editBook(this.book.id, book).then(() => {
                     getBook(this.$store.state.token,this.bookId).then(result => {
@@ -96,8 +106,17 @@
                 });
             },
             fromFavorites() {
-                let book = new Book(this.book.name, this.book.description, this.book.author, this.book.authorId, this.book.bookCover, this.book.publicationDate, this.book.updateDate, this.book.favorites.filter(item => item !== this.user.id), this.book.id);
-                editBook(this.book.id, book).then(() => {
+                editBook(this.book.id, new Book({
+                    name: this.book.name,
+                    description: this.book.description,
+                    author: this.book.author,
+                    authorId: this.book.authorId,
+                    bookCover: this.book.bookCover,
+                    publicationDate: this.book.publicationDate,
+                    updateDate: this.book.updateDate,
+                    favorites: this.book.favorites.filter(item => item !== this.user.id),
+                    id: this.book.id
+                })).then(() => {
                     getBook(this.$store.state.token,this.bookId).then(result => {
                         this.book = result.data[0];
                     });

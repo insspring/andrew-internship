@@ -28,6 +28,13 @@
                 user: 'getUser'
             }),
         },
+        watch: {
+            user(user) {
+                if(user) {
+                    this.loadMore();
+                }
+            }
+        },
         methods: {
             loadMore () {
                 if(this.totalCount > this.books.length) {
