@@ -17,10 +17,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="rate-stats" v-if="checkRate(book)">
-                    <span  class="rate">Rating: {{ averageRate(book) }} / 5</span>
-                    <span class="votes">Votes: {{ averageVotes(book) }}</span>
-                </div>
+                <Rating
+                        :book="book"
+                        :bookPage="false"
+                ></Rating>
                 <div class="book-footer">
                     <div class="date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
                     <div class="date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
@@ -33,6 +33,7 @@
 <script>
     import Loader from "../Loader";
     import {mapGetters} from "vuex";
+    import Rating from "../Rating";
 
     export default {
         name: "BooksFeed",
@@ -41,7 +42,7 @@
             books: Array,
             userBooks: Boolean
         },
-        components: {Loader},
+        components: {Rating, Loader},
         data() {
             return {
                 bottom: false,
@@ -69,17 +70,6 @@
         methods: {
             bottomVisible() {
                 return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
-            },
-            averageRate(book) {
-                let initialValue = 0;
-                return Math.trunc(book.rating.reduce(
-                    (accumulator, currentValue) => accumulator + currentValue.rate / '1', initialValue)/book.rating.length * 100)/ 100;
-            },
-            averageVotes(book) {
-                return book.rating.length;
-            },
-            checkRate(book) {
-                return book.rating.length;
             },
         }
     }

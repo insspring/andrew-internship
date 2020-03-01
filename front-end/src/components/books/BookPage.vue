@@ -2,8 +2,9 @@
     <div class="book" v-if="book.description">
         <div class="cover">
             <img class="bookCover" :src="book.bookCover">
-            <Rating v-if="!checkUser"
+            <Rating
                     :book="book"
+                    :bookPage="true"
             ></Rating>
         </div>
         <div class="desc">

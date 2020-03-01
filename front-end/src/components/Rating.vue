@@ -1,14 +1,17 @@
 <template>
     <div>
-        <span class="star-rating" v-if="!checkRate">
+        <span class="star-rating" v-if="!checkRate && !checkUser && bookPage">
             <input type="radio" name="rating" value="1" v-model="rate"><i></i>
             <input type="radio" name="rating" value="2" v-model="rate"><i></i>
             <input type="radio" name="rating" value="3" v-model="rate"><i></i>
             <input type="radio" name="rating" value="4" v-model="rate"><i></i>
             <input type="radio" name="rating" value="5" v-model="rate"><i></i>
         </span>
+        <span class="votes" v-if="checkRate">
+            Your rate: {{ getUserRate }}
+        </span>
         <div class="rate-stats">
-            <span  class="rate" v-if="checkRate">Rating: {{ averageRate }} / 5</span>
+            <span  class="rate" v-if="averageVotes">Rating: {{ averageRate }} / 5</span>
             <span class="votes">Votes: {{ averageVotes }}</span>
         </div>
     </div>
@@ -22,7 +25,8 @@
     export default {
         name: "Rating",
         props: {
-            book: Object
+            book: Object,
+            bookPage: Boolean
         },
         data() {
             return {
@@ -33,8 +37,14 @@
             user() {
                 return this.$store.getters.getUser;
             },
+            checkUser() {
+                return this.user.id === this.book.authorId;
+            },
             checkRate() {
                 return this.book.rating.some(item => item.id === this.user.id);
+            },
+            getUserRate() {
+                return this.book.rating.find(item => item.id === this.user.id).rate;
             },
             averageRate() {
                 let initialValue = 0;
