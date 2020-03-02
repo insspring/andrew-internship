@@ -55,7 +55,7 @@
             this.loadMore();
         },
         watch: {
-            bottom(bottom) {
+            bottom(bottom ) {
                 if (bottom) {
                     this.loadMore();
                 }

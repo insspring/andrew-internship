@@ -15,7 +15,7 @@
             ></ButtonTemplate>
         </div>
         <CommentsFeed
-                :bookId="book.id"
+                :book="book"
         ></CommentsFeed>
     </div>
 </template>
@@ -33,7 +33,7 @@
         name: "Comments",
         components: {CommentsFeed, TextArea, ButtonTemplate},
         props: {
-            book: {}
+            book: Object
         },
         data() {
             return {

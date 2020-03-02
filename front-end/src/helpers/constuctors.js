@@ -61,7 +61,8 @@ export class Comment {
                     commentAuthorId = null,
                     commentAuthorAvatar = '',
                     publicationDate = '',
-                    likes = []
+                    likes = [],
+                    id = null
                 }={})
     {
         this.bookId = bookId;
@@ -70,7 +71,8 @@ export class Comment {
         this.commentAuthorId = commentAuthorId;
         this.commentAuthorAvatar = commentAuthorAvatar;
         this.publicationDate = publicationDate.trim();
-        this.likes = likes;
+        this.likes = [...likes];
+        this.id = id;
     }
     addLike(data) {
         this.likes.push(data)

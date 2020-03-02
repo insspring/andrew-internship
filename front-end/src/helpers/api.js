@@ -68,3 +68,6 @@ export const getBook = (token,id) => {
 export const editBook = (id, data) => {
     return axios.put('/books/' + id, data);
 };
+export const editComments = (id, data) => {
+    return axios.put('/comments/' + id, data);
+};
