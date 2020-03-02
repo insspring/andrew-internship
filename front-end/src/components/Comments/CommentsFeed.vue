@@ -13,7 +13,7 @@
                             <router-link class="linkToProfile" :to="'/user/' + comment.commentAuthorId">{{ comment.commentAuthorName }}</router-link>
                         </div>
                     </div>
-                    <div @click.once="pressLike(comment)">
+                    <div @click="pressLike(comment)">
                         <Like
                                 :active="{active: checkLike(comment)}"
                         ></Like>
@@ -52,7 +52,6 @@
                 page: 1,
                 totalCount: 1,
                 comments: [],
-                liked: false
             }
         },
         created() {
@@ -94,25 +93,44 @@
                 }
             },
             pressLike(comment) {
-                let data = new Comment({
-                    bookId: comment.bookId,
-                    commentText: comment.commentText,
-                    commentAuthorName: comment.commentAuthorName,
-                    commentAuthorId: comment.commentAuthorId,
-                    commentAuthorAvatar: comment.commentAuthorAvatar,
-                    publicationDate: comment.publicationDate,
-                    likes: comment.likes,
-                    id: comment.id
-                });
-                data.addLike(this.user.id);
-                editComments(comment.id, data).then(() => {
-                    commentsCounter(this.$store.state.token, this.book.id).then(result => {
-                        this.comments = [];
-                        this.comments.push(...result.data);
+                if(!this.checkLike(comment)) {
+                    let data = new Comment({
+                        bookId: comment.bookId,
+                        commentText: comment.commentText,
+                        commentAuthorName: comment.commentAuthorName,
+                        commentAuthorId: comment.commentAuthorId,
+                        commentAuthorAvatar: comment.commentAuthorAvatar,
+                        publicationDate: comment.publicationDate,
+                        likes: comment.likes,
+                        id: comment.id
                     });
-                    this.liked = true;
-                    alert('Liked!');
-                })
+                    data.addLike(this.user.id);
+                    editComments(comment.id, data).then(() => {
+                        commentsCounter(this.$store.state.token, this.book.id).then(result => {
+                            this.comments = [];
+                            this.comments.push(...result.data);
+                        });
+                        alert('Liked!');
+                    })
+                } else {
+                    let data = new Comment({
+                        bookId: comment.bookId,
+                        commentText: comment.commentText,
+                        commentAuthorName: comment.commentAuthorName,
+                        commentAuthorId: comment.commentAuthorId,
+                        commentAuthorAvatar: comment.commentAuthorAvatar,
+                        publicationDate: comment.publicationDate,
+                        likes: comment.likes.filter(item => item !== this.user.id),
+                        id: comment.id
+                    });
+                    editComments(comment.id, data).then(() => {
+                        commentsCounter(this.$store.state.token, this.book.id).then(result => {
+                            this.comments = [];
+                            this.comments.push(...result.data);
+                        });
+                        alert("You don't like it anymore!");
+                    })
+                }
             }
         }
     }
