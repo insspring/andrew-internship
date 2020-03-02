@@ -52,3 +52,27 @@ export class Book {
         this.rating.push(data)
     }
 }
+
+export class Comment {
+    constructor({
+                    bookId = null,
+                    commentText = '',
+                    commentAuthorName = '',
+                    commentAuthorId = null,
+                    commentAuthorAvatar = '',
+                    publicationDate = '',
+                    likes = []
+                }={})
+    {
+        this.bookId = bookId;
+        this.commentText = commentText.trim();
+        this.commentAuthorName = commentAuthorName.trim();
+        this.commentAuthorId = commentAuthorId;
+        this.commentAuthorAvatar = commentAuthorAvatar;
+        this.publicationDate = publicationDate.trim();
+        this.likes = likes;
+    }
+    addLike(data) {
+        this.likes.push(data)
+    }
+}

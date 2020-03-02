@@ -24,67 +24,68 @@ const expiresIn = '10h'
 
 // Create a token from a payload
 function createToken(payload) {
-	return jwt.sign(payload, SECRET_KEY, {expiresIn})
+    return jwt.sign(payload, SECRET_KEY, {expiresIn})
 }
 
 // Verify the token
 function verifyToken(token, cb) {
-	return jwt.verify(token, SECRET_KEY, cb);
+    return jwt.verify(token, SECRET_KEY, cb);
 }
 
 // Check if the user exists in database
 function isAuthenticated({email, password}) {
-	const userdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
-	return userdb.users.findIndex(user => user.email === email && user.password === password) !== -1
+    const userdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+    return userdb.users.findIndex(user => user.email === email && user.password === password) !== -1
 }
 
 function findUser({email, password}) {
-	const userdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
-	return userdb.users.find(user => user.email === email && user.password === password)
+    const userdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+    return userdb.users.find(user => user.email === email && user.password === password)
 }
 
 function findUsersByIds(userIds) {
-  const userdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
-	let usersForReplies = []
-	userIds.forEach(id => {
-		const user = userdb.users.find(user => user.id === id)
-		usersForReplies.push(user)
-	})
-  return usersForReplies
+    const userdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+    let usersForReplies = []
+    userIds.forEach(id => {
+        const user = userdb.users.find(user => user.id === id)
+        usersForReplies.push(user)
+    })
+    return usersForReplies
 }
 
 server.post('/auth/login', (req, res) => {
-	const email = req.body.email
-	const password = req.body.password
+    const email = req.body.email
+    const password = req.body.password
 
-	if (isAuthenticated({email, password}) === false) {
-		const status = 401
-		const message = 'Incorrect email or password'
-		res.status(status).json({status, message})
-		return
-	}
-	const user = findUser({email, password})
-	const access_token = createToken({email, password})
-	res.status(200).json({access_token, user})
+    if (isAuthenticated({email, password}) === false) {
+        const status = 401
+        const message = 'Incorrect email or password'
+        res.status(status).json({status, message})
+        return
+    }
+    const user = findUser({email, password})
+    const access_token = createToken({email, password})
+    res.status(200).json({access_token, user})
 })
 
 server.post('/auth/register', (req, res) => {
-	const email = req.body.email
-	const password = req.body.password
-	if (findUser({email, password}) !== undefined) {
-		const status = 401
-		const message = 'This user already registered'
-		res.status(status).json({status, message})
-		return
-	}
-	const userdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
-	const id = userdb.users.length == 0 ? 1 : userdb.users[userdb.users.length - 1].id + 1;
-	const user = req.body
-	user.id = id
-	db.get('users').push(user)
-		.write()
-	res.status(200).json(id)
-});
+    const email = req.body.email
+    const password = req.body.password
+    if (findUser({email, password}) !== undefined) {
+        const status = 401
+        const message = 'This user already registered'
+        res.status(status).json({status, message})
+        return
+    }
+    const userdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+    const id = userdb.users.length == 0 ? 1 : userdb.users[userdb.users.length - 1].id + 1;
+    const user = req.body
+    user.id = id
+    db.get('users').push(user)
+        .write()
+    server.use(jsonServer.router('db.json'));
+    res.status(200).json(id)
+})
 
 server.post('/books/add', (req, res) => {
     const booksdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'));
@@ -96,29 +97,42 @@ server.post('/books/add', (req, res) => {
     res.status(200).json(id)
 });
 
+server.post('/comments/add', (req, res) => {
+    const commentsdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'));
+    const id = commentsdb.comments.length == 0 ? 1 : commentsdb.comments[commentsdb.comments.length - 1].id + 1;
+    const comment = req.body;
+    comment.id = id;
+    db.get('comments').push(comment)
+        .write()
+    res.status(200).json(id)
+});
+
 server.use('/', (req, res, next) => {
-  switch(req.path) {
-    case '/users':
-    case '/books':
-      break;
-    default: 
-      return next();
-	}
-  if (req.headers.authorization === undefined || req.headers.authorization === 'null') {
-    const status = 401
-    const message = 'Bad authorization header'
-    return res.status(status).json({status, message})
-  }
-  try {
-    verifyToken(req.headers.authorization.split(' ')[1], (err, decode) => decode ? next() : (function(){throw(err)})())
-  } catch (err) {
-    const status = 401
-    const message = 'Error: access_token is not valid'
-    return res.status(status).json({status, message})
-  }
+    switch(req.path) {
+        case '/users':
+            break;
+        case '/books':
+            break;
+        case '/comments':
+            break;
+        default:
+            return next();
+    }
+    if (req.headers.authorization === undefined || req.headers.authorization === 'null') {
+        const status = 401
+        const message = 'Bad authorization header'
+        return res.status(status).json({status, message})
+    }
+    try {
+        verifyToken(req.headers.authorization.split(' ')[1], (err, decode) => decode ? next() : (function(){throw(err)})())
+    } catch (err) {
+        const status = 401
+        const message = 'Error: access_token is not valid'
+        return res.status(status).json({status, message})
+    }
 })
 
 server.use(router);
 server.listen(3000, () => {
-	console.log('JSON Server is running on 3000')
+    console.log('JSON Server is running on 3000')
 })

@@ -82,10 +82,10 @@
         display: flex;
         flex-wrap: wrap;
 
-    @include for-size (phone-only) {
-        justify-content: center;
-        margin: 0;
-    }
+        @include for-size (phone-only) {
+            justify-content: center;
+            margin: 0;
+        }
     }
     .book {
         width: 20rem;

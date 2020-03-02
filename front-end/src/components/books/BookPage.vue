@@ -1,43 +1,48 @@
 <template>
-    <div class="book" v-if="book.description">
-        <div class="cover">
-            <img class="bookCover" :src="book.bookCover">
-            <Rating
-                    :book="book"
-                    :bookPage="true"
-                    @setRate="setBookRate"
-            ></Rating>
-        </div>
-        <div class="desc">
-            <div class="header">
-                <div class="item name">{{ book.name }}</div>
-                <div>
-                    <router-link v-if="user.id === book.authorId" class="router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
-                    <ButtonTemplate v-if="!checkUser && !favoritesCheck"
-                            :text="'Add to favorites'"
-                            :method="toFavorites"
-                    ></ButtonTemplate>
-                    <ButtonTemplate v-if="!checkUser && favoritesCheck"
-                                    :text="'Remove from favorites'"
-                                    :method="fromFavorites"
-                    ></ButtonTemplate>
+    <div class="book-page" v-if="book.description">
+        <div class="book">
+            <div class="cover">
+                <img class="bookCover" :src="book.bookCover">
+                <Rating
+                        :book="book"
+                        :bookPage="true"
+                        @setRate="setBookRate"
+                ></Rating>
+            </div>
+            <div class="desc">
+                <div class="header">
+                    <div class="item name">{{ book.name }}</div>
+                    <div>
+                        <router-link v-if="user.id === book.authorId" class="router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
+                        <ButtonTemplate v-if="!checkUser && !favoritesCheck"
+                                :text="'Add to favorites'"
+                                :method="toFavorites"
+                        ></ButtonTemplate>
+                        <ButtonTemplate v-if="!checkUser && favoritesCheck"
+                                        :text="'Remove from favorites'"
+                                        :method="fromFavorites"
+                        ></ButtonTemplate>
+                    </div>
+                </div>
+                <div class="item author">
+                    {{ $t('author') }}:
+                    <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
+                </div>
+                <div class="item description">
+                    <span v-if="!readMoreActivated">{{ book.description.slice(0,200) }}</span>
+                       <a class="readMore" v-if="!readMoreActivated && checkLength" @click.prevent="activateReadMore(book.id)" href="#">  (Read more...)</a>
+                    <span v-if="readMoreActivated">{{ book.description }}</span>
+                    <a class="readMore" v-if="readMoreActivated && checkLength" @click.prevent="deactivateReadMore" href="#">  (...less)</a>
+                </div>
+                <div class="date">
+                    <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
+                    <div class="item date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
                 </div>
             </div>
-            <div class="item author">
-                {{ $t('author') }}:
-                <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
-            </div>
-            <div class="item description">
-                <span v-if="!readMoreActivated">{{ book.description.slice(0,200) }}</span>
-                   <a class="readMore" v-if="!readMoreActivated && checkLength" @click.prevent="activateReadMore(book.id)" href="#">  (Read more...)</a>
-                <span v-if="readMoreActivated">{{ book.description }}</span>
-                <a class="readMore" v-if="readMoreActivated && checkLength" @click.prevent="deactivateReadMore" href="#">  (...less)</a>
-            </div>
-            <div class="date">
-                <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
-                <div class="item date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
-            </div>
         </div>
+        <Comments
+                :book="book"
+        ></Comments>
     </div>
 </template>
 
@@ -49,10 +54,11 @@
     import {Book} from "../../helpers/constuctors";
     import ButtonTemplate from "../templates/ButtonTemplate";
     import Rating from "../Rating";
+    import Comments from "../Comments/Comments";
 
     export default {
         name: "BookPage",
-        components: {Rating, ButtonTemplate},
+        components: {Comments, Rating, ButtonTemplate},
         props: ['bookId'],
         data() {
             return {
@@ -62,8 +68,10 @@
             }
         },
         created() {
+            this.$store.dispatch('loadingProcess',true);
             getBook(this.$store.state.token,this.bookId).then(result => {
                 this.book = result.data[0];
+                this.$store.dispatch('loadingProcess',false);
             });
             getUser(this.$store.state.token).then(result => {
                 this.users = result.data;
@@ -143,6 +151,10 @@
 </script>
 
 <style lang="scss" scoped>
+    .book-page {
+        display: flex;
+        flex-direction: column;
+    }
     .book {
         display: flex;
         padding: 2rem;

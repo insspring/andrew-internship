@@ -7,11 +7,8 @@ export const signUpUser = (user) => {
 export const signInUser = (user) => {
     return axios.post('/auth/login', user);
 };
-/*export const editUser = (id, data) => {
-    return axios.put('/users/' + id, data);
-};*/
 export const editUser = (id, data) => {
-    return axios.patch('/users/' + id, data);
+    return axios.put('/users/' + id, data);
 };
 export const getUser = (token) => {
     return axios.get('/users', {
@@ -23,9 +20,25 @@ export const getUser = (token) => {
 export const addBook = (book) => {
     return axios.post('/books/add', book);
 };
-
+export const addComment = (comment) => {
+    return axios.post('/comments/add', comment);
+};
 export const booksPagination = (token,page) => {
     return axios.get("/books?_page="+ page +"&_limit=10&", {
+        headers: {
+            'authorization': "bearer " + token
+        },
+    });
+};
+export const commentsPagination = (token, id, page) => {
+    return axios.get("/books/"+ id +"?_embed=comments&_page="+ page +"&_limit=10&", {
+        headers: {
+            'authorization': "bearer " + token
+        },
+    });
+};
+export const commentsCounter = (token, id) => {
+    return axios.get("/comments?bookId="+ id +"&_page=1&_limit=10&", {
         headers: {
             'authorization': "bearer " + token
         },
