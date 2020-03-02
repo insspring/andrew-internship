@@ -77,18 +77,7 @@
 
 <style lang="scss" scoped>
     @import '../../scss/mixins';
-    .rate-stats {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    .rate {
-        font-weight: bold;
-        font-size: 1.6rem;
-    }
-    .votes {
-        font-size: 1.2rem;
-    }
+
     .library {
         display: flex;
         flex-wrap: wrap;

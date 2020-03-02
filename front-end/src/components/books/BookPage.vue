@@ -5,6 +5,7 @@
             <Rating
                     :book="book"
                     :bookPage="true"
+                    @setRate="setBookRate"
             ></Rating>
         </div>
         <div class="desc">
@@ -128,6 +129,13 @@
                         this.book = result.data[0];
                     });
                     alert('Removed from favorites!');
+                });
+            },
+            setBookRate(book) {
+                editBook(this.book.id, book).then(() => {
+                    getBook(this.$store.state.token,this.book.id).then(result => {
+                        this.book = result.data[0];
+                    });
                 });
             }
         }

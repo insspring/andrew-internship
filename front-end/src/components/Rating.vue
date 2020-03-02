@@ -18,8 +18,6 @@
 </template>
 
 <script>
-    import {editBook} from "../helpers/api";
-    import {getBook} from "../helpers/api";
     import {Book} from "../helpers/constuctors";
 
     export default {
@@ -76,16 +74,9 @@
                     }
                 };
                 bookTemplate.addRate(data(this.user.id, rate));
-                editBook(this.book.id, bookTemplate).then(() => {
-                    getBook(this.$store.state.token,this.book.id).then(result => {
-                        this.book = result.data[0];
-                    });
-                });
+                this.$emit('setRate', bookTemplate);
             }
         },
-        method: {
-
-        }
     }
 </script>
 
@@ -98,6 +89,7 @@
         flex-direction: column;
     }
     .rate {
+        display: block;
         font-weight: bold;
         font-size: 1.4rem;
     }
