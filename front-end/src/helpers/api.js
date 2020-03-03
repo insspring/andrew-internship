@@ -71,3 +71,6 @@ export const editBook = (id, data) => {
 export const editComments = (id, data) => {
     return axios.put('/comments/' + id, data);
 };
+export const deleteComment = (id) => {
+    return axios.delete('/comments/' + id);
+};

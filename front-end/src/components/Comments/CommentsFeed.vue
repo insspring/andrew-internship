@@ -32,6 +32,12 @@
                         ></Like>
                         {{ comment.likes.length }}
                     </div>
+                    <ButtonTemplate
+                            v-if="checkUser(comment)"
+                            :text="'X'"
+                            :params="[comment]"
+                            :method="deleteComment"
+                    ></ButtonTemplate>
                 </div>
                 <div class="comment-body">
                     <TextArea v-if="checkEdit(comment)"
@@ -53,7 +59,7 @@
 <script>
     import Loader from "../Loader";
     import {mapGetters} from "vuex";
-    import {commentsPagination} from "../../helpers/api";
+    import {commentsPagination, deleteComment} from "../../helpers/api";
     import {getComments} from "../../helpers/api";
     import Like from "../Like";
     import {editComments} from "../../helpers/api";
@@ -186,6 +192,15 @@
                     this.edit = false;
                     alert('Edited!');
                 })
+            },
+            deleteComment(comment) {
+                deleteComment(comment.id).then(() => {
+                    getComments(this.$store.state.token, this.book.id).then(result => {
+                        this.comments = [];
+                        this.comments.push(...result.data);
+                    });
+                    alert('Deleted!');
+                });
             }
         }
     }
