@@ -13,6 +13,19 @@
                             <router-link class="linkToProfile" :to="'/user/' + comment.commentAuthorId">{{ comment.commentAuthorName }}</router-link>
                         </div>
                     </div>
+                    <ButtonTemplate
+                            v-if="checkUser(comment) && !edit"
+                            :text="'Edit'"
+                            :params="[comment]"
+                            :method="editOn"
+                    ></ButtonTemplate>
+                    <ButtonTemplate
+                            v-if="checkUser(comment) && edit"
+                            :text="$t('submit')"
+                            :params="[comment]"
+                            :method="editComment"
+                            class="btn-submit"
+                    ></ButtonTemplate>
                     <div @click="pressLike(comment)">
                         <Like
                                 :active="{active: checkLike(comment)}"
@@ -21,7 +34,13 @@
                     </div>
                 </div>
                 <div class="comment-body">
-                    <div class="commentText">{{ comment.commentText }}</div>
+                    <TextArea v-if="checkEdit(comment)"
+                            v-model="comment.commentText"
+                            :value="comment.commentText"
+                            :class="{error: classErrorComment}"
+                            :method="startPrintingComment"
+                    ></TextArea>
+                    <div v-else class="commentText">{{ comment.commentText }}</div>
                 </div>
                 <div class="book-footer">
                     <div class="date">{{ $t('uploaded') }}: {{ comment.publicationDate }}</div>
@@ -35,14 +54,16 @@
     import Loader from "../Loader";
     import {mapGetters} from "vuex";
     import {commentsPagination} from "../../helpers/api";
-    import {commentsCounter} from "../../helpers/api";
+    import {getComments} from "../../helpers/api";
     import Like from "../Like";
     import {editComments} from "../../helpers/api";
     import {Comment} from "../../helpers/constuctors";
+    import ButtonTemplate from "../templates/ButtonTemplate";
+    import TextArea from "../templates/TextArea";
 
     export default {
         name: "CommentsFeed",
-        components: {Like, Loader},
+        components: {TextArea, ButtonTemplate, Like, Loader},
         props: {
             book: Object
         },
@@ -52,6 +73,8 @@
                 page: 1,
                 totalCount: 1,
                 comments: [],
+                edit: false,
+                classErrorComment: false
             }
         },
         created() {
@@ -73,8 +96,20 @@
             }),
         },
         methods: {
+            startPrintingComment() {
+                this.classErrorComment = false;
+            },
+            editOn(comment) {
+                this.edit = comment.id;
+            },
+            checkEdit(comment) {
+                return this.edit === comment.id;
+            },
             checkLike(comment) {
                 return comment.likes.find(item => item === this.user.id);
+            },
+            checkUser(comment) {
+                return this.user.id === comment.commentAuthorId;
             },
             bottomVisible() {
                 return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
@@ -83,7 +118,7 @@
                 if(this.totalCount > this.comments.length) {
                     this.$store.dispatch('loadingProcess', true);
                     commentsPagination(this.$store.state.token, this.book.id, this.page).then(result => {
-                        commentsCounter(this.$store.state.token, this.book.id).then(result => {
+                        getComments(this.$store.state.token, this.book.id).then(result => {
                             this.totalCount = result.headers["x-total-count"];
                         });
                         this.comments.push(...result.data.comments);
@@ -106,7 +141,7 @@
                     });
                     data.addLike(this.user.id);
                     editComments(comment.id, data).then(() => {
-                        commentsCounter(this.$store.state.token, this.book.id).then(result => {
+                        getComments(this.$store.state.token, this.book.id).then(result => {
                             this.comments = [];
                             this.comments.push(...result.data);
                         });
@@ -124,13 +159,33 @@
                         id: comment.id
                     });
                     editComments(comment.id, data).then(() => {
-                        commentsCounter(this.$store.state.token, this.book.id).then(result => {
+                        getComments(this.$store.state.token, this.book.id).then(result => {
                             this.comments = [];
                             this.comments.push(...result.data);
                         });
                         alert("You don't like it anymore!");
                     })
                 }
+            },
+            editComment(comment) {
+                let data = new Comment({
+                    bookId: comment.bookId,
+                    commentText: comment.commentText,
+                    commentAuthorName: comment.commentAuthorName,
+                    commentAuthorId: comment.commentAuthorId,
+                    commentAuthorAvatar: comment.commentAuthorAvatar,
+                    publicationDate: comment.publicationDate,
+                    likes: comment.likes,
+                    id: comment.id
+                });
+                editComments(comment.id, data).then(() => {
+                    getComments(this.$store.state.token, this.book.id).then(result => {
+                        this.comments = [];
+                        this.comments.push(...result.data);
+                    });
+                    this.edit = false;
+                    alert('Edited!');
+                })
             }
         }
     }

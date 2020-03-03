@@ -37,7 +37,7 @@ export const commentsPagination = (token, id, page) => {
         },
     });
 };
-export const commentsCounter = (token, id) => {
+export const getComments = (token, id) => {
     return axios.get("/comments?bookId="+ id +"&_page=1&_limit=10&", {
         headers: {
             'authorization': "bearer " + token
