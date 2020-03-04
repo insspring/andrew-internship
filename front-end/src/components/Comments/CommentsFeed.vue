@@ -46,7 +46,7 @@
                             :class="{error: classErrorComment}"
                             :method="startPrintingComment"
                     ></TextArea>
-                    <div v-else class="commentText">{{ comment.commentText }}</div>
+                    <div v-else class="commentText" v-html="convert(comment.commentText)"></div>
                 </div>
                 <div class="book-footer">
                     <div class="date">{{ $t('uploaded') }}: {{ comment.publicationDate }}</div>
@@ -81,7 +81,7 @@
                 totalCount: 1,
                 comments: [],
                 edit: false,
-                classErrorComment: false
+                classErrorComment: false,
             }
         },
         created() {
@@ -104,6 +104,11 @@
             }),
         },
         methods: {
+            convert(text)
+            {
+                let exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
+                return text.replace(exp, "<a class='commentTextLink' href='$1'>$1</a>");
+            },
             startPrintingComment() {
                 this.classErrorComment = false;
             },
@@ -237,6 +242,9 @@
     }
     .linkToProfile:hover {
         color: rgb(233,233,235);
+    }
+    .commentText >>> .commentTextLink {
+        color: red;
     }
     .date {
         margin-top: .1rem;
