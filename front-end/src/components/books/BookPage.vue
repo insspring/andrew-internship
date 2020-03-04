@@ -22,11 +22,11 @@
                         ></ButtonTemplate>
                         <ButtonTemplate v-if="!checkUser && !favoritesCheck"
                                 :text="'Add to favorites'"
-                                :method="toFavorites"
+                                :method="debouncedToFavorites"
                         ></ButtonTemplate>
                         <ButtonTemplate v-if="!checkUser && favoritesCheck"
                                         :text="'Remove from favorites'"
-                                        :method="fromFavorites"
+                                        :method="debouncedFromFavorites"
                         ></ButtonTemplate>
                     </div>
                 </div>
@@ -62,6 +62,7 @@
     import ButtonTemplate from "../templates/ButtonTemplate";
     import Rating from "../Rating";
     import Comments from "../Comments/Comments";
+    import _ from 'lodash';
 
     export default {
         name: "BookPage",
@@ -84,6 +85,8 @@
                 this.users = result.data;
             });
             this.$store.dispatch('discardBooksFeed');
+            this.debouncedToFavorites = _.debounce(this.toFavorites, 500);
+            this.debouncedFromFavorites = _.debounce(this.fromFavorites, 500);
         },
         computed: {
             ...mapGetters({
@@ -124,7 +127,6 @@
                     getBook(this.$store.state.token,this.bookId).then(result => {
                         this.book = result.data[0];
                     });
-                    alert('Added to favorites!');
                 });
             },
             fromFavorites() {
@@ -143,7 +145,6 @@
                     getBook(this.$store.state.token,this.bookId).then(result => {
                         this.book = result.data[0];
                     });
-                    alert('Removed from favorites!');
                 });
             },
             setBookRate(book) {

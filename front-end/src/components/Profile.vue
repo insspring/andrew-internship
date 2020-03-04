@@ -33,11 +33,11 @@
                         </div>
                         <ButtonTemplate v-if="!userCheck && !subscribeCheck"
                                         :text="'Subscribe'"
-                                        :method="subscribe"
+                                        :method="debouncedSuscribe"
                         ></ButtonTemplate>
                         <ButtonTemplate v-if="!userCheck && subscribeCheck"
                                         :text="'Unsubscribe'"
-                                        :method="unsubscribe"
+                                        :method="debouncedUnsuscribe"
                         ></ButtonTemplate>
                     </div>
                 </div>
@@ -54,6 +54,7 @@
     import {User} from "../helpers/constuctors";
     import ButtonTemplate from "./templates/ButtonTemplate";
     import Loader from "./Loader";
+    import _ from 'lodash';
 
     export default {
         name: "Profile",
@@ -75,6 +76,8 @@
                 this.user = result.data.find(item =>
                     item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
             });
+            this.debouncedSuscribe = _.debounce(this.subscribe, 500);
+            this.debouncedUnsuscribe = _.debounce(this.unsubscribe, 500);
         },
         computed: {
             profile() {
@@ -123,7 +126,6 @@
                         this.user = result.data.find(item =>
                             item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
                     });
-                    alert('Subscribed!');
                 });
             },
             unsubscribe() {
@@ -148,7 +150,6 @@
                         this.user = result.data.find(item =>
                             item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
                     });
-                    alert('Unsubscribed!');
                 });
             },
         }
