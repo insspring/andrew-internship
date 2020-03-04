@@ -26,7 +26,7 @@
                             :method="editComment"
                             class="btn-submit"
                     ></ButtonTemplate>
-                    <div @click="pressLike(comment)">
+                    <div @click="debouncedPressLike(comment)">
                         <Like
                                 :active="{active: checkLike(comment)}"
                         ></Like>
@@ -66,6 +66,7 @@
     import {Comment} from "../../helpers/constuctors";
     import ButtonTemplate from "../templates/ButtonTemplate";
     import TextArea from "../templates/TextArea";
+    import _ from 'lodash';
 
     export default {
         name: "CommentsFeed",
@@ -88,6 +89,7 @@
                 this.bottom = this.bottomVisible()
             });
             this.loadMore();
+            this.debouncedPressLike = _.debounce(this.pressLike, 500);
         },
         watch: {
             bottom(bottom) {
@@ -151,7 +153,6 @@
                             this.comments = [];
                             this.comments.push(...result.data);
                         });
-                        alert('Liked!');
                     })
                 } else {
                     let data = new Comment({
@@ -169,7 +170,6 @@
                             this.comments = [];
                             this.comments.push(...result.data);
                         });
-                        alert("You don't like it anymore!");
                     })
                 }
             },

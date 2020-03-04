@@ -12,8 +12,14 @@
             <div class="desc">
                 <div class="header">
                     <div class="item name">{{ book.name }}</div>
-                    <div>
-                        <router-link v-if="user.id === book.authorId" class="router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
+                    <div class="buttons">
+                        <router-link v-if="checkUser" class="router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
+                        <ButtonTemplate
+                                v-if="checkUser"
+                                :text="'X'"
+                                :params="[book]"
+                                :method="deleteBook"
+                        ></ButtonTemplate>
                         <ButtonTemplate v-if="!checkUser && !favoritesCheck"
                                 :text="'Add to favorites'"
                                 :method="toFavorites"
@@ -51,6 +57,7 @@
     import {getBook} from "../../helpers/api";
     import {getUser} from "../../helpers/api";
     import {editBook} from "../../helpers/api";
+    import {deleteBook} from "../../helpers/api";
     import {Book} from "../../helpers/constuctors";
     import ButtonTemplate from "../templates/ButtonTemplate";
     import Rating from "../Rating";
@@ -145,6 +152,12 @@
                         this.book = result.data[0];
                     });
                 });
+            },
+            deleteBook(book) {
+                deleteBook(book.id).then(() => {
+                    alert('Book deleted!');
+                    this.$router.push({path: '/'});
+                });
             }
         }
     }
@@ -190,6 +203,9 @@
     .header {
         display: flex;
         justify-content: space-between;
+    }
+    .buttons {
+        display: flex;
     }
     .name {
         margin: 0;
