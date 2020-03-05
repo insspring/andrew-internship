@@ -3,54 +3,9 @@
         <Loader></Loader>
         <ul class="library">
             <li class="comment" v-for="comment in comments" :key="comment.id">
-                <div class="comment-header">
-                    <div class="header">
-                        <div class="avatar">
-                            <img v-if="!comment.commentAuthorAvatar" class="avatar-photo" src="../../assets/none.png.jpg"/>
-                            <img v-else class="avatar-photo" :src="comment.commentAuthorAvatar"/>
-                        </div>
-                        <div class="author">
-                            <router-link class="linkToProfile" :to="'/user/' + comment.commentAuthorId">{{ comment.commentAuthorName }}</router-link>
-                        </div>
-                    </div>
-                    <ButtonTemplate
-                            v-if="checkUser(comment) && !edit"
-                            :text="'Edit'"
-                            :params="[comment]"
-                            :method="editOn"
-                    ></ButtonTemplate>
-                    <ButtonTemplate
-                            v-if="checkUser(comment) && edit"
-                            :text="$t('submit')"
-                            :params="[comment]"
-                            :method="editComment"
-                            class="btn-submit"
-                    ></ButtonTemplate>
-                    <div @click="debouncedPressLike(comment)">
-                        <Like
-                                :active="{active: checkLike(comment)}"
-                        ></Like>
-                        {{ comment.likes.length }}
-                    </div>
-                    <ButtonTemplate
-                            v-if="checkUser(comment)"
-                            :text="'X'"
-                            :params="[comment]"
-                            :method="deleteComment"
-                    ></ButtonTemplate>
-                </div>
-                <div class="comment-body">
-                    <TextArea v-if="checkEdit(comment)"
-                            v-model="comment.commentText"
-                            :value="comment.commentText"
-                            :class="{error: classErrorComment}"
-                            :method="startPrintingComment"
-                    ></TextArea>
-                    <div v-else class="commentText" v-html="convert(comment.commentText)"></div>
-                </div>
-                <div class="book-footer">
-                    <div class="date">{{ $t('uploaded') }}: {{ comment.publicationDate }}</div>
-                </div>
+                <CommentsItem
+                        :comment="comment"
+                ></CommentsItem>
             </li>
         </ul>
     </div>
@@ -58,19 +13,13 @@
 
 <script>
     import Loader from "../Loader";
-    import {mapGetters} from "vuex";
-    import {commentsPagination, deleteComment} from "../../helpers/api";
+    import {commentsPagination} from "../../helpers/api";
     import {getComments} from "../../helpers/api";
-    import Like from "../Like";
-    import {editComments} from "../../helpers/api";
-    import {Comment} from "../../helpers/constuctors";
-    import ButtonTemplate from "../templates/ButtonTemplate";
-    import TextArea from "../templates/TextArea";
-    import _ from 'lodash';
+    import CommentsItem from "./CommentsItem";
 
     export default {
         name: "CommentsFeed",
-        components: {TextArea, ButtonTemplate, Like, Loader},
+        components: {CommentsItem, Loader},
         props: {
             book: Object
         },
@@ -80,8 +29,6 @@
                 page: 1,
                 totalCount: 1,
                 comments: [],
-                edit: false,
-                classErrorComment: false,
             }
         },
         created() {
@@ -89,7 +36,6 @@
                 this.bottom = this.bottomVisible()
             });
             this.loadMore();
-            this.debouncedPressLike = _.debounce(this.pressLike, 500);
         },
         watch: {
             bottom(bottom) {
@@ -98,32 +44,7 @@
                 }
             }
         },
-        computed: {
-            ...mapGetters({
-                user: 'getUser',
-            }),
-        },
         methods: {
-            convert(text)
-            {
-                let exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
-                return text.replace(exp, "<a class='commentTextLink' href='$1'>$1</a>");
-            },
-            startPrintingComment() {
-                this.classErrorComment = false;
-            },
-            editOn(comment) {
-                this.edit = comment.id;
-            },
-            checkEdit(comment) {
-                return this.edit === comment.id;
-            },
-            checkLike(comment) {
-                return comment.likes.find(item => item === this.user.id);
-            },
-            checkUser(comment) {
-                return this.user.id === comment.commentAuthorId;
-            },
             bottomVisible() {
                 return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
             },
@@ -140,7 +61,7 @@
                     });
                 }
             },
-            pressLike(comment) {
+/*            pressLike(comment) {
                 if(!this.checkLike(comment)) {
                     let data = new Comment({
                         bookId: comment.bookId,
@@ -177,36 +98,7 @@
                         });
                     })
                 }
-            },
-            editComment(comment) {
-                let data = new Comment({
-                    bookId: comment.bookId,
-                    commentText: comment.commentText,
-                    commentAuthorName: comment.commentAuthorName,
-                    commentAuthorId: comment.commentAuthorId,
-                    commentAuthorAvatar: comment.commentAuthorAvatar,
-                    publicationDate: comment.publicationDate,
-                    likes: comment.likes,
-                    id: comment.id
-                });
-                editComments(comment.id, data).then(() => {
-                    getComments(this.$store.state.token, this.book.id).then(result => {
-                        this.comments = [];
-                        this.comments.push(...result.data);
-                    });
-                    this.edit = false;
-                    alert('Edited!');
-                })
-            },
-            deleteComment(comment) {
-                deleteComment(comment.id).then(() => {
-                    getComments(this.$store.state.token, this.book.id).then(result => {
-                        this.comments = [];
-                        this.comments.push(...result.data);
-                    });
-                    alert('Deleted!');
-                });
-            }
+            },*/
         }
     }
 </script>
@@ -222,33 +114,5 @@
         background-color: rgb(77, 81, 80);
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
         margin: .5rem 0;
-    }
-    .avatar-photo {
-        width: 2rem;
-        border-radius: 50%;
-    }
-    .comment-header {
-        display: flex;
-        justify-content: space-between;
-    }
-    .header {
-        display: flex;
-    }
-    .linkToProfile{
-        display: block;
-        margin-left: .5rem;
-        font-size: 1.5rem;
-        color: rgb(193,193,195);
-    }
-    .linkToProfile:hover {
-        color: rgb(233,233,235);
-    }
-    .commentText >>> .commentTextLink {
-        color: red;
-    }
-    .date {
-        margin-top: .1rem;
-        font-size: .9rem;
-        color: rgb(153,153,155);
     }
 </style>

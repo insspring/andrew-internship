@@ -87,7 +87,7 @@ server.post('/auth/register', (req, res) => {
     res.status(200).json(id)
 })
 
-server.post('/books/add', (req, res) => {
+server.post('/add/books', (req, res) => {
     const booksdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'));
     const id = booksdb.books.length == 0 ? 1 : booksdb.books[booksdb.books.length - 1].id + 1;
     const book = req.body;
@@ -97,12 +97,32 @@ server.post('/books/add', (req, res) => {
     res.status(200).json(id)
 });
 
-server.post('/comments/add', (req, res) => {
+server.post('/add/comments', (req, res) => {
     const commentsdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'));
     const id = commentsdb.comments.length == 0 ? 1 : commentsdb.comments[commentsdb.comments.length - 1].id + 1;
     const comment = req.body;
     comment.id = id;
     db.get('comments').push(comment)
+        .write()
+    res.status(200).json(id)
+});
+
+server.post('/add/likes', (req, res) => {
+    const likesdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'));
+    const id = likesdb.likes.length == 0 ? 1 : likesdb.likes[likesdb.likes.length - 1].id + 1;
+    const like = req.body;
+    like.id = id;
+    db.get('likes').push(like)
+        .write()
+    res.status(200).json(id)
+});
+
+server.post('/add/hashtags', (req, res) => {
+    const hashtagsdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'));
+    const id = hashtagsdb.hashtags.length == 0 ? 1 : hashtagsdb.hashtags[hashtagsdb.hashtags.length - 1].id + 1;
+    const hashtag = req.body;
+    hashtag.id = id;
+    db.get('hashtags').push(hashtag)
         .write()
     res.status(200).json(id)
 });
@@ -114,6 +134,10 @@ server.use('/', (req, res, next) => {
         case '/books':
             break;
         case '/comments':
+            break;
+        case '/likes':
+            break;
+        case '/hashtags':
             break;
         default:
             return next();

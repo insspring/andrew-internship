@@ -61,7 +61,6 @@ export class Comment {
                     commentAuthorId = null,
                     commentAuthorAvatar = '',
                     publicationDate = '',
-                    likes = [],
                     id = null
                 }={})
     {
@@ -71,10 +70,32 @@ export class Comment {
         this.commentAuthorId = commentAuthorId;
         this.commentAuthorAvatar = commentAuthorAvatar;
         this.publicationDate = publicationDate.trim();
-        this.likes = [...likes];
         this.id = id;
     }
-    addLike(data) {
-        this.likes.push(data)
+}
+
+export class LikeClass {
+    constructor({
+                    commentId = null,
+                    userId = null,
+                    id = null,
+                }={})
+    {
+        this.commentId = commentId;
+        this.userId = userId;
+        this.id = id;
+    }
+}
+
+export class Hashtag {
+    constructor({
+                    bookId = null,
+                    tagContent = '',
+                    id = null,
+                }={})
+    {
+        this.bookId = bookId;
+        this.tagContent = tagContent;
+        this.id = id;
     }
 }

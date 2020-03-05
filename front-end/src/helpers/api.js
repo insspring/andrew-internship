@@ -18,10 +18,16 @@ export const getUser = (token) => {
     })
 };
 export const addBook = (book) => {
-    return axios.post('/books/add', book);
+    return axios.post('/add/books', book);
 };
 export const addComment = (comment) => {
-    return axios.post('/comments/add', comment);
+    return axios.post('/add/comments', comment);
+};
+export const addLike = (like) => {
+    return axios.post('/add/likes', like);
+};
+export const addHashtag = (hashtag) => {
+    return axios.post('/add/hashtags', hashtag);
 };
 export const booksPagination = (token,page) => {
     return axios.get("/books?_page="+ page +"&_limit=10&", {
@@ -39,6 +45,13 @@ export const commentsPagination = (token, id, page) => {
 };
 export const getComments = (token, id) => {
     return axios.get("/comments?bookId="+ id +"&_page=1&_limit=10&", {
+        headers: {
+            'authorization': "bearer " + token
+        },
+    });
+};
+export const getLikes = (token, id) => {
+    return axios.get("/comments/"+ id +"?_embed=likes", {
         headers: {
             'authorization': "bearer " + token
         },
@@ -76,4 +89,7 @@ export const deleteBook = (id) => {
 };
 export const deleteComment = (id) => {
     return axios.delete('/comments/' + id);
+};
+export const deleteLike = (id) => {
+    return axios.delete('/likes/' + id);
 };
