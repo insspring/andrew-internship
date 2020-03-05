@@ -5,6 +5,10 @@
             <li class="comment" v-for="comment in comments" :key="comment.id">
                 <CommentsItem
                         :comment="comment"
+                        :edit.sync="edit"
+                        @editOn="editOn"
+                        :editComment="editComment"
+                        :deleteComment="deleteComment"
                 ></CommentsItem>
             </li>
         </ul>
@@ -13,9 +17,9 @@
 
 <script>
     import Loader from "../Loader";
-    import {commentsPagination} from "../../helpers/api";
-    import {getComments} from "../../helpers/api";
+    import {commentsPagination, getComments, deleteComment, editComments} from "../../helpers/api";
     import CommentsItem from "./CommentsItem";
+    import {Comment} from "../../helpers/constuctors";
 
     export default {
         name: "CommentsFeed",
@@ -29,6 +33,7 @@
                 page: 1,
                 totalCount: 1,
                 comments: [],
+                edit: 0,
             }
         },
         created() {
@@ -61,44 +66,37 @@
                     });
                 }
             },
-/*            pressLike(comment) {
-                if(!this.checkLike(comment)) {
-                    let data = new Comment({
-                        bookId: comment.bookId,
-                        commentText: comment.commentText,
-                        commentAuthorName: comment.commentAuthorName,
-                        commentAuthorId: comment.commentAuthorId,
-                        commentAuthorAvatar: comment.commentAuthorAvatar,
-                        publicationDate: comment.publicationDate,
-                        likes: comment.likes,
-                        id: comment.id
+            editOn(id) {
+                this.edit = id;
+            },
+            editComment(comment) {
+                let data = new Comment({
+                    bookId: comment.bookId,
+                    commentText: comment.commentText,
+                    commentAuthorName: comment.commentAuthorName,
+                    commentAuthorId: comment.commentAuthorId,
+                    commentAuthorAvatar: comment.commentAuthorAvatar,
+                    publicationDate: comment.publicationDate,
+                    id: comment.id
+                });
+                editComments(comment.id, data).then(() => {
+                    getComments(this.$store.state.token, this.book.id).then(result => {
+                        this.comments = [];
+                        this.comments.push(...result.data);
                     });
-                    data.addLike(this.user.id);
-                    editComments(comment.id, data).then(() => {
-                        getComments(this.$store.state.token, this.book.id).then(result => {
-                            this.comments = [];
-                            this.comments.push(...result.data);
-                        });
-                    })
-                } else {
-                    let data = new Comment({
-                        bookId: comment.bookId,
-                        commentText: comment.commentText,
-                        commentAuthorName: comment.commentAuthorName,
-                        commentAuthorId: comment.commentAuthorId,
-                        commentAuthorAvatar: comment.commentAuthorAvatar,
-                        publicationDate: comment.publicationDate,
-                        likes: comment.likes.filter(item => item !== this.user.id),
-                        id: comment.id
+                    this.edit = 0;
+                    alert('Edited!');
+                })
+            },
+            deleteComment(comment) {
+                deleteComment(comment.id).then(() => {
+                    getComments(this.$store.state.token, this.book.id).then(result => {
+                        this.comments = [];
+                        this.comments.push(...result.data);
                     });
-                    editComments(comment.id, data).then(() => {
-                        getComments(this.$store.state.token, this.book.id).then(result => {
-                            this.comments = [];
-                            this.comments.push(...result.data);
-                        });
-                    })
-                }
-            },*/
+                    alert('Deleted!');
+                });
+            }
         }
     }
 </script>

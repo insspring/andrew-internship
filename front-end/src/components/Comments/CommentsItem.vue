@@ -55,8 +55,8 @@
     import ButtonTemplate from "../templates/ButtonTemplate";
     import TextArea from "../templates/TextArea";
     import Like from "../Like";
-    import {Comment, LikeClass} from "../../helpers/constuctors";
-    import {getComments, editComments, addLike, deleteLike, deleteComment, getLikes} from "../../helpers/api";
+    import {LikeClass} from "../../helpers/constuctors";
+    import {addLike, deleteLike, getLikes} from "../../helpers/api";
     import _ from 'lodash';
 
     export default {
@@ -64,10 +64,12 @@
         components: {ButtonTemplate, TextArea, Like},
         props: {
             comment: Object,
+            edit: Number,
+            editComment: Function,
+            deleteComment: Function,
         },
         data() {
             return {
-                edit: false,
                 classErrorComment: false,
                 likes: [],
                 likeFirstState: false,
@@ -103,7 +105,7 @@
                 this.classErrorComment = false;
             },
             editOn() {
-                this.edit = this.comment.id;
+                this.$emit('editOn', this.comment.id);
             },
             checkUser() {
                 return this.user.id === this.comment.commentAuthorId;
@@ -130,34 +132,6 @@
                     deleteLike(this.likes[this.likes.findIndex(item => item.userId === this.user.id)].id);
                 }
             },
-            editComment(comment) {
-                let data = new Comment({
-                    bookId: comment.bookId,
-                    commentText: comment.commentText,
-                    commentAuthorName: comment.commentAuthorName,
-                    commentAuthorId: comment.commentAuthorId,
-                    commentAuthorAvatar: comment.commentAuthorAvatar,
-                    publicationDate: comment.publicationDate,
-                    id: comment.id
-                });
-                editComments(comment.id, data).then(() => {
-                    getComments(this.$store.state.token, this.book.id).then(result => {
-                        this.comments = [];
-                        this.comments.push(...result.data);
-                    });
-                    this.edit = false;
-                    alert('Edited!');
-                })
-            },
-            deleteComment(comment) {
-                deleteComment(comment.id).then(() => {
-                    getComments(this.$store.state.token, this.book.id).then(result => {
-                        this.comments = [];
-                        this.comments.push(...result.data);
-                    });
-                    alert('Deleted!');
-                });
-            }
         }
     }
 </script>
