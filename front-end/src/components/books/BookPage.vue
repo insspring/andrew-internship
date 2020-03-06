@@ -1,5 +1,5 @@
 <template>
-    <div class="book-page" v-if="book.description">
+    <div class="book-page" v-if="book.description && book.hashtags">
         <div class="book">
             <div class="cover">
                 <img class="bookCover" :src="book.bookCover">
@@ -43,6 +43,9 @@
                 <div class="date">
                     <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
                     <div class="item date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
+                    <div class="hashtags" v-for="hashtag in book.hashtags" :key="hashtag">
+                        <router-link class="hashtag" :to="{ name: 'searched', params: {hashtag} }">#{{ hashtag }}</router-link>
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,6 +104,10 @@
             favoritesCheck() {
                 return this.book.favorites ? this.book.favorites.find(item => item === this.user.id) : null;
             },
+            /*convert() {
+                let exp = /([A-Za-z0-9\d-._]*)/g;
+                return this.book.hashtags.map(item => item.replace(exp, `<router-link class="hashtagsLink" to="$1">$1</router-link>`));
+            }*/
         },
         methods: {
             activateReadMore(id) {
@@ -224,6 +231,9 @@
     }
     .linkToProfile:hover {
         color: rgb(233,233,235);
+    }
+    .hashtag {
+        color: rgb(212, 126, 15);
     }
     .readMore {
         color: rgb(122, 126, 125);

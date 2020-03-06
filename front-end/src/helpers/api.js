@@ -68,6 +68,13 @@ export const getFavorites = (token,id,page) => {
         },
     });
 };
+export const getSearched = (token,hashtag,page) => {
+    return axios.get("/books?hashtags_like="+hashtag+"&_page="+page+"&_limit=10&_sort=id&_order=desc", {
+        headers: {
+            'authorization': "bearer " + token
+        },
+    });
+};
 export const getBook = (token,id) => {
     return axios.get("/books?id="+id, {
         headers: {
