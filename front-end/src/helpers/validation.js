@@ -19,6 +19,9 @@ export const validationBooks = (select, param) => {
     } else if(select === 'description') {
         let regex = /[A-Za-z0-9\s\d-_,'".;:()]{50,500}$/;
         return regex.test(param);
+    } else if(select === 'tags') {
+        let regex = /(?:\s|^)#[A-Za-z0-9\d-._]+(?:\s|$)/g;
+        return regex.test(param);
     }
 };
 export const validationComments = (param) => {

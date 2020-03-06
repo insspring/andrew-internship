@@ -26,11 +26,8 @@ export const addComment = (comment) => {
 export const addLike = (like) => {
     return axios.post('/add/likes', like);
 };
-export const addHashtag = (hashtag) => {
-    return axios.post('/add/hashtags', hashtag);
-};
 export const booksPagination = (token,page) => {
-    return axios.get("/books?_page="+ page +"&_limit=10&", {
+    return axios.get("/books?_page="+ page +"&_limit=10&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },
@@ -58,14 +55,14 @@ export const getLikes = (token, id) => {
     });
 };
 export const getBooks = (token,id,page) => {
-    return axios.get("/books?authorId="+id+"&_page="+page+"&_limit=10&", {
+    return axios.get("/books?authorId="+id+"&_page="+page+"&_limit=10&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },
     });
 };
 export const getFavorites = (token,id,page) => {
-    return axios.get("/books?favorites_like="+id+"&_page="+page+"&_limit=10&", {
+    return axios.get("/books?favorites_like="+id+"&_page="+page+"&_limit=10&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },

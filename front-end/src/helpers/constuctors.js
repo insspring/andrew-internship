@@ -27,6 +27,7 @@ export class Book {
                     author = "",
                     authorId = null,
                     bookCover = '',
+                    hashtags = [],
                     publicationDate = '',
                     updateDate = '',
                     favorites = [],
@@ -39,6 +40,7 @@ export class Book {
         this.author = author;
         this.authorId = authorId;
         this.bookCover = bookCover;
+        this.hashtags = [...hashtags];
         this.publicationDate = publicationDate.trim();
         this.updateDate = updateDate.trim();
         this.favorites = [...favorites];
@@ -50,6 +52,9 @@ export class Book {
     };
     addRate(data) {
         this.rating.push(data)
+    }
+    addHashtag(tag) {
+        this.hashtags.push(tag);
     }
 }
 
@@ -83,19 +88,6 @@ export class LikeClass {
     {
         this.commentId = commentId;
         this.userId = userId;
-        this.id = id;
-    }
-}
-
-export class Hashtag {
-    constructor({
-                    bookId = null,
-                    tagContent = '',
-                    id = null,
-                }={})
-    {
-        this.bookId = bookId;
-        this.tagContent = tagContent;
         this.id = id;
     }
 }

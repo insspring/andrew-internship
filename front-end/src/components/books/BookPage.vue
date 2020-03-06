@@ -116,6 +116,7 @@
                     author: this.book.author,
                     authorId: this.book.authorId,
                     bookCover: this.book.bookCover,
+                    hashtags: this.hashtags,
                     publicationDate: this.book.publicationDate,
                     updateDate: this.book.updateDate,
                     favorites: this.book.favorites,
@@ -136,6 +137,7 @@
                     author: this.book.author,
                     authorId: this.book.authorId,
                     bookCover: this.book.bookCover,
+                    hashtags: this.hashtags,
                     publicationDate: this.book.publicationDate,
                     updateDate: this.book.updateDate,
                     favorites: this.book.favorites.filter(item => item !== this.user.id),
@@ -180,7 +182,6 @@
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
     }
     .desc {
-        box-sizing: border-box;
         flex-direction: column;
         justify-content: space-between;
     }
