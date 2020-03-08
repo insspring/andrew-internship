@@ -101,16 +101,24 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "../../scss/mixins";
+
     li {
         list-style: none;
     }
     .comment {
+        width: 40rem;
         padding: 2rem;
         border-radius: 2rem;
         color: rgb(193,193,195);
         background-color: rgb(77, 81, 80);
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
-        margin: .5rem 0;
+        margin: 1rem 0;
+
+        @include for-size (phone-only) {
+            width: 20rem;
+        }
     }
 </style>

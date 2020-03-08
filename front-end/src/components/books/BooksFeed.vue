@@ -88,7 +88,7 @@
         }
     }
     .book {
-        width: 20rem;
+        box-sizing: border-box;
         margin: .7rem;
         padding: 2rem;
         display: flex;
@@ -103,7 +103,7 @@
         display: flex;
     }
     .desc {
-        box-sizing: border-box;
+        width: 10rem;
         flex-direction: column;
     }
     .bookCover {
@@ -121,12 +121,12 @@
     }
     .name {
         margin: 0;
-        font-size: 2rem;
+        font-size: 1.6rem;
         font-weight: bold;
         color: rgb(212, 126, 15);
     }
     .author {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         color: rgb(193,193,195);
     }
     .linkToProfile{

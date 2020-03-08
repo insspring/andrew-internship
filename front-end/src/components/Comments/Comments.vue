@@ -2,6 +2,7 @@
     <div class="comment-area">
         <div class="comment-area-write" v-if="!checkUser">
             <TextArea
+                    class="comment"
                     v-model="commentText"
                     :value="commentText"
                     :placeholder="'Required at least 20 symbol length comment'"

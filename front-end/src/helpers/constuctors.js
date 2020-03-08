@@ -53,9 +53,6 @@ export class Book {
     addRate(data) {
         this.rating.push(data)
     }
-    addHashtag(tag) {
-        this.hashtags.push(tag);
-    }
 }
 
 export class Comment {

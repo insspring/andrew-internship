@@ -10,30 +10,34 @@
                     <router-link class="linkToProfile" :to="'/user/' + comment.commentAuthorId">{{ comment.commentAuthorName }}</router-link>
                 </div>
             </div>
-            <ButtonTemplate
-                    v-if="checkUser() && !edit"
-                    :text="'Edit'"
-                    :method="editOn"
-            ></ButtonTemplate>
-            <ButtonTemplate
-                    v-if="checkUser() && edit"
-                    :text="$t('submit')"
-                    :params="[comment]"
-                    :method="editComment"
-                    class="btn-submit"
-            ></ButtonTemplate>
+            <div class="buttons">
+                <ButtonTemplate
+                        v-if="checkUser() && !edit"
+                        :text="'Edit'"
+                        :method="editOn"
+                        class="btn edit"
+                ></ButtonTemplate>
+                <ButtonTemplate
+                        v-if="checkUser() && edit"
+                        :text="$t('submit')"
+                        :params="[comment]"
+                        :method="editComment"
+                        class="btn-submit"
+                ></ButtonTemplate>
+                <ButtonTemplate
+                        v-if="checkUser()"
+                        :text="'X'"
+                        :params="[comment]"
+                        :method="deleteComment"
+                        class="btn delete"
+                ></ButtonTemplate>
+            </div>
             <div @click="pressLike">
                 <Like
                         :active="{active: likeClickingState}"
                 ></Like>
                 {{ likeCounter }}
             </div>
-            <ButtonTemplate
-                    v-if="checkUser()"
-                    :text="'X'"
-                    :params="[comment]"
-                    :method="deleteComment"
-            ></ButtonTemplate>
         </div>
         <div class="comment-body">
             <TextArea v-if="checkEdit"
@@ -147,6 +151,17 @@
     }
     .header {
         display: flex;
+    }
+    .buttons {
+        display: flex;
+    }
+    .btn {
+        background-color: transparent;
+        border: 1px solid transparent;
+    }
+    .btn:hover {
+        background-color: rgb(80,80,80);
+        border: 1px solid rgb(60,60,60)
     }
     .linkToProfile{
         display: block;

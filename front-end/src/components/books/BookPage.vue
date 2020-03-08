@@ -1,5 +1,5 @@
 <template>
-    <div class="book-page" v-if="book.description && book.hashtags">
+    <div class="book-page" v-if="book.description">
         <div class="book">
             <div class="cover">
                 <img class="bookCover" :src="book.bookCover">
@@ -13,20 +13,25 @@
                 <div class="header">
                     <div class="item name">{{ book.name }}</div>
                     <div class="buttons">
-                        <router-link v-if="checkUser" class="router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
+                        <router-link v-if="checkUser" class="btn router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
                         <ButtonTemplate
+                                class="btn"
                                 v-if="checkUser"
                                 :text="'X'"
                                 :params="[book]"
                                 :method="deleteBook"
                         ></ButtonTemplate>
-                        <ButtonTemplate v-if="!checkUser && !favoritesCheck"
+                        <ButtonTemplate
+                                v-if="!checkUser && !favoritesCheck"
+                                class="btn"
                                 :text="'Add to favorites'"
                                 :method="debouncedToFavorites"
                         ></ButtonTemplate>
-                        <ButtonTemplate v-if="!checkUser && favoritesCheck"
-                                        :text="'Remove from favorites'"
-                                        :method="debouncedFromFavorites"
+                        <ButtonTemplate
+                                v-if="!checkUser && favoritesCheck"
+                                class="btn"
+                                :text="'Remove from favorites'"
+                                :method="debouncedFromFavorites"
                         ></ButtonTemplate>
                     </div>
                 </div>
@@ -44,7 +49,7 @@
                     <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
                     <div class="item date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
                     <div class="hashtags" v-for="hashtag in book.hashtags" :key="hashtag">
-                        <router-link class="hashtag" :to="{ name: 'searched', params: {hashtag} }">#{{ hashtag }}</router-link>
+                        <router-link v-if="hashtag" class="hashtag" :to="{ name: 'searched', params: {hashtag} }">#{{ hashtag }}</router-link>
                     </div>
                 </div>
             </div>
@@ -104,10 +109,6 @@
             favoritesCheck() {
                 return this.book.favorites ? this.book.favorites.find(item => item === this.user.id) : null;
             },
-            /*convert() {
-                let exp = /([A-Za-z0-9\d-._]*)/g;
-                return this.book.hashtags.map(item => item.replace(exp, `<router-link class="hashtagsLink" to="$1">$1</router-link>`));
-            }*/
         },
         methods: {
             activateReadMore(id) {
@@ -216,6 +217,13 @@
     .buttons {
         display: flex;
     }
+    .btn {
+        background-color: transparent;
+        border: 1px solid transparent;
+    }
+    .btn:hover {
+        color: rgb(212, 126, 15);
+    }
     .name {
         margin: 0;
         font-size: 2rem;
@@ -235,6 +243,9 @@
     .hashtag {
         color: rgb(212, 126, 15);
     }
+    .hashtag:hover {
+        text-shadow: 0 0 .1rem rgb(142, 106, 15);
+    }
     .readMore {
         color: rgb(122, 126, 125);
     }
@@ -248,11 +259,9 @@
         border-radius: .5rem;
         font-weight: bold;
         cursor: pointer;
-        background-color: rgb(96, 96, 95);
         color: rgb(203, 203, 205);
-        border: 2px solid rgb(73, 73, 75);
     }
     .router-link:hover {
-        background-color: rgb(66, 66, 65);
+        color: rgb(212, 126, 15);
     }
 </style>

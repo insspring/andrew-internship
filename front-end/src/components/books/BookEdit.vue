@@ -24,6 +24,17 @@
             </div>
 
             <div class="item">
+                <label for="tags">#Hashtags</label>
+                <TextArea
+                        id="tags"
+                        v-model="hashtags"
+                        :value="hashtags"
+                        :class="{error: classErrorTags}"
+                        :method="startPrintingTags"
+                ></TextArea>
+            </div>
+
+            <div class="item">
                 <input type="file"
                        @change="chooseBookCover"
                 >
@@ -55,14 +66,17 @@
             return {
                 classErrorName: false,
                 classErrorDesc: false,
+                classErrorTags: false,
                 selectedFile: null,
-                book: {}
+                book: {},
+                hashtags: ''
             }
         },
         created() {
-
             getBook(this.$store.state.token,this.bookId).then(result => {
                 this.book = result.data[0];
+                this.hashtags = '#' + this.book.hashtags.join(' #');
+                this.$store.dispatch('loadingProcess', false);
             });
         },
         methods: {
@@ -72,6 +86,9 @@
             startPrintingDesc() {
                 this.classErrorDesc = false;
             },
+            startPrintingTags() {
+                this.classErrorTags = false;
+            },
             chooseBookCover(e) {
                 let reader = new FileReader();
                 reader.addEventListener('load', function () {
@@ -80,16 +97,18 @@
                 reader.readAsDataURL(e.target.files[0]);
             },
             changeBook() {
-                if(validationBooks('name',this.book.name) && validationBooks('description',this.book.description)) {
+                if(validationBooks('name',this.book.name) && validationBooks('description',this.book.description) && validationBooks('tags',this.hashtags)) {
                     editBook(this.bookId, new Book ({
                         name: this.book.name,
                         description: this.book.description,
                         author: this.book.author,
                         authorId: this.book.authorId,
                         bookCover: this.selectedFile ? this.selectedFile : this.book.bookCover,
+                        hashtags: this.hashtags.split('#').map(item => item.trim()).filter(item => item !== ''),
                         publicationDate: this.book.publicationDate,
                         updateDate: Date().toString().split('').slice(4, Date().toString().split('').length - 36).join(''),
                         favorites: this.book.favorites,
+                        rating: this.book.rating,
                         id: this.book.id
                     })).then(() => {
                         alert('Changes succeed!');
@@ -103,6 +122,9 @@
                     }
                     if(!validationBooks('description',this.book.description)) {
                         this.classErrorDesc = true;
+                    }
+                    if(!validationBooks('tags',this.hashtags)) {
+                        this.classErrorTags = true;
                     }
                 }
             }

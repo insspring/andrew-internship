@@ -33,7 +33,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import '../../scss/mixins';
+
 textarea {
   resize: none;
   overflow: hidden;
@@ -43,6 +46,14 @@ textarea {
   color: rgb(245, 245, 245);
   border-bottom: 2px solid rgb(56, 56, 55);
   background-color: rgb(76, 76, 75);
+}
+.comment {
+    min-width: 40rem;
+    margin-bottom: 1rem;
+
+    @include for-size (phone-only) {
+        min-width: 20rem;
+    }
 }
 .error {
   border-color: rgb(166, 40, 40);
