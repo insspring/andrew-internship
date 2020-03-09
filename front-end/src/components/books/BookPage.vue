@@ -110,6 +110,14 @@
                 return this.book.favorites ? this.book.favorites.find(item => item === this.user.id) : null;
             },
         },
+        watch: {
+            bookId(bookId) {
+                getBook(this.$store.state.token, bookId).then(result => {
+                    this.book = result.data[0];
+                    this.$store.dispatch('loadingProcess',false);
+                });
+            }
+        },
         methods: {
             activateReadMore(id) {
                 this.readMoreActivated = id;

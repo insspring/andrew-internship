@@ -4,6 +4,7 @@
             <img class="logo__img" src="../assets/logo.png">
         </div>
         <SignUpIn></SignUpIn>
+        <NavSearch></NavSearch>
         <div class="menu burgerMenu" :class="{ active: opened }">
             <div class="menu-content burgerMenuContent">
                 <router-link class="router-link" to="/">{{ $t('home') }}</router-link>
@@ -41,10 +42,11 @@
     import SignUpIn from "./SignUpIn";
     import {mapGetters} from "vuex";
     import UserMiniature from "./UserMiniature";
+    import NavSearch from "./NavSearch";
 
     export default {
         name: "Header",
-        components: {UserMiniature, SignUpIn, LocaleChange, ButtonTemplate},
+        components: {NavSearch, UserMiniature, SignUpIn, LocaleChange, ButtonTemplate},
         data() {
             return {
                 opened: false,

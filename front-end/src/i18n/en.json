@@ -1,7 +1,7 @@
 {
-  "signUp": "Sign Up",
-  "signIn": "Sign In",
-  "signOut": "Sign Out",
+  "signUp": "SignUp",
+  "signIn": "SignIn",
+  "signOut": "SignOut",
   "email": "Email address",
   "name":  "Name",
   "password": "Password",
