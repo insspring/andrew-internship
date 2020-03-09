@@ -2,6 +2,8 @@
     <div>
         <input
                 @input="debouncedSearch"
+                @focus="search = true"
+                @blur="search = false"
         />
         <div class="searchResult">
             <div v-if=" search && !books.length">
@@ -37,32 +39,32 @@
         },
         created() {
             this.debouncedSearch = _.debounce((e) => {
-                this.search = true;
                 this.books = [];
                 this.page = 1;
-                this.$store.dispatch('loadingProcess', true);
-                console.log(e.target.value);
-                if(e.target.value.split('')[0] === '#') {
-                    getSearchedByHashtag(this.$store.state.token, e.target.value.slice(1), this.page).then(result => {
-                        this.totalCount = result.headers["x-total-count"];
-                        this.books.push(...result.data);
-                        this.page++;
-                        this.$store.dispatch('loadingProcess', false);
-                    });
-                } else {
-                    getSearchedByTitle(this.$store.state.token, e.target.value, this.page).then(result => {
-                        this.totalCount = result.headers["x-total-count"];
-                        this.books.push(...result.data);
-                        this.page++;
-                        this.$store.dispatch('loadingProcess', false);
-                    });
-                    getSearchedByAuthor(this.$store.state.token, e.target.value, this.page).then(result => {
-                        this.totalCount = result.headers["x-total-count"];
-                        this.books.push(...result.data);
-                        this.page++;
-                        this.$store.dispatch('loadingProcess', false);
-                    });
-                 }
+                if(e.target.value) {
+                    this.$store.dispatch('loadingProcess', true);
+                    if (e.target.value.split('')[0] === '#') {
+                        getSearchedByHashtag(this.$store.state.token, e.target.value.slice(1), this.page).then(result => {
+                            this.totalCount = result.headers["x-total-count"];
+                            this.books.push(...result.data);
+                            this.page++;
+                            this.$store.dispatch('loadingProcess', false);
+                        });
+                    } else {
+                        getSearchedByTitle(this.$store.state.token, e.target.value, this.page).then(result => {
+                            this.totalCount = result.headers["x-total-count"];
+                            this.books.push(...result.data);
+                            this.page++;
+                            this.$store.dispatch('loadingProcess', false);
+                        });
+                        getSearchedByAuthor(this.$store.state.token, e.target.value, this.page).then(result => {
+                            this.totalCount = result.headers["x-total-count"];
+                            this.books.push(...result.data);
+                            this.page++;
+                            this.$store.dispatch('loadingProcess', false);
+                        });
+                    }
+                }
             }, 1000, {'leading': false, 'trailing': true})
         },
     }
@@ -80,13 +82,16 @@
     .searchResult {
         position: absolute;
         top: 5rem;
-        background-color: rgb(60, 60, 60);
         color: rgb(205, 205, 205);
+        max-height: 26rem;
+        width: 16rem;
+        overflow: scroll;
     }
     .book {
         padding: 1rem;
         display: flex;
         flex-direction: column;
+        background-color: rgb(60, 60, 60);
     }
     .router-link {
         display: flex;
