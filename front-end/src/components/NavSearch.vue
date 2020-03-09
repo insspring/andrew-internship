@@ -2,13 +2,8 @@
     <div>
         <input
                 @input="debouncedSearch"
-                @focus="search = true"
-                @blur="search = false"
         />
-        <div class="searchResult">
-            <div v-if=" search && !books.length">
-                <p>Nothing has been found</p>
-            </div>
+        <div v-if="search" class="searchResult" id="result">
             <div class="book" v-for="book in books" :key="book.id">
                 <router-link class="router-link" :to="'/book/' + book.id">
                     <img class="bookCover" :src="book.bookCover">
@@ -18,6 +13,9 @@
                     </div>
                 </router-link>
                 <hr>
+            </div>
+            <div v-if=" !books.length && search">
+                <p>Nothing has been found</p>
             </div>
         </div>
     </div>
@@ -38,7 +36,11 @@
             }
         },
         created() {
-            this.debouncedSearch = _.debounce((e) => {
+            this.clickedOutside();
+            this.debouncedSearch = _.debounce(this.searchFunc, 1000, {'leading': false, 'trailing': true})
+        },
+        methods: {
+            searchFunc(e) {
                 this.books = [];
                 this.page = 1;
                 if(e.target.value) {
@@ -49,6 +51,7 @@
                             this.books.push(...result.data);
                             this.page++;
                             this.$store.dispatch('loadingProcess', false);
+                            this.search = true;
                         });
                     } else {
                         getSearchedByTitle(this.$store.state.token, e.target.value, this.page).then(result => {
@@ -56,17 +59,33 @@
                             this.books.push(...result.data);
                             this.page++;
                             this.$store.dispatch('loadingProcess', false);
+                            this.search = true;
                         });
                         getSearchedByAuthor(this.$store.state.token, e.target.value, this.page).then(result => {
                             this.totalCount = result.headers["x-total-count"];
                             this.books.push(...result.data);
                             this.page++;
                             this.$store.dispatch('loadingProcess', false);
+                            this.search = true;
                         });
                     }
                 }
-            }, 1000, {'leading': false, 'trailing': true})
-        },
+            },
+            clickedOutside() {
+                document.addEventListener("click", (evt) => {
+                    const aroundElement = document.getElementById("result");
+                    let targetElement = evt.target;
+                    do {
+                        if (targetElement === aroundElement) {
+                            this.search = false;
+                            return;
+                        }
+                        targetElement = targetElement.parentNode;
+                    } while (targetElement);
+                    this.search = false;
+                });
+            }
+        }
     }
 </script>
 
