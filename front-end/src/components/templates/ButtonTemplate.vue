@@ -48,7 +48,7 @@
         color: rgb(243, 243, 245);
     }
     .btn-menu {
-        @include for-size(phone-only) {
+        @include for-size(tablet-landscape-up) {
             margin-left: .6rem;
             border-radius: .1rem;
             border: 1px solid rgb(43, 43, 45);
@@ -57,7 +57,7 @@
         }
     }
     .btn-menu:hover {
-        @include for-size(phone-only) {
+        @include for-size(tablet-landscape-up) {
             box-shadow: 0 .1rem .1rem .2rem rgb(43, 43, 45);
         }
     }

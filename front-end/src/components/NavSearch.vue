@@ -2,6 +2,7 @@
     <div>
         <input
                 @input="debouncedSearch"
+                placeholder="#search"
         />
         <div v-if="search" class="searchResult" id="result">
             <div class="book" v-for="book in books" :key="book.id">
@@ -73,10 +74,10 @@
             },
             clickedOutside() {
                 document.addEventListener("click", (evt) => {
-                    const aroundElement = document.getElementById("result");
+                    const closedElement = document.getElementById("result");
                     let targetElement = evt.target;
                     do {
-                        if (targetElement === aroundElement) {
+                        if (targetElement === closedElement) {
                             this.search = false;
                             return;
                         }
@@ -89,14 +90,21 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "../scss/mixins";
+
     input {
+        padding-left: .2rem;
         width: 16rem;
-        margin-right: 2rem;
         border: none;
         color: rgb(245, 245, 245);
         border-bottom: 2px solid rgb(80, 80, 80);
         background-color: transparent;
+
+        @include for-size(phone-only) {
+
+        }
     }
     .searchResult {
         position: absolute;
@@ -104,7 +112,7 @@
         color: rgb(205, 205, 205);
         max-height: 26rem;
         width: 16rem;
-        overflow: scroll;
+        overflow: hidden scroll;
     }
     .book {
         padding: 1rem;

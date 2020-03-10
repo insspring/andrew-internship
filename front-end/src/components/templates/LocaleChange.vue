@@ -53,7 +53,7 @@
         background-color: rgb(46, 46, 45);
         appearance: none;
 
-        @include for-size(phone-only) {
+        @include for-size(tablet-landscape-up) {
             border-radius: 0.1rem;
             border: 1px solid rgb(43, 43, 45);
             background-color: rgb(36, 36, 35);
@@ -64,7 +64,7 @@
         box-shadow: 0 0 0.5rem 0.1rem rgb(53, 53, 55);
         color: rgb(243, 243, 245);
 
-        @include for-size(phone-only) {
+        @include for-size(tablet-landscape-up) {
             box-shadow: -0.2rem 0.1rem 0.1rem 0.2rem rgb(43, 43, 45);
         }
     }

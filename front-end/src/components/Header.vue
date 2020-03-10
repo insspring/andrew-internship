@@ -5,34 +5,35 @@
         </div>
         <SignUpIn></SignUpIn>
         <NavSearch></NavSearch>
-        <div class="menu burgerMenu" :class="{ active: opened }">
-            <div class="menu-content burgerMenuContent">
-                <router-link class="router-link" to="/">{{ $t('home') }}</router-link>
-                <ButtonTemplate
-                        class="btn-menu"
-                        v-if="!flag"
-                        :text="$t('signUp')"
-                        :method="visibleUp"
-                ></ButtonTemplate>
-                <ButtonTemplate
-                        class="btn-menu"
-                        v-if="!flag"
-                        :text="$t('signIn')"
-                        :method="visibleIn"
-                ></ButtonTemplate>
-                <ButtonTemplate
-                        class="btn-menu"
-                        v-if="flag"
-                        :text="$t('signOut')"
-                        :method="deleteToken"
-                ></ButtonTemplate>
-                <LocaleChange></LocaleChange>
-                <router-link v-if="flag" class="router-link" to="/favorites">Favorites</router-link>
-                <UserMiniature :user="user"></UserMiniature>
+        <div id="menu">
+            <div id="background" class="burgerMenu" :class="{ active: opened }">
+                <div class="menu-content burgerMenuContent">
+                    <router-link class="router-link" to="/">{{ $t('home') }}</router-link>
+                    <ButtonTemplate
+                            class="btn-menu"
+                            v-if="!flag"
+                            :text="$t('signUp')"
+                            :method="visibleUp"
+                    ></ButtonTemplate>
+                    <ButtonTemplate
+                            class="btn-menu"
+                            v-if="!flag"
+                            :text="$t('signIn')"
+                            :method="visibleIn"
+                    ></ButtonTemplate>
+                    <ButtonTemplate
+                            class="btn-menu"
+                            v-if="flag"
+                            :text="$t('signOut')"
+                            :method="deleteToken"
+                    ></ButtonTemplate>
+                    <LocaleChange></LocaleChange>
+                    <router-link v-if="flag" class="router-link" to="/favorites">Favorites</router-link>
+                    <UserMiniature :user="user"></UserMiniature>
+                </div>
             </div>
+            <div class="menu-btn" @click="openMenu" :class="{ change: opened }"></div>
         </div>
-        <div class="menu-btn" @click="openMenu" :class="{ change: opened }"></div>
-
     </div>
 </template>
 
@@ -59,9 +60,28 @@
                 loading: 'getLoading'
             })
         },
+        /*watch: {
+            opened(opened) {
+                if (opened) {
+                    this.clickedOutside();
+                }
+            }
+        },*/
+        created() {
+            this.clickedOutside();
+        },
         methods: {
             openMenu() {
                 this.opened = !this.opened;
+            },
+            clickedOutside() {
+                document.addEventListener("click", (evt) => {
+                    const backgroundElement = document.getElementById("background");
+                    let targetElement = evt.target;
+                    if(targetElement === backgroundElement) {
+                        this.opened = false;
+                    }
+                });
             },
             visibleIn() {
                 this.$store.dispatch('visibleIn',true);
@@ -69,7 +89,6 @@
             visibleUp() {
                 this.$store.dispatch('visibleUp',true);
             },
-
             deleteToken() {
                 localStorage.removeItem('accessToken');
                 this.$store.dispatch('setFlag',false);
@@ -98,18 +117,28 @@
         background-color: rgb(36, 36, 35);
         box-shadow: 0 .1rem 1rem .1rem rgb(36, 36, 35);
 
-        @include for-size (phone-only) {
+        @include for-size (tablet-landscape-up) {
             justify-content: space-around;
         }
     }
 
     .logo {
         padding: 1rem;
-        width: 20rem;
-        min-width: 10rem;
+        width: 16rem;
+        min-width: 16rem;
+
+        @include for-size (tablet-landscape-up) {
+            padding: 0;
+            width: 12rem;
+            min-width: 12rem;
+        }
+        @include for-size (phone-only) {
+            padding: 0;
+            width: 8rem;
+            min-width: 8rem;
+        }
     }
     .logo__img {
-        margin-top: .5rem;
         width: 100%;
     }
 
@@ -120,7 +149,7 @@
         cursor: pointer;
         min-width: 1.5rem;
 
-        @include for-size (phone-only) {
+        @include for-size (tablet-landscape-up) {
             display: block;
         }
     }
@@ -150,12 +179,6 @@
         transform: translateY(-10px) rotate(-45deg);
         z-index: 2;
     }
-
-    .menu {
-
-        @include for-size (phone-only) {
-        }
-    }
     .menu-content {
         display: flex;
         align-items: center;
@@ -163,14 +186,13 @@
     }
     .burgerMenu {
 
-        @include for-size (phone-only) {
+        @include for-size (tablet-landscape-up) {
             display: none;
-            height: 100%;
             width: 100%;
+            height: 100%;
             position: fixed;
-            z-index: 1;
             top: 0;
-            left: 0;
+            right: 0;
             background-color: rgba(0,0,0,0.3);
             overflow: hidden;
             transition: 1s;
@@ -178,11 +200,11 @@
     }
     .burgerMenuContent {
 
-        @include for-size (phone-only) {
-            margin-top: 5rem;
+        @include for-size (tablet-landscape-up) {
             float: right;
+            margin-top: 5rem;
             height: 100%;
-            width: 15rem;
+            width: 16rem;
             background-color: rgb(36, 36, 35);
             display: flex;
             flex-direction: column;
@@ -191,11 +213,12 @@
     }
     .active {
 
-        @include for-size (phone-only) {
+        @include for-size (tablet-landscape-up) {
             display: block;
         }
     }
     .router-link {
+        box-sizing: border-box;
         margin-right: .5rem;
         padding: .6rem .8rem .6rem .8rem;
         border-radius: .5rem;
@@ -205,7 +228,7 @@
         color: rgb(133, 133, 135);
         border: 2px solid rgb(63, 63, 65);
 
-        @include for-size(phone-only) {
+        @include for-size(tablet-landscape-up) {
             width: 100%;
             display: block;
             margin-left: .6rem;
@@ -217,6 +240,7 @@
             padding: 1rem;
             cursor: pointer;
             color: rgb(133, 133, 135);
+            box-sizing: border-box;
         }
     }
     .router-link:hover {

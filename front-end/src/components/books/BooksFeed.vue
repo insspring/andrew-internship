@@ -82,7 +82,7 @@
         display: flex;
         flex-wrap: wrap;
 
-        @include for-size (phone-only) {
+        @include for-size (tablet-landscape-up) {
             justify-content: center;
             margin: 0;
         }
