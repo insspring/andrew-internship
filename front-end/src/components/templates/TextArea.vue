@@ -51,7 +51,7 @@ textarea {
     min-width: 40rem;
     margin-bottom: 1rem;
 
-    @include for-size (phone-only) {
+    @include for-size (tablet-landscape-up) {
         min-width: 20rem;
     }
 }

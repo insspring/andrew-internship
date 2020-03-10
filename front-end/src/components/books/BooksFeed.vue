@@ -76,7 +76,9 @@
 </script>
 
 <style lang="scss" scoped>
+
     @import '../../scss/mixins';
+    @import "../../scss/_variables";
 
     .library {
         display: flex;
@@ -123,7 +125,7 @@
         margin: 0;
         font-size: 1.6rem;
         font-weight: bold;
-        color: rgb(212, 126, 15);
+        color: $orange-color;
     }
     .author {
         font-size: 1.4rem;
@@ -150,6 +152,6 @@
         cursor: pointer;
     }
     .router-link:hover {
-        color: rgb(222, 146, 35);
+        color: $orange-color;
     }
 </style>

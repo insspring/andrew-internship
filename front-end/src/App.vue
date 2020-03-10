@@ -42,8 +42,6 @@ export default {
     font-size: 14px;
 }
 body {
-    display: flex;
-    justify-content: center;
     background-color: rgb(65, 65, 65);
 }
 .router-view {

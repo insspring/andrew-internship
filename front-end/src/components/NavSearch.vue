@@ -76,13 +76,10 @@
                 document.addEventListener("click", (evt) => {
                     const closedElement = document.getElementById("result");
                     let targetElement = evt.target;
-                    do {
-                        if (targetElement === closedElement) {
-                            this.search = false;
-                            return;
-                        }
-                        targetElement = targetElement.parentNode;
-                    } while (targetElement);
+                    if (targetElement === closedElement) {
+                        this.search = false;
+                        return;
+                    }
                     this.search = false;
                 });
             }
@@ -108,6 +105,7 @@
     }
     .searchResult {
         position: absolute;
+        z-index: 5;
         top: 5rem;
         color: rgb(205, 205, 205);
         max-height: 26rem;

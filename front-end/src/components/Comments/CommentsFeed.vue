@@ -117,8 +117,5 @@
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
         margin: 1rem 0;
 
-        @include for-size (phone-only) {
-            width: 20rem;
-        }
     }
 </style>

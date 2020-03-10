@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="rating">
         <span class="star-rating" v-if="!checkRate && !checkUser && bookPage">
             <input type="radio" name="rating" value="1" v-model="rate"><i></i>
             <input type="radio" name="rating" value="2" v-model="rate"><i></i>
@@ -80,9 +80,20 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "../scss/mixins";
+
     input {
         cursor: pointer;
+    }
+    .rating {
+        display: flex;
+        flex-direction: column;
+
+        @include for-size(phone-only) {
+            margin-left: .6rem;
+        }
     }
     .rate-stats {
         display: flex;
@@ -92,9 +103,18 @@
         display: block;
         font-weight: bold;
         font-size: 1.4rem;
+        margin: .4rem 0;
+
+        @include for-size(phone-only) {
+            font-size: 1rem;
+        }
     }
     .votes {
         font-size: 1.2rem;
+
+        @include for-size(phone-only) {
+            font-size: .8rem;
+        }
     }
     .star-rating {
         font-size: 0;
@@ -106,6 +126,11 @@
         position: relative;
         background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
         background-size: contain;
+
+        @include for-size(phone-only) {
+            width: 7rem;
+            height: 1.4rem;
+        }
     }
     .star-rating i {
         opacity: 0;
@@ -114,7 +139,6 @@
         top: 0;
         height: 100%;
         width: 20%;
-        z-index: 1;
         background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
         background-size: contain;
     }
@@ -125,7 +149,7 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        z-index: 2;
+        z-index: 1;
         position: relative;
     }
     .star-rating input:hover + i,

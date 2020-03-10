@@ -173,7 +173,10 @@
         color: rgb(233,233,235);
     }
     .commentText >>> .commentTextLink {
-        color: red;
+        color: rgb(212, 126, 15);
+    }
+    .commentText >>> .commentTextLink:hover {
+        text-decoration: underline;
     }
     .date {
         margin-top: .1rem;

@@ -37,35 +37,35 @@
     @import "../../scss/mixins";
 
     select {
+        box-sizing: border-box;
+        margin-right: .5rem;
+        padding: .7rem .8rem .7rem .8rem;
+        border-radius: .5rem;
+        font-weight: bold;
         cursor: pointer;
-        margin-right: 0.5rem;
+        background-color: rgb(46, 46, 45);
+        color: rgb(193, 193, 195);
+        border: 2px solid rgb(63, 63, 65);
         display: block;
         font-size: 14px;
         font-family: sans-serif;
-        font-weight: bold;
-        color: rgb(213, 213, 215);
         line-height: 1rem;
-        padding: 0.6rem 0.8rem 0.6rem 0.8rem;
         width: 7rem;
         text-align: center;
-        border: 2px solid rgb(63, 63, 65);
-        border-radius: 0.5rem;
-        background-color: rgb(46, 46, 45);
         appearance: none;
 
         @include for-size(tablet-landscape-up) {
-            border-radius: 0.1rem;
-            border: 1px solid rgb(43, 43, 45);
+            border: none;
             background-color: rgb(36, 36, 35);
             width: 100%;
         }
     }
     select:hover {
-        box-shadow: 0 0 0.5rem 0.1rem rgb(53, 53, 55);
+        background-color: rgb(36, 36, 35);
         color: rgb(243, 243, 245);
 
         @include for-size(tablet-landscape-up) {
-            box-shadow: -0.2rem 0.1rem 0.1rem 0.2rem rgb(43, 43, 45);
+
         }
     }
     select option {

@@ -1,7 +1,8 @@
 <template>
     <div class="header">
         <div class="logo">
-            <img class="logo__img" src="../assets/logo.png">
+            <img v-if="windowWidth > 500" class="logo__img" src="../assets/logo.png">
+            <img class="logo__img" v-else src="../assets/logo-mini.png">
         </div>
         <SignUpIn></SignUpIn>
         <NavSearch></NavSearch>
@@ -29,7 +30,9 @@
                     ></ButtonTemplate>
                     <LocaleChange></LocaleChange>
                     <router-link v-if="flag" class="router-link" to="/favorites">Favorites</router-link>
-                    <UserMiniature :user="user"></UserMiniature>
+                    <UserMiniature
+                            :user="user"
+                    ></UserMiniature>
                 </div>
             </div>
             <div class="menu-btn" @click="openMenu" :class="{ change: opened }"></div>
@@ -51,6 +54,7 @@
         data() {
             return {
                 opened: false,
+                windowWidth: window.innerWidth,
             }
         },
         computed: {
@@ -58,17 +62,13 @@
                 flag: 'getFlag',
                 user: 'getUser',
                 loading: 'getLoading'
-            })
+            }),
         },
-        /*watch: {
-            opened(opened) {
-                if (opened) {
-                    this.clickedOutside();
-                }
-            }
-        },*/
         created() {
             this.clickedOutside();
+            window.onresize = () => {
+                this.windowWidth = window.innerWidth
+            }
         },
         methods: {
             openMenu() {
@@ -104,6 +104,7 @@
 <style lang="scss" scoped>
 
     @import '../scss/mixins.scss';
+    @import "../scss/variables";
 
     .header {
         position: absolute;
@@ -134,8 +135,8 @@
         }
         @include for-size (phone-only) {
             padding: 0;
-            width: 8rem;
-            min-width: 8rem;
+            width: 4rem;
+            min-width: 4rem;
         }
     }
     .logo__img {
@@ -191,6 +192,7 @@
             width: 100%;
             height: 100%;
             position: fixed;
+            z-index: 2;
             top: 0;
             right: 0;
             background-color: rgba(0,0,0,0.3);
@@ -225,32 +227,35 @@
         font-weight: bold;
         cursor: pointer;
         background-color: rgb(46, 46, 45);
-        color: rgb(133, 133, 135);
+        color: rgb(193, 193, 195);
         border: 2px solid rgb(63, 63, 65);
 
         @include for-size(tablet-landscape-up) {
             width: 100%;
             display: block;
             margin-left: .6rem;
-            border-radius: .1rem;
-            border: 1px solid rgb(43, 43, 45);
+            border: none;
             background-color: transparent;
             text-align: center;
             font-weight: bold;
             padding: 1rem;
             cursor: pointer;
-            color: rgb(133, 133, 135);
+            color: rgb(193, 193, 195);
             box-sizing: border-box;
         }
     }
     .router-link:hover {
         background-color: rgb(36, 36, 35);
-        color: rgb(213, 213, 215);
+        color: $white-hover;
     }
     .router-link-exact-active {
         color: rgb(213, 213, 215);
     }
     .btn-menu {
         margin-right: .5rem;
+
+        @include for-size(tablet-landscape-up) {
+            margin: 0;
+        }
     }
 </style>

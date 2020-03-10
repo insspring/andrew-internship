@@ -37,6 +37,6 @@
         margin-right: 1rem;
     }
     .profile:hover {
-        color: rgb(213, 213, 215);
+        color: rgb(243, 243, 245);
     }
 </style>

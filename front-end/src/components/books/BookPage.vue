@@ -183,6 +183,10 @@
 </script>
 
 <style lang="scss" scoped>
+
+    @import "../../scss/mixins";
+    @import "../../scss/_variables";
+
     .book-page {
         display: flex;
         flex-direction: column;
@@ -207,6 +211,11 @@
         height: 16rem;
         border: 2px solid rgb(52, 56, 55);
         box-shadow: 0 0 .7rem .1rem rgb(60,60,60);
+
+        @include for-size (phone-only) {
+            width: 8rem;
+            height: 12rem;
+        }
     }
     .rating {
         display: flex;
@@ -214,6 +223,10 @@
     .author {
         font-size: 1.5rem;
         color: rgb(193,193,195);
+
+        @include for-size (phone-only) {
+            font-size: 1.2rem;
+        }
     }
     .item {
         margin: 1rem 0;
@@ -221,6 +234,11 @@
     .header {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+
+        @include for-size (phone-only) {
+            flex-direction: column-reverse;
+        }
     }
     .buttons {
         display: flex;
@@ -228,18 +246,30 @@
     .btn {
         background-color: transparent;
         border: 1px solid transparent;
+
+        @include for-size (phone-only) {
+            padding: .2rem;
+        }
     }
     .btn:hover {
-        color: rgb(212, 126, 15);
+        color: $orange-color;
     }
     .name {
         margin: 0;
         font-size: 2rem;
         font-weight: bold;
-        color: rgb(212, 126, 15);
+        color: $orange-color;
+
+        @include for-size (phone-only) {
+            font-size: 1.5rem;
+        }
     }
     .date {
         margin: .2rem 0;
+
+        @include for-size(phone-only) {
+            font-size: .8rem;
+        }
     }
     .linkToProfile{
 
@@ -249,7 +279,7 @@
         color: rgb(233,233,235);
     }
     .hashtag {
-        color: rgb(212, 126, 15);
+        color: $orange-color;
     }
     .hashtag:hover {
         text-shadow: 0 0 .1rem rgb(142, 106, 15);
@@ -270,6 +300,6 @@
         color: rgb(203, 203, 205);
     }
     .router-link:hover {
-        color: rgb(212, 126, 15);
+        color: $orange-color;
     }
 </style>

@@ -33,6 +33,7 @@
 <style lang="scss" scoped>
 
     @import '../../scss/mixins';
+    @import "../../scss/variables";
 
     .btn {
         padding: .6rem .8rem .6rem .8rem;
@@ -44,21 +45,21 @@
         border: 2px solid rgb(63, 63, 65);
     }
     .btn:hover {
-        box-shadow: 0 0 .5rem .1rem rgb(83, 83, 85);
-        color: rgb(243, 243, 245);
+        color: $white-hover;
     }
     .btn-menu {
         @include for-size(tablet-landscape-up) {
-            margin-left: .6rem;
-            border-radius: .1rem;
-            border: 1px solid rgb(43, 43, 45);
+            border: none;
             background-color: transparent;
             width: 100%;
         }
     }
     .btn-menu:hover {
+        background-color: rgb(36, 36, 35);
+        color: $white-hover;
+
         @include for-size(tablet-landscape-up) {
-            box-shadow: 0 .1rem .1rem .2rem rgb(43, 43, 45);
+
         }
     }
     .btn-submit {
@@ -67,11 +68,9 @@
         border-radius: .5rem;
         font-weight: bold;
         cursor: pointer;
-        background-color: rgb(83, 83, 85);;
-        color: rgb(203, 203, 205);
-        border: 2px solid rgb(63, 63, 65);
+        background-color: rgb(83, 83, 85);
     }
     .btn-submit:hover {
-        box-shadow: 0 0 .1rem .05rem rgb(43, 43, 45);
+        color: $white-hover;
     }
 </style>
