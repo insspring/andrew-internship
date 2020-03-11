@@ -5,8 +5,9 @@
             <li class="comment" v-for="comment in comments" :key="comment.id">
                 <CommentsItem
                         :comment="comment"
-                        :edit.sync="edit"
+                        :edit="edit"
                         @editOn="editOn"
+                        @editOff="editOff"
                         :editComment="editComment"
                         :deleteComment="deleteComment"
                 ></CommentsItem>
@@ -69,6 +70,9 @@
             editOn(id) {
                 this.edit = id;
             },
+            editOff(param) {
+                this.edit = param;
+            },
             editComment(comment) {
                 let data = new Comment({
                     bookId: comment.bookId,
@@ -85,7 +89,6 @@
                         this.comments.push(...result.data);
                     });
                     this.edit = 0;
-                    alert('Edited!');
                 })
             },
             deleteComment(comment) {
@@ -94,7 +97,6 @@
                         this.comments = [];
                         this.comments.push(...result.data);
                     });
-                    alert('Deleted!');
                 });
             }
         }
@@ -109,7 +111,7 @@
         list-style: none;
     }
     .comment {
-        width: 40rem;
+        max-width: 40rem;
         padding: 2rem;
         border-radius: 2rem;
         color: rgb(193,193,195);
@@ -117,5 +119,11 @@
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
         margin: 1rem 0;
 
+        @include for-size(tablet-landscape-up) {
+            max-width: 30rem;
+        }
+        @include for-size(phone-only) {
+            max-width: 20rem;
+        }
     }
 </style>

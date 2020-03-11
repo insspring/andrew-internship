@@ -100,12 +100,12 @@
         color: rgb(193,193,195);
         background-color: rgb(77, 81, 80);
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
+        max-width: 26rem;
     }
     .book-body {
         display: flex;
     }
     .desc {
-        width: 10rem;
         flex-direction: column;
     }
     .bookCover {
@@ -114,6 +114,11 @@
         height: 16rem;
         border: 2px solid rgb(52, 56, 55);
         box-shadow: 0 0 .7rem .1rem rgb(60,60,60);
+
+        @include for-size (phone-only) {
+            width: 8rem;
+            height: 12rem;
+        }
     }
     .book-footer {
         margin-top: .5rem;
@@ -126,10 +131,18 @@
         font-size: 1.6rem;
         font-weight: bold;
         color: $orange-color;
+
+        @include for-size (phone-only) {
+            font-size: 1.5rem;
+        }
     }
     .author {
         font-size: 1.4rem;
         color: rgb(193,193,195);
+
+        @include for-size (phone-only) {
+            font-size: 1.2rem;
+        }
     }
     .linkToProfile{
 
@@ -140,8 +153,12 @@
     }
     .date {
         margin-top: .1rem;
-        font-size: .9rem;
+        font-size: 1rem;
         color: rgb(153,153,155);
+
+        @include for-size (phone-only) {
+            font-size: .8rem;
+        }
     }
     .readMore {
         color: rgb(122, 126, 125);

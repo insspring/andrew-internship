@@ -40,18 +40,20 @@ export default {
 textarea {
   resize: none;
   overflow: hidden;
-  min-width: 20rem;
+  width: 100%;
   min-height: 5rem;
   border: none;
   color: rgb(245, 245, 245);
-  border-bottom: 2px solid rgb(56, 56, 55);
-  background-color: rgb(76, 76, 75);
+  border-bottom: 2px solid rgb(120, 120, 120);
+  background-color: rgb(66, 66, 65);
 }
 .comment {
     min-width: 40rem;
     margin-bottom: 1rem;
-
-    @include for-size (tablet-landscape-up) {
+    @include for-size(tablet-landscape-up) {
+        min-width: 30rem;
+    }
+    @include for-size(phone-only) {
         min-width: 20rem;
     }
 }

@@ -12,7 +12,7 @@
             <ButtonTemplate
                     :text="$t('submit')"
                     :method="createComment"
-                    class="btn-submit"
+                    class="btn-submit submit"
             ></ButtonTemplate>
         </div>
         <CommentsFeed
@@ -75,19 +75,28 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "../../scss/mixins";
+    @import "../../scss/variables";
+
     .comment-area {
-        margin-top: 2rem;
+        margin: 2rem 0;
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        @include for-size(tablet-landscape-up) {
+
+        }
     }
     .comment-area-write {
         display: flex;
         flex-direction: column;
+        align-items: center;
         padding: 2rem;
         border-radius: 2rem;
-        color: rgb(193,193,195);
+        color: $wick-white;
         background-color: rgb(77, 81, 80);
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
     }

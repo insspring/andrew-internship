@@ -41,7 +41,7 @@
         font-weight: bold;
         cursor: pointer;
         background-color: rgb(46, 46, 45);
-        color: rgb(213, 213, 215);
+        color: $classic-white;
         border: 2px solid rgb(63, 63, 65);
     }
     .btn:hover {
@@ -68,9 +68,16 @@
         border-radius: .5rem;
         font-weight: bold;
         cursor: pointer;
-        background-color: rgb(83, 83, 85);
+        background-color: rgb(85,85,85);
+        border: 1px solid rgb(60,60,60);
+        box-shadow: 0 0 .1rem .1rem rgb(50,50,50);
+
+        @include for-size(tablet-landscape-up) {
+
+        }
     }
     .btn-submit:hover {
         color: $white-hover;
+        background-color: rgb(70,70,70);
     }
 </style>

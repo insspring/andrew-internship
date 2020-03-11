@@ -1,43 +1,56 @@
 <template>
     <div>
         <div class="comment-header">
-            <div class="header">
-                <div class="avatar">
-                    <img v-if="!comment.commentAuthorAvatar" class="avatar-photo" src="../../assets/none.png.jpg"/>
-                    <img v-else class="avatar-photo" :src="comment.commentAuthorAvatar"/>
+            <router-link class="linkToProfile" :to="'/user/' + comment.commentAuthorId">
+                <div class="header">
+                    <div class="avatar">
+                        <img v-if="!comment.commentAuthorAvatar" class="avatar-photo" src="../../assets/none.png.jpg"/>
+                        <img v-else class="avatar-photo" :src="comment.commentAuthorAvatar"/>
+                    </div>
+                    <div class="author">
+                        {{ comment.commentAuthorName }}
+                    </div>
                 </div>
-                <div class="author">
-                    <router-link class="linkToProfile" :to="'/user/' + comment.commentAuthorId">{{ comment.commentAuthorName }}</router-link>
-                </div>
-            </div>
-            <div class="buttons">
+            </router-link>
+            <div class="edit-buttons" v-if="checkUser() && edit === comment.id">
                 <ButtonTemplate
-                        v-if="checkUser() && !edit"
-                        :text="'Edit'"
-                        :method="editOn"
-                        class="btn edit"
-                ></ButtonTemplate>
-                <ButtonTemplate
-                        v-if="checkUser() && edit"
                         :text="$t('submit')"
                         :params="[comment]"
                         :method="editComment"
-                        class="btn-submit"
+                        class="btn"
                 ></ButtonTemplate>
                 <ButtonTemplate
-                        v-if="checkUser()"
-                        :text="'X'"
-                        :params="[comment]"
-                        :method="deleteComment"
-                        class="btn delete"
+                        :text="'Cancel'"
+                        :method="editOff"
+                        class="btn"
                 ></ButtonTemplate>
             </div>
-            <div @click="pressLike">
-                <Like
-                        :active="{active: likeClickingState}"
-                ></Like>
-                {{ likeCounter }}
-            </div>
+            <section class="buttons">
+                <div @click="pressLike">
+                    <Like
+                            :active="{active: likeClickingState}"
+                    ></Like>
+                    {{ likeCounter }}
+                </div>
+                <div class="dropDown" @click="showMenu">
+                    <ThreeDots id="edit"></ThreeDots>
+                    <div class="dropDown-menu" v-if="menuVisible">
+                        <ButtonTemplate
+                                v-if="checkUser() && !edit"
+                                :text="'Edit'"
+                                :method="editOn"
+                                class="btn"
+                        ></ButtonTemplate>
+                        <ButtonTemplate
+                                v-if="checkUser()"
+                                :text="'Delete'"
+                                :params="[comment]"
+                                :method="deleteComment"
+                                class="btn"
+                        ></ButtonTemplate>
+                    </div>
+                </div>
+            </section>
         </div>
         <div class="comment-body">
             <TextArea v-if="checkEdit"
@@ -62,10 +75,11 @@
     import {LikeClass} from "../../helpers/constuctors";
     import {addLike, deleteLike, getLikes} from "../../helpers/api";
     import _ from 'lodash';
+    import ThreeDots from "../ThreeDots";
 
     export default {
         name: "CommentsItem",
-        components: {ButtonTemplate, TextArea, Like},
+        components: {ThreeDots, ButtonTemplate, TextArea, Like},
         props: {
             comment: Object,
             edit: Number,
@@ -78,7 +92,8 @@
                 likes: [],
                 likeFirstState: false,
                 likeClickingState: false,
-                likeCounter: null
+                likeCounter: null,
+                menuVisible: false,
             }
         },
         created() {
@@ -91,6 +106,7 @@
                     this.likeClickingState = true;
                 }
             });
+            this.clickedOutside();
         },
         computed: {
             ...mapGetters({
@@ -105,11 +121,26 @@
             },
         },
         methods: {
+            clickedOutside() {
+                document.addEventListener("click", (evt) => {
+                    const searchedElement = document.getElementById("edit");
+                    let targetElement = evt.target;
+                    if(searchedElement !== targetElement) {
+                        this.menuVisible = false;
+                    }
+                });
+            },
             startPrintingComment() {
                 this.classErrorComment = false;
             },
+            showMenu() {
+                this.menuVisible = !this.menuVisible;
+            },
             editOn() {
                 this.$emit('editOn', this.comment.id);
+            },
+            editOff() {
+                this.$emit('editOn', 0);
             },
             checkUser() {
                 return this.user.id === this.comment.commentAuthorId;
@@ -140,7 +171,11 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "../../scss/variables";
+    @import "../../scss/mixins";
+
     .avatar-photo {
         width: 2rem;
         border-radius: 50%;
@@ -151,32 +186,60 @@
     }
     .header {
         display: flex;
+        align-items: center;
+    }
+    .author {
+        margin-left: .5rem;
+        font-size: 1.5rem;
+
+        @include for-size(phone-only) {
+            font-size: 1.2rem;
+        }
     }
     .buttons {
         display: flex;
     }
+    .edit-buttons {
+        display: flex;
+    }
     .btn {
+        width: 100%;
+        padding: .5rem;
         background-color: transparent;
         border: 1px solid transparent;
+        border-radius: 0;
     }
     .btn:hover {
-        background-color: rgb(80,80,80);
-        border: 1px solid rgb(60,60,60)
+        color: $white-hover;
+        background-color: rgb(70,70,70);
+        border-bottom: 1px solid rgb(60,60,60)
+    }
+    .dropDown {
+        position: relative;
+        margin-left: 2rem;
+    }
+    .dropDown-menu {
+        position: absolute;
+        background-color: rgb(100,100,100);
+        top: 1.5rem;
+        right: 0;
     }
     .linkToProfile{
         display: block;
-        margin-left: .5rem;
-        font-size: 1.5rem;
-        color: rgb(193,193,195);
+        color: $wick-white;
     }
     .linkToProfile:hover {
-        color: rgb(233,233,235);
+        color: $white-hover;
     }
-    .commentText >>> .commentTextLink {
-        color: rgb(212, 126, 15);
+    .commentText {
+        ::v-deep .commentTextLink {
+            color: $orange-color;
+        }
     }
-    .commentText >>> .commentTextLink:hover {
-        text-decoration: underline;
+    .commentText {
+        ::v-deep .commentTextLink:hover {
+            text-decoration: underline;
+        }
     }
     .date {
         margin-top: .1rem;
