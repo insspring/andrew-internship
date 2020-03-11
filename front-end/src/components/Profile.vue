@@ -159,10 +159,9 @@
 <style scoped>
     .profile {
         width: 100%;
-        height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        align-items: center;
         color: rgb(175,175,175);
     }
     .main {

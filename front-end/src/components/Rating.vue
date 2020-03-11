@@ -113,7 +113,7 @@
         font-size: 1.2rem;
 
         @include for-size(phone-only) {
-            font-size: .8rem;
+            font-size: .9rem;
         }
     }
     .star-rating {

@@ -5,7 +5,7 @@
             <img class="logo__img" v-else src="../assets/logo-mini.png">
         </div>
         <SignUpIn></SignUpIn>
-        <NavSearch></NavSearch>
+        <SearchBar></SearchBar>
         <div id="menu">
             <div id="background" class="burgerMenu" :class="{ active: opened }">
                 <div class="menu-content burgerMenuContent">
@@ -46,11 +46,11 @@
     import SignUpIn from "./SignUpIn";
     import {mapGetters} from "vuex";
     import UserMiniature from "./UserMiniature";
-    import NavSearch from "./NavSearch";
+    import SearchBar from "./SearchBar";
 
     export default {
         name: "Header",
-        components: {NavSearch, UserMiniature, SignUpIn, LocaleChange, ButtonTemplate},
+        components: {SearchBar, UserMiniature, SignUpIn, LocaleChange, ButtonTemplate},
         data() {
             return {
                 opened: false,

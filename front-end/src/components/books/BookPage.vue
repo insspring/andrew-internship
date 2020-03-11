@@ -1,5 +1,5 @@
 <template>
-    <div class="book-page" v-if="book.description">
+    <div class="book-page" v-if="book.description && user">
         <div class="book">
             <div class="cover">
                 <img class="bookCover" :src="book.bookCover">
@@ -17,7 +17,7 @@
                         <ButtonTemplate
                                 class="btn"
                                 v-if="checkUser"
-                                :text="'X'"
+                                :text="'Delete'"
                                 :params="[book]"
                                 :method="deleteBook"
                         ></ButtonTemplate>
@@ -190,10 +190,12 @@
     .book-page {
         display: flex;
         flex-direction: column;
+        align-items: center;
     }
     .book {
         display: flex;
         padding: 2rem;
+        max-width: 70rem;
         margin-right: 1rem;
         margin-left: 1rem;
         border-radius: 2rem;

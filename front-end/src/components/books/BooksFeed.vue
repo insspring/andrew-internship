@@ -11,17 +11,17 @@
                             {{ $t('author') }}:
                             <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
                         </div>
-                        <div class="item description">
-                            <span>{{ book.description.slice(0,150) }}</span>
+                        <div class="item">
+                            <span class="description">{{ book.description.slice(0,150) }}</span>
                             <router-link class="router-link" :to="'/book/' + book.id">(Read more...)</router-link>
                         </div>
                     </div>
                 </div>
-                <Rating
-                        :book="book"
-                        :bookPage="false"
-                ></Rating>
                 <div class="book-footer">
+                    <Rating
+                            :book="book"
+                            :bookPage="false"
+                    ></Rating>
                     <div class="date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
                     <div class="date" v-if="book.updateDate">{{ $t('updated') }}: {{ book.updateDate }}</div>
                 </div>
@@ -91,16 +91,21 @@
     }
     .book {
         box-sizing: border-box;
-        margin: .7rem;
+        margin: .5rem;
         padding: 2rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        flex-shrink: 0;
         border-radius: 2rem;
-        color: rgb(193,193,195);
+        color: $wick-white;
         background-color: rgb(77, 81, 80);
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
-        max-width: 26rem;
+        max-width: 24rem;
+
+        @include for-size (tablet-landscape-up) {
+            max-width: 24rem;
+        }
     }
     .book-body {
         display: flex;
@@ -133,15 +138,22 @@
         color: $orange-color;
 
         @include for-size (phone-only) {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
     }
     .author {
         font-size: 1.4rem;
-        color: rgb(193,193,195);
+        color: $wick-white;
 
         @include for-size (phone-only) {
             font-size: 1.2rem;
+        }
+    }
+    .description {
+        font-size: 1rem;
+
+        @include for-size (phone-only) {
+            font-size: .8rem;
         }
     }
     .linkToProfile{
@@ -149,7 +161,7 @@
         @extend .author;
     }
     .linkToProfile:hover {
-        color: rgb(233,233,235);
+        color: $white-hover;
     }
     .date {
         margin-top: .1rem;

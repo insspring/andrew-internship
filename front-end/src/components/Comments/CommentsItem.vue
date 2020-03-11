@@ -32,7 +32,7 @@
                     ></Like>
                     {{ likeCounter }}
                 </div>
-                <div class="dropDown" @click="showMenu">
+                <div class="dropDown" @click="showMenu" v-if="checkUser()">
                     <ThreeDots id="edit"></ThreeDots>
                     <div class="dropDown-menu" v-if="menuVisible">
                         <ButtonTemplate
@@ -232,17 +232,22 @@
         color: $white-hover;
     }
     .commentText {
+        margin: 1rem 0;
+        font-size: 1.2rem;
+
         ::v-deep .commentTextLink {
             color: $orange-color;
         }
-    }
-    .commentText {
         ::v-deep .commentTextLink:hover {
             text-decoration: underline;
         }
+
+        @include for-size(phone-only) {
+            margin: .5rem 0;
+            font-size: 1rem;
+        }
     }
     .date {
-        margin-top: .1rem;
         font-size: .9rem;
         color: rgb(153,153,155);
     }
