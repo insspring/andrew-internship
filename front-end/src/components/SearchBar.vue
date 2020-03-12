@@ -3,10 +3,11 @@
         <input
                 @input="debouncedSearch"
                 placeholder="#search"
+                v-model="searchInputData"
         />
         <div v-if="search" class="searchResult" id="result">
             <div class="book" v-for="book in books" :key="book.id">
-                <router-link class="router-link" :to="'/book/' + book.id">
+                <router-link class="link" :to="'/book/' + book.id">
                     <img class="bookCover" :src="book.bookCover">
                     <div class="desc">
                         <div class="name">{{ book.name }}</div>
@@ -15,10 +16,10 @@
                 </router-link>
                 <hr>
             </div>
-            <router-link class="linkToSearched" :to="'searched'">
-                <div v-if="totalCount > 10">Showed results: 10 out of {{totalCount}}</div>
-            </router-link>
-            <div v-if=" !books.length && search">
+            <div class="searched" v-if="showedResultsConditions">Showed results: {{page-1}}0 out of {{totalCounts}}</div>
+            <div class="searched" v-if="lastShowedResultsConditions">Showed results: {{totalCounts}} out of {{totalCounts}}</div>
+            <a v-if="nextConditions" class="nextBtn" @click="searchNext">Next</a>
+            <div v-if="!books.length && search">
                 <p>Nothing has been found</p>
             </div>
         </div>
@@ -33,42 +34,88 @@
         name: "NavSearch",
         data() {
             return {
+                searchInputData: '',
                 books: [],
                 page: 1,
+                pageForAuthor: 1,
                 totalCount: 1,
+                totalCountForAuthor: 1,
                 search: false
             }
         },
         created() {
             this.clickedOutside();
-            this.debouncedSearch = _.debounce(this.searchFunc, 1000, {'leading': false, 'trailing': true})
+            this.debouncedSearch = _.debounce(this.searchFunc, 1000, {'leading': false, 'trailing': true});
+        },
+        computed: {
+            totalCounts() {
+                return this.totalCount  + this.totalCountForAuthor;
+            },
+            nextConditions() {
+                return this.totalCounts > 10 && this.search && this.page <= Math.ceil(this.totalCounts/10) && this.books.length;
+            },
+            showedResultsConditions() {
+                return this.totalCounts > 10 && this.page-1 < Math.ceil(this.totalCounts/10) && this.books.length;
+            },
+            lastShowedResultsConditions() {
+                return this.totalCounts > 10 && this.page-1 === Math.ceil(this.totalCounts/10) && this.books.length;
+            },
         },
         methods: {
             searchFunc(e) {
                 this.books = [];
                 this.page = 1;
+                this.pageForAuthor = 1;
                 if(e.target.value) {
                     this.$store.dispatch('loadingProcess', true);
                     if (e.target.value.split('')[0] === '#') {
                         getSearchedByHashtag(this.$store.state.token, e.target.value.slice(1), this.page).then(result => {
-                            this.totalCount = result.headers["x-total-count"];
+                            this.totalCount = result.headers["x-total-count"] * 1;
+                            this.books.push(...result.data);
+                            this.page++;
+                            this.$store.dispatch('loadingProcess', false);
+                            this.search = true;
+                        });
+
+                    } else {
+                        getSearchedByTitle(this.$store.state.token, e.target.value, this.page).then(result => {
+                            this.totalCount = result.headers["x-total-count"] * 1;
+                            this.books.push(...result.data);
+                            this.page++;
+                            this.$store.dispatch('loadingProcess', false);
+                            this.search = true;
+                        });
+                        getSearchedByAuthor(this.$store.state.token, e.target.value, this.pageForAuthor).then(result => {
+                            this.totalCountForAuthor = result.headers["x-total-count"] * 1;
+                            this.books.push(...result.data);
+                            this.pageForAuthor++;
+                            this.$store.dispatch('loadingProcess', false);
+                            this.search = true;
+                        });
+                    }
+                }
+            },
+            searchNext() {
+                this.books = [];
+                if(this.searchInputData) {
+                    this.$store.dispatch('loadingProcess', true);
+                    if (this.searchInputData.split('')[0] === '#') {
+                        getSearchedByHashtag(this.$store.state.token, this.searchInputData.slice(1), this.page).then(result => {
                             this.books.push(...result.data);
                             this.page++;
                             this.$store.dispatch('loadingProcess', false);
                             this.search = true;
                         });
                     } else {
-                        getSearchedByTitle(this.$store.state.token, e.target.value, this.page).then(result => {
-                            this.totalCount = result.headers["x-total-count"];
+                        getSearchedByTitle(this.$store.state.token, this.searchInputData, this.page).then(result => {
                             this.books.push(...result.data);
                             this.page++;
                             this.$store.dispatch('loadingProcess', false);
                             this.search = true;
                         });
-                        getSearchedByAuthor(this.$store.state.token, e.target.value, this.page).then(result => {
-                            this.totalCount = result.headers["x-total-count"];
+                        getSearchedByAuthor(this.$store.state.token, this.searchInputData, this.pageForAuthor).then(result => {
                             this.books.push(...result.data);
-                            this.page++;
+                            this.pageForAuthor++;
                             this.$store.dispatch('loadingProcess', false);
                             this.search = true;
                         });
@@ -77,9 +124,9 @@
             },
             clickedOutside() {
                 document.addEventListener("click", (evt) => {
-                    const closedElement = document.getElementById("result");
+                    const searchedElement = document.getElementById("result");
                     let targetElement = evt.target;
-                    if (targetElement === closedElement) {
+                    if (targetElement === searchedElement) {
                         this.search = false;
                         return;
                     }
@@ -128,17 +175,23 @@
         padding: 1rem;
         background-color: rgb(50, 50, 50);
     }
-    .router-link {
+    .link {
         display: flex;
         color: $wick-white;
     }
-    .router-link:hover, .linkToSearched:hover {
+    .link:hover, .nextBtn:hover {
         color: $white-hover;
     }
-    .linkToSearched {
+    .searched {
         text-align: center;
-        color: $wick-white;
+        color: $classic-white;
         background-color: rgb(50, 50, 50);
+    }
+    .nextBtn {
+        @extend .searched;
+
+        cursor: pointer;
+        color: $wick-white;
     }
     .bookCover {
         margin: 0 .6rem .6rem 0;

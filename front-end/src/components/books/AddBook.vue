@@ -1,53 +1,58 @@
 <template>
-    <div class="form">
-        <h2>{{ $t('addBook') }}</h2>
-        <form @submit.prevent>
-            <div class="item">
-                <label for="title">{{ $t('title') }}</label>
-                <TextArea
-                        id="title"
-                        v-model="name"
-                        :value="name"
-                        :class="{error: classErrorName}"
-                        :method="startPrintingName"
-                ></TextArea>
-            </div>
+    <div class="component">
+        <div class="form">
+            <h2>{{ $t('addBook') }}</h2>
+            <form class="form-content" @submit.prevent>
+                <div class="item">
+                    <label for="title">{{ $t('title') }}</label>
+                    <TextArea
+                            id="title"
+                            class="adaptive"
+                            v-model="name"
+                            :value="name"
+                            :class="{error: classErrorName}"
+                            :method="startPrintingName"
+                    ></TextArea>
+                </div>
 
-            <div class="item">
-                <label for="desc">{{ $t('description') }}</label>
-                <TextArea
-                        id="desc"
-                        v-model="description"
-                        :value="description"
-                        :placeholder="'Required at least 50 symbol length description'"
-                        :class="{error: classErrorDesc}"
-                        :method="startPrintingDesc"
-                ></TextArea>
-            </div>
+                <div class="item">
+                    <label for="desc">{{ $t('description') }}</label>
+                    <TextArea
+                            id="desc"
+                            class="adaptive"
+                            v-model="description"
+                            :value="description"
+                            :placeholder="'Required at least 50 symbol length description'"
+                            :class="{error: classErrorDesc}"
+                            :method="startPrintingDesc"
+                    ></TextArea>
+                </div>
 
-            <div class="item">
-                <label for="tags">#Hashtags</label>
-                <TextArea
-                        id="tags"
-                        v-model="tags"
-                        :value="tags"
-                        :class="{error: classErrorTags}"
-                        :method="startPrintingTags"
-                ></TextArea>
-            </div>
+                <div class="item">
+                    <label for="tags">#Hashtags</label>
+                    <TextArea
+                            id="tags"
+                            class="adaptive"
+                            v-model="tags"
+                            :value="tags"
+                            :class="{error: classErrorTags}"
+                            :method="startPrintingTags"
+                    ></TextArea>
+                </div>
 
-            <div class="item">
-                <input type="file"
-                       @change="chooseBookCover"
-                >
-            </div>
+                <div class="item">
+                    <input type="file"
+                           @change="chooseBookCover"
+                    >
+                </div>
 
-            <ButtonTemplate
-                    :text="$t('submit')"
-                    :method="createBook"
-                    class="btn-submit"
-            ></ButtonTemplate>
-        </form>
+                <ButtonTemplate
+                        :text="$t('submit')"
+                        :method="createBook"
+                        class="btn-submit"
+                ></ButtonTemplate>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -142,20 +147,48 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "../../scss/mixins";
+    @import "../../scss/variables";
+
+    .component {
+        display: flex;
+        justify-content: center;
+    }
+    h2 {
+        padding-top: 1rem;
+    }
+    label {
+        margin-bottom: .6rem;
+        margin-left: .6rem;
+    }
     .form {
-        color: rgb(203, 203, 205);
+        color: $classic-white;
         border-radius: 1rem;
         box-shadow: 0 0 1rem .1rem rgb(45, 45, 45);
-        padding: 1rem;
         background-color: rgb(76, 76, 75);
+        text-align: center;
+        min-width: 42rem;
+        margin-bottom: 1rem;
+
+        @include for-size(tablet-landscape-up) {
+            min-width: 32rem;
+        }
+        @include for-size(phone-only) {
+            min-width: 22rem;
+        }
+    }
+    .form-content {
+        text-align: left;
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding: 1rem;
     }
     .item {
         display: flex;
         flex-direction: column;
-        padding: 1rem 0;
+        margin-bottom: .6rem;
     }
 </style>

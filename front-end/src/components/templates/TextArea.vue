@@ -40,14 +40,15 @@ export default {
 textarea {
   resize: none;
   overflow: hidden;
-  width: 100%;
   min-height: 5rem;
   border: none;
+    border-radius: 1rem;
+    padding: 1rem;
   color: rgb(245, 245, 245);
   border-bottom: 2px solid rgb(120, 120, 120);
   background-color: rgb(66, 66, 65);
 }
-.comment {
+.adaptive {
     min-width: 40rem;
     margin-bottom: 1rem;
     @include for-size(tablet-landscape-up) {

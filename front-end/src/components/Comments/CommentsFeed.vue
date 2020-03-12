@@ -112,7 +112,7 @@
     }
     .comment {
         max-width: 40rem;
-        padding: 2rem;
+        padding: 2rem 3rem;
         border-radius: 2rem;
         color: rgb(193,193,195);
         background-color: rgb(77, 81, 80);
@@ -124,6 +124,7 @@
         }
         @include for-size(phone-only) {
             max-width: 20rem;
+            padding: 1rem 2.2rem;
         }
     }
 </style>

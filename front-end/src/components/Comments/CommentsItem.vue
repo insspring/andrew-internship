@@ -176,6 +176,7 @@
     @import "../../scss/variables";
     @import "../../scss/mixins";
 
+
     .avatar-photo {
         width: 2rem;
         border-radius: 50%;

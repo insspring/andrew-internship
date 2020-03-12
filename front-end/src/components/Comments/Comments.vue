@@ -2,7 +2,7 @@
     <div class="comment-area">
         <div class="comment-area-write" v-if="!checkUser">
             <TextArea
-                    class="comment"
+                    class="adaptive"
                     v-model="commentText"
                     :value="commentText"
                     :placeholder="'Required at least 20 symbol length comment'"
@@ -99,5 +99,9 @@
         color: $wick-white;
         background-color: rgb(77, 81, 80);
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
+
+        @include for-size(phone-only) {
+            padding: 1.2rem;
+        }
     }
 </style>
