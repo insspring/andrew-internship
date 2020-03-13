@@ -22,6 +22,9 @@
                 books: []
             }
         },
+        created() {
+            this.loadMore();
+        },
         computed: {
             ...mapGetters({
                 user: 'getUser'

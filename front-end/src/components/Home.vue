@@ -26,6 +26,9 @@
                 books: 'getBooks',
             }),
         },
+        created() {
+            this.loadMore();
+        },
         methods: {
             loadMore () {
                 if(this.totalCount > this.books.length) {

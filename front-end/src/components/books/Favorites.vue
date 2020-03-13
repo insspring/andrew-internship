@@ -2,7 +2,6 @@
     <BooksFeed
             :loadMore="loadMore"
             :books="books"
-            :favorites="true"
     ></BooksFeed>
 </template>
 
@@ -23,6 +22,9 @@
         },
         created() {
             this.$store.dispatch('discardBooksFeed');
+            if(this.user.id !== undefined) {
+                this.loadMore();
+            }
         },
         computed: {
             ...mapGetters({

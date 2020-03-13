@@ -41,7 +41,6 @@
             loadMore: Function,
             books: Array,
             userBooks: Boolean,
-            favorites: Boolean
         },
         components: {Rating, Loader},
         data() {
@@ -53,9 +52,6 @@
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
             });
-            if(!this.favorites) {
-                this.loadMore();
-            }
         },
         watch: {
             bottom(bottom ) {
