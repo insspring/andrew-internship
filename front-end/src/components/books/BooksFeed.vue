@@ -40,7 +40,8 @@
         props: {
             loadMore: Function,
             books: Array,
-            userBooks: Boolean
+            userBooks: Boolean,
+            favorites: Boolean
         },
         components: {Rating, Loader},
         data() {
@@ -52,7 +53,9 @@
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
             });
-            this.loadMore();
+            if(!this.favorites) {
+                this.loadMore();
+            }
         },
         watch: {
             bottom(bottom ) {
@@ -116,12 +119,14 @@
     .bookCover {
         margin-right: 1rem;
         width: 10rem;
+        min-width: 10rem;
         height: 16rem;
         border: 2px solid rgb(52, 56, 55);
         box-shadow: 0 0 .7rem .1rem rgb(60,60,60);
 
         @include for-size (phone-only) {
             width: 8rem;
+            min-width: 8rem;
             height: 12rem;
         }
     }
@@ -132,6 +137,10 @@
         margin: 1rem 0;
     }
     .name {
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        width: 100%;
         margin: 0;
         font-size: 1.6rem;
         font-weight: bold;
@@ -142,6 +151,9 @@
         }
     }
     .author {
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
         font-size: 1.4rem;
         color: $wick-white;
 
@@ -150,6 +162,9 @@
         }
     }
     .description {
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
         font-size: 1rem;
 
         @include for-size (phone-only) {

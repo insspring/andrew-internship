@@ -42,8 +42,8 @@ textarea {
   overflow: hidden;
   min-height: 5rem;
   border: none;
+    padding: .2rem;
     border-radius: 1rem;
-    padding: 1rem;
   color: rgb(245, 245, 245);
   border-bottom: 2px solid rgb(120, 120, 120);
   background-color: rgb(66, 66, 65);

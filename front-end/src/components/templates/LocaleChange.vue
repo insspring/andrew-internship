@@ -5,7 +5,6 @@
                     v-for="(option, index) in options"
                     :value="option.value"
                     :key="`Lang${index}`"
-                    @click="storeLanguage"
             >{{ option.text }}</option
             >
         </select>
@@ -13,7 +12,6 @@
 </template>
 
 <script>
-    import i18n from "../../i18n/index";
 
     export default {
         name: "localeChange",
@@ -24,11 +22,6 @@
                     { text: "English", value: "en" }
                     ]
             };
-        },
-        methods: {
-            storeLanguage() {
-                localStorage.setItem("locale", i18n.locale);
-            }
         }
     };
 </script>

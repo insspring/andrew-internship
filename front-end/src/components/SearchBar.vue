@@ -10,7 +10,7 @@
                 <router-link class="link" :to="'/book/' + book.id">
                     <img class="bookCover" :src="book.bookCover">
                     <div class="desc">
-                        <div class="name">{{ book.name }}</div>
+                        <div class="name">{{ book.name }} {{book.id}}</div>
                         <div class="name">Author: {{ book.author }}</div>
                     </div>
                 </router-link>
@@ -49,16 +49,16 @@
         },
         computed: {
             totalCounts() {
-                return this.totalCount  + this.totalCountForAuthor;
+                return Math.max(this.totalCount, this.totalCountForAuthor);
             },
             nextConditions() {
-                return this.totalCounts > 10 && this.search && this.page <= Math.ceil(this.totalCounts/10) && this.books.length;
+                return this.totalCounts > 10 && this.search && this.page <= Math.ceil(this.totalCounts/10) && this.books.length > 0;
             },
             showedResultsConditions() {
-                return this.totalCounts > 10 && this.page-1 < Math.ceil(this.totalCounts/10) && this.books.length;
+                return this.totalCounts > 10 && this.page-1 < Math.ceil(this.totalCounts/10) && this.books.length > 0;
             },
             lastShowedResultsConditions() {
-                return this.totalCounts > 10 && this.page-1 === Math.ceil(this.totalCounts/10) && this.books.length;
+                return this.totalCounts > 10 && this.page-1 === Math.ceil(this.totalCounts/10) && this.books.length > 0;
             },
         },
         methods: {
@@ -92,6 +92,7 @@
                             this.$store.dispatch('loadingProcess', false);
                             this.search = true;
                         });
+                        this.books = Array.from(new Set(this.books));
                     }
                 }
             },

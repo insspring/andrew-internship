@@ -21,7 +21,7 @@
                 ></ButtonTemplate>
                 <ButtonTemplate
                         :text="'Cancel'"
-                        :method="editOff"
+                        :method="editCancel"
                         class="btn"
                 ></ButtonTemplate>
             </div>
@@ -33,10 +33,10 @@
                     {{ likeCounter }}
                 </div>
                 <div class="dropDown" @click="showMenu" v-if="checkUser()">
-                    <ThreeDots id="edit"></ThreeDots>
+                    <ThreeDots :id="comment.id"></ThreeDots>
                     <div class="dropDown-menu" v-if="menuVisible">
                         <ButtonTemplate
-                                v-if="checkUser() && !edit"
+                                v-if="checkUser()"
                                 :text="'Edit'"
                                 :method="editOn"
                                 class="btn"
@@ -54,9 +54,10 @@
         </div>
         <div class="comment-body">
             <TextArea v-if="checkEdit"
+                      class="adaptive"
                       v-model="comment.commentText"
                       :value="comment.commentText"
-                      :class="{error: classErrorComment}"
+                      :class="{error: failedValidation}"
                       :method="startPrintingComment"
             ></TextArea>
             <div v-else class="commentText" v-html="convert"></div>
@@ -85,6 +86,7 @@
             edit: Number,
             editComment: Function,
             deleteComment: Function,
+            failedValidation: Boolean
         },
         data() {
             return {
@@ -94,6 +96,7 @@
                 likeClickingState: false,
                 likeCounter: null,
                 menuVisible: false,
+                commentTextStore: this.comment.commentText
             }
         },
         created() {
@@ -123,7 +126,7 @@
         methods: {
             clickedOutside() {
                 document.addEventListener("click", (evt) => {
-                    const searchedElement = document.getElementById("edit");
+                    const searchedElement = document.getElementById(this.comment.id);
                     let targetElement = evt.target;
                     if(searchedElement !== targetElement) {
                         this.menuVisible = false;
@@ -131,7 +134,7 @@
                 });
             },
             startPrintingComment() {
-                this.classErrorComment = false;
+                this.$emit('startPrinting');
             },
             showMenu() {
                 this.menuVisible = !this.menuVisible;
@@ -139,7 +142,8 @@
             editOn() {
                 this.$emit('editOn', this.comment.id);
             },
-            editOff() {
+            editCancel() {
+                this.comment.commentText = this.commentTextStore;
                 this.$emit('editOn', 0);
             },
             checkUser() {

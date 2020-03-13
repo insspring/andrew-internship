@@ -6,8 +6,10 @@
                 <CommentsItem
                         :comment="comment"
                         :edit="edit"
+                        :failedValidation="error"
                         @editOn="editOn"
                         @editOff="editOff"
+                        @startPrinting="startPrinting"
                         :editComment="editComment"
                         :deleteComment="deleteComment"
                 ></CommentsItem>
@@ -21,6 +23,7 @@
     import {commentsPagination, getComments, deleteComment, editComments} from "../../helpers/api";
     import CommentsItem from "./CommentsItem";
     import {Comment} from "../../helpers/constuctors";
+    //import {validationComments} from "../../helpers/validation";
 
     export default {
         name: "CommentsFeed",
@@ -35,6 +38,7 @@
                 totalCount: 1,
                 comments: [],
                 edit: 0,
+                error: false
             }
         },
         created() {
@@ -73,6 +77,9 @@
             editOff(param) {
                 this.edit = param;
             },
+            startPrinting() {
+                this.error = false;
+            },
             editComment(comment) {
                 let data = new Comment({
                     bookId: comment.bookId,
@@ -83,13 +90,17 @@
                     publicationDate: comment.publicationDate,
                     id: comment.id
                 });
-                editComments(comment.id, data).then(() => {
-                    getComments(this.$store.state.token, this.book.id).then(result => {
-                        this.comments = [];
-                        this.comments.push(...result.data);
-                    });
-                    this.edit = 0;
-                })
+                //if(validationComments(comment)) {
+                    editComments(comment.id, data).then(() => {
+                        getComments(this.$store.state.token, this.book.id).then(result => {
+                            this.comments = [];
+                            this.comments.push(...result.data);
+                        });
+                        this.edit = 0;
+                    })
+                /*} else {
+                    this.error = true;
+                }*/
             },
             deleteComment(comment) {
                 deleteComment(comment.id).then(() => {
@@ -112,7 +123,7 @@
     }
     .comment {
         max-width: 40rem;
-        padding: 2rem 3rem;
+        padding: 2rem 2.2rem;
         border-radius: 2rem;
         color: rgb(193,193,195);
         background-color: rgb(77, 81, 80);
@@ -124,7 +135,7 @@
         }
         @include for-size(phone-only) {
             max-width: 20rem;
-            padding: 1rem 2.2rem;
+            padding: 1rem 1.2rem;
         }
     }
 </style>
