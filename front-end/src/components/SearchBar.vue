@@ -6,18 +6,17 @@
                 v-model="searchInputData"
         />
         <div v-if="search" class="searchResult" id="result">
-            <div class="book" v-for="book in filterBooks.slice(counter === 1 ? 1 : 1 + (counter-1)*10, counter*10 + 1)" :key="book.id">
+            <div class="book" v-for="book in filterBooks.slice(counter === 1 ? 0 : 1 + (counter-1)*10, counter*10 + 1)" :key="book.id">
                 <router-link class="link" :to="'/book/' + book.id">
                     <img class="bookCover" :src="book.bookCover">
                     <div class="desc">
-                        <div class="name">{{ book.name }} {{book.id}}</div>
+                        <div class="name">{{ book.name }}</div>
                         <div class="name">Author: {{ book.author }}</div>
                     </div>
                 </router-link>
                 <hr>
             </div>
-            <!--<div class="searched" v-if="showedResultsConditions">Showed results: {{page-1}}0 out of {{totalCounts}}</div>-->
-            <div class="searched" v-if="lastShowedResultsConditions">Results: {{this.filterBooks.length}}</div>
+            <div class="searched" v-if="showedResultsConditions">Results: {{this.filterBooks.length}}</div>
             <a v-if="nextConditions" class="nextBtn" @click="searchNext">Next</a>
             <div v-if="!books.length && search">
                 <p>Nothing has been found</p>
@@ -56,12 +55,9 @@
                 return Math.max(this.totalCount, this.totalCountForAuthor);
             },
             nextConditions() {
-                return this.totalCounts > 10 && this.search && this.page <= Math.ceil(this.totalCounts/10) && this.books.length > 0;
+                return this.totalCounts > 10 && this.search && this.page <= Math.ceil(this.totalCounts/10);
             },
-            /*showedResultsConditions() {
-                return this.totalCounts > 10 && this.page-1 < Math.ceil(this.totalCounts/10) && this.books.length > 0;
-            },*/
-            lastShowedResultsConditions() {
+            showedResultsConditions() {
                 return this.page-1 === Math.ceil(this.totalCounts/10) && this.books.length > 0;
             },
         },
