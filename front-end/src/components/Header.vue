@@ -5,7 +5,7 @@
             <img class="logo__img" v-else src="../assets/logo-mini.png">
         </div>
         <SignUpIn></SignUpIn>
-        <SearchBar></SearchBar>
+        <SearchBar v-if="flag"></SearchBar>
         <div id="menu">
             <div id="background" class="burgerMenu" :class="{ active: opened }">
                 <div class="menu-content burgerMenuContent">

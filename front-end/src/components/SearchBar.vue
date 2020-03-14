@@ -6,7 +6,7 @@
                 v-model="searchInputData"
         />
         <div v-if="search" class="searchResult" id="result">
-            <div class="book" v-for="book in books" :key="book.id">
+            <div class="book" v-for="book in filterBooks.slice(counter === 1 ? 1 : 1 + (counter-1)*10, counter*10 + 1)" :key="book.id">
                 <router-link class="link" :to="'/book/' + book.id">
                     <img class="bookCover" :src="book.bookCover">
                     <div class="desc">
@@ -16,8 +16,8 @@
                 </router-link>
                 <hr>
             </div>
-            <div class="searched" v-if="showedResultsConditions">Showed results: {{page-1}}0 out of {{totalCounts}}</div>
-            <div class="searched" v-if="lastShowedResultsConditions">Showed results: {{totalCounts}} out of {{totalCounts}}</div>
+            <!--<div class="searched" v-if="showedResultsConditions">Showed results: {{page-1}}0 out of {{totalCounts}}</div>-->
+            <div class="searched" v-if="lastShowedResultsConditions">Results: {{this.filterBooks.length}}</div>
             <a v-if="nextConditions" class="nextBtn" @click="searchNext">Next</a>
             <div v-if="!books.length && search">
                 <p>Nothing has been found</p>
@@ -40,7 +40,8 @@
                 pageForAuthor: 1,
                 totalCount: 1,
                 totalCountForAuthor: 1,
-                search: false
+                search: false,
+                counter: 1
             }
         },
         created() {
@@ -48,21 +49,25 @@
             this.debouncedSearch = _.debounce(this.searchFunc, 1000, {'leading': false, 'trailing': true});
         },
         computed: {
+            filterBooks() {
+                return this.books.filter((item, index) => this.books.findIndex((x) => x.id === item.id) === index);
+            },
             totalCounts() {
                 return Math.max(this.totalCount, this.totalCountForAuthor);
             },
             nextConditions() {
                 return this.totalCounts > 10 && this.search && this.page <= Math.ceil(this.totalCounts/10) && this.books.length > 0;
             },
-            showedResultsConditions() {
+            /*showedResultsConditions() {
                 return this.totalCounts > 10 && this.page-1 < Math.ceil(this.totalCounts/10) && this.books.length > 0;
-            },
+            },*/
             lastShowedResultsConditions() {
-                return this.totalCounts > 10 && this.page-1 === Math.ceil(this.totalCounts/10) && this.books.length > 0;
+                return this.page-1 === Math.ceil(this.totalCounts/10) && this.books.length > 0;
             },
         },
         methods: {
             searchFunc(e) {
+                this.counter = 1;
                 this.books = [];
                 this.page = 1;
                 this.pageForAuthor = 1;
@@ -92,12 +97,11 @@
                             this.$store.dispatch('loadingProcess', false);
                             this.search = true;
                         });
-                        this.books = Array.from(new Set(this.books));
                     }
                 }
             },
             searchNext() {
-                this.books = [];
+                this.counter++;
                 if(this.searchInputData) {
                     this.$store.dispatch('loadingProcess', true);
                     if (this.searchInputData.split('')[0] === '#') {

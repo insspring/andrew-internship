@@ -22,6 +22,7 @@
         },
         created() {
             this.$store.dispatch('discardBooksFeed');
+            this.loadMore();
         },
         methods: {
             loadMore () {
