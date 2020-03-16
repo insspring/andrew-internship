@@ -34,7 +34,7 @@
         name: "Comments",
         components: {CommentsFeed, TextArea, ButtonTemplate},
         props: {
-            book: Object
+            book: Object,
         },
         data() {
             return {

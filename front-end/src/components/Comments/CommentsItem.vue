@@ -239,6 +239,7 @@
     .commentText {
         margin: 1rem 0;
         font-size: 1.2rem;
+        word-break: break-word;
 
         ::v-deep .commentTextLink {
             color: $orange-color;

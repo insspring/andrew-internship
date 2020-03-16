@@ -34,14 +34,14 @@ export const booksPagination = (token,page) => {
     });
 };
 export const commentsPagination = (token, id, page) => {
-    return axios.get("/books/"+ id +"?_embed=comments&_page="+ page +"&_limit=10&", {
+    return axios.get("/books/"+ id +"?_embed=comments&_page="+ page +"&_limit=10&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },
     });
 };
-export const getComments = (token, id) => {
-    return axios.get("/comments?bookId="+ id +"&_page=1&_limit=10&", {
+export const getComments = (token, id, page) => {
+    return axios.get("/comments?bookId="+ id +"&_page="+ page +"&_limit=10&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },

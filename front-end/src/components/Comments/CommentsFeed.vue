@@ -61,15 +61,13 @@
             loadMore () {
                 if(this.totalCount > this.comments.length) {
                     this.$store.dispatch('loadingProcess', true);
-                    commentsPagination(this.$store.state.token, this.book.id, this.page).then(result => {
-                        getComments(this.$store.state.token, this.book.id).then(result => {
+                        getComments(this.$store.state.token, this.book.id, this.page).then(result => {
                             this.totalCount = result.headers["x-total-count"];
+                            this.comments.push(...result.data);
+                            this.page++;
+                            this.$store.dispatch('loadingProcess', false);
                         });
-                        this.comments.push(...result.data.comments);
-                        this.page++;
-                        this.$store.dispatch('loadingProcess', false);
-                    });
-                }
+                    }
             },
             editOn(id) {
                 this.edit = id;

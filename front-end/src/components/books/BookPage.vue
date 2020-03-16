@@ -54,7 +54,21 @@
                 </div>
             </div>
         </div>
-        <Comments
+        <div class="showCommentsBtn">
+            <ButtonTemplate
+                    v-if="!showCommentsToggle"
+                    class="btn"
+                    :text="'Show comments'"
+                    :method="showComments"
+            ></ButtonTemplate>
+            <ButtonTemplate
+                    v-else
+                    class="btn"
+                    :text="'Hide comments'"
+                    :method="showComments"
+            ></ButtonTemplate>
+        </div>
+        <Comments v-if="showCommentsToggle"
                 :book="book"
         ></Comments>
     </div>
@@ -81,6 +95,7 @@
                 readMoreActivated: null,
                 book: {},
                 users: [],
+                showCommentsToggle: false
             }
         },
         created() {
@@ -119,6 +134,9 @@
             }
         },
         methods: {
+            showComments() {
+                this.showCommentsToggle = !this.showCommentsToggle;
+            },
             activateReadMore(id) {
                 this.readMoreActivated = id;
             },
@@ -273,6 +291,10 @@
             font-size: .8rem;
         }
     }
+    .showCommentsBtn {
+        display: flex;
+        justify-content: center;
+    }
     .linkToProfile{
 
         @extend .author;
@@ -284,7 +306,7 @@
         color: $orange-color;
     }
     .hashtag:hover {
-        text-shadow: 0 0 .1rem rgb(142, 106, 15);
+        text-decoration: underline;
     }
     .readMore {
         color: rgb(122, 126, 125);
