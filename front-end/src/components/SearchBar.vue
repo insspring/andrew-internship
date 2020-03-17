@@ -6,7 +6,7 @@
                 v-model="searchInputData"
         />
         <div v-if="search" class="searchResult" id="result">
-            <div class="book" v-for="book in filterBooks.slice(counter === 1 ? 0 : 1 + (counter-1)*10, counter*10 + 1)" :key="book.id">
+            <div class="book" v-for="book in filteredBooks.slice(counter === 1 ? 0 : 1 + (counter-1)*10, counter*10 + 1)" :key="book.id">
                 <router-link class="link" :to="'/book/' + book.id">
                     <img class="bookCover" :src="book.bookCover">
                     <div class="desc">
@@ -16,7 +16,7 @@
                 </router-link>
                 <hr>
             </div>
-            <div class="searched" v-if="showedResultsConditions">Results: {{this.filterBooks.length}}</div>
+            <div class="searched" v-if="showedResultsConditions">Results: {{filteredBooks.length}}</div>
             <a v-if="nextConditions" class="nextBtn" @click="searchNext">Next</a>
             <div v-if="!books.length && search">
                 <p>Nothing has been found</p>
@@ -48,7 +48,7 @@
             this.debouncedSearch = _.debounce(this.searchFunc, 1000, {'leading': false, 'trailing': true});
         },
         computed: {
-            filterBooks() {
+            filteredBooks() {
                 return this.books.filter((item, index) => this.books.findIndex((x) => x.id === item.id) === index);
             },
             totalCounts() {

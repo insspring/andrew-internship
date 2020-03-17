@@ -40,9 +40,8 @@
         color: rgb(193, 193, 195);
         border: 2px solid rgb(63, 63, 65);
         display: block;
-        font-size: 14px;
         font-family: sans-serif;
-        line-height: 1rem;
+        line-height: 1.1rem;
         width: 7rem;
         text-align: center;
         appearance: none;

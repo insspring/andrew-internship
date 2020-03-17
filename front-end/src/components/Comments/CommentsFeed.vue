@@ -20,7 +20,7 @@
 
 <script>
     import Loader from "../Loader";
-    import {commentsPagination, getComments, deleteComment, editComments} from "../../helpers/api";
+    import {getComments, deleteComment, editComments} from "../../helpers/api";
     import CommentsItem from "./CommentsItem";
     import {Comment} from "../../helpers/constuctors";
     //import {validationComments} from "../../helpers/validation";

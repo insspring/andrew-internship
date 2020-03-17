@@ -33,13 +33,6 @@ export const booksPagination = (token,page) => {
         },
     });
 };
-export const commentsPagination = (token, id, page) => {
-    return axios.get("/books/"+ id +"?_embed=comments&_page="+ page +"&_limit=10&_sort=id&_order=desc", {
-        headers: {
-            'authorization': "bearer " + token
-        },
-    });
-};
 export const getComments = (token, id, page) => {
     return axios.get("/comments?bookId="+ id +"&_page="+ page +"&_limit=10&_sort=id&_order=desc", {
         headers: {
@@ -56,6 +49,13 @@ export const getLikes = (token, id) => {
 };
 export const getBooks = (token,id,page) => {
     return axios.get("/books?authorId="+id+"&_page="+page+"&_limit=10&_sort=id&_order=desc", {
+        headers: {
+            'authorization': "bearer " + token
+        },
+    });
+};
+export const getRecentBooks = (token,id) => {
+    return axios.get("/books?authorId="+id+"&_page=1&_limit=3&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },

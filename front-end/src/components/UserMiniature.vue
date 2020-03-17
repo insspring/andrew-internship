@@ -24,6 +24,7 @@
 
 <style scoped>
     .avatar-photo {
+        min-width: 2rem;
         width: 2rem;
         border-radius: 50%;
         padding: .5rem;
@@ -38,5 +39,8 @@
     }
     .profile:hover {
         color: rgb(243, 243, 245);
+    }
+    .data {
+        word-break: break-word;
     }
 </style>

@@ -36,6 +36,8 @@ export default {
     @import "../../scss/mixins";
 
     input {
+        overflow: hidden;
+        text-overflow: ellipsis;
         width: 10rem;
         margin: 1rem 0;
         border: none;

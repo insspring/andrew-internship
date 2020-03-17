@@ -2,7 +2,7 @@
     <div class="component">
         <Loader v-if="flag"></Loader>
         <ul class="library">
-            <li class="book" v-for="book in books" :key="book.id">
+            <li class="book" v-for="book in filteredBooks" :key="book.id">
                 <div class="book-body">
                     <img class="bookCover" :src="book.bookCover">
                     <div class="desc">
@@ -41,6 +41,7 @@
             loadMore: Function,
             books: Array,
             userBooks: Boolean,
+            recentBooks: Boolean
         },
         components: {Rating, Loader},
         data() {
@@ -55,7 +56,7 @@
         },
         watch: {
             bottom(bottom ) {
-                if (bottom) {
+                if (bottom && !this.recentBooks) {
                     this.loadMore();
                 }
             }
@@ -65,6 +66,9 @@
                 user: 'getUser',
                 flag: 'getFlag'
             }),
+            filteredBooks() {
+                return this.books.filter((item, index) => this.books.findIndex((x) => x.id === item.id) === index);
+            }
         },
         methods: {
             bottomVisible() {
@@ -98,7 +102,7 @@
         flex-shrink: 0;
         border-radius: 2rem;
         color: $wick-white;
-        background-color: rgb(77, 81, 80);
+        background-color: rgb(76, 76, 75);
         box-shadow: 0 0 .7rem .1rem rgb(50,50,50);
         max-width: 24rem;
 
