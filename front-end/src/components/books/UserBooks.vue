@@ -1,9 +1,14 @@
 <template>
-    <BooksFeed
-            :loadMore="loadMore"
-            :books="books"
-            :userBooks="true"
-    ></BooksFeed>
+    <div>
+        <BooksFeed
+                :loadMore="loadMore"
+                :books="books"
+                :userBooks="true"
+        ></BooksFeed>
+        <div v-if="!books.length && !loading" class="empty">
+            <p >Nothing has been added</p>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -27,7 +32,8 @@
         },
         computed: {
             ...mapGetters({
-                user: 'getUser'
+                user: 'getUser',
+                loading: 'getLoading'
             })
         },
         methods: {
@@ -48,4 +54,15 @@
 
 <style lang="scss" scoped>
 
+    @import "../../scss/variables";
+
+    .empty {
+        text-align: center;
+        color: $classic-white;
+        font-size: 2rem;
+        font-weight: 600;
+    }
+    p {
+        @extend .empty
+    }
 </style>

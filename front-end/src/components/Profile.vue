@@ -1,6 +1,6 @@
 <template>
-    <div class="component">
-        <div class="profile" v-if="profile">
+    <div class="component" v-if="profile">
+        <div class="profile">
             <div class="main">
                 <div class="profile-info">
                     <div class="avatar">
@@ -77,7 +77,6 @@
         data() {
             return {
                 countBooks: 0,
-                count: 0,
                 users: [],
                 user: {},
                 books: [],
@@ -124,7 +123,6 @@
                     this.books.push(...result.data);
                     this.$store.dispatch('loadingProcess', false);
                 });
-                return this.countBooks;
             },
             subscribe() {
                 let user = new User({
@@ -257,10 +255,6 @@
         flex-direction: column;
         align-items: flex-start;
         justify-content: space-between;
-
-        @include for-size(phone-only) {
-            align-items: center;
-        }
     }
     .userData-header {
         display: flex;
