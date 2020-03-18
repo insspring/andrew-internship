@@ -68,22 +68,22 @@ export const getFavorites = (token,id,page) => {
         },
     });
 };
-export const getSearchedByHashtag = (token,hashtag,page) => {
-    return axios.get("/books?hashtags_like="+hashtag+"&_page="+page+"&_limit=10&_sort=id&_order=desc", {
+export const getSearchedByHashtag = (token,hashtag) => {
+    return axios.get("/books?hashtags_like="+hashtag+"&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },
     });
 };
-export const getSearchedByTitle = (token,name,page) => {
-    return axios.get("/books?name_like="+name+"&_page="+page+"&_limit=10&_sort=id&_order=desc", {
+export const getSearchedByTitle = (token,name) => {
+    return axios.get("/books?name_like="+name+"&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },
     });
 };
-export const getSearchedByAuthor = (token,name,page) => {
-    return axios.get("/books?author_like="+name+"&_page="+page+"&_limit=10&_sort=id&_order=desc", {
+export const getSearchedByAuthor = (token,name) => {
+    return axios.get("/books?authorId_like="+name+"&_sort=id&_order=desc", {
         headers: {
             'authorization': "bearer " + token
         },
