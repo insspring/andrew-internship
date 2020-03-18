@@ -37,7 +37,7 @@
                 </div>
                 <div class="item author">
                     {{ $t('author') }}:
-                    <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
+                    <router-link class="linkToProfile" :to="'/user/' + book.authorId" v-if="author">{{ author.name }}</router-link>
                 </div>
                 <div class="item description">
                     <span v-if="!readMoreActivated">{{ book.description.slice(0,200) }}</span>
@@ -115,6 +115,9 @@
             ...mapGetters({
                 user: 'getUser'
             }),
+            author() {
+                return this.users.find(item => item.id === this.book.authorId);
+            },
             checkLength() {
                 return this.book.description.slice(200).length > 0;
             },

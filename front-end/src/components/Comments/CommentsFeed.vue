@@ -82,9 +82,7 @@
                 let data = new Comment({
                     bookId: comment.bookId,
                     commentText: comment.commentText,
-                    commentAuthorName: comment.commentAuthorName,
                     commentAuthorId: comment.commentAuthorId,
-                    commentAuthorAvatar: comment.commentAuthorAvatar,
                     publicationDate: comment.publicationDate,
                     id: comment.id
                 });

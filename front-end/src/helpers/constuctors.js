@@ -59,18 +59,14 @@ export class Comment {
     constructor({
                     bookId = null,
                     commentText = '',
-                    commentAuthorName = '',
                     commentAuthorId = null,
-                    commentAuthorAvatar = '',
                     publicationDate = '',
                     id = null
                 }={})
     {
         this.bookId = bookId;
         this.commentText = commentText.trim();
-        this.commentAuthorName = commentAuthorName.trim();
         this.commentAuthorId = commentAuthorId;
-        this.commentAuthorAvatar = commentAuthorAvatar;
         this.publicationDate = publicationDate.trim();
         this.id = id;
     }

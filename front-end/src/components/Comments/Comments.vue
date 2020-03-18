@@ -59,13 +59,10 @@
                     addComment(new Comment({
                         bookId: this.book.id,
                         commentText: this.commentText,
-                        commentAuthorName: this.user.name,
                         commentAuthorId: this.user.id,
-                        commentAuthorAvatar: this.user.avatar,
                         publicationDate: Date().toString().split('').slice(4, Date().toString().split('').length - 36).join('')
                     })).then(() => {
                         this.commentText = '';
-                        alert('Comment has been added!');
                     })
                 } else {
                     this.classErrorComment = true;
