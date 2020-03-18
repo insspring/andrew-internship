@@ -224,6 +224,9 @@
     .desc {
         flex-direction: column;
         justify-content: space-between;
+        -moz-hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
     }
     .bookCover {
         margin-right: 1rem;

@@ -23,7 +23,7 @@
     import {getComments, deleteComment, editComments} from "../../helpers/api";
     import CommentsItem from "./CommentsItem";
     import {Comment} from "../../helpers/constuctors";
-    //import {validationComments} from "../../helpers/validation";
+    import {validationComments} from "../../helpers/validation";
 
     export default {
         name: "CommentsFeed",
@@ -88,7 +88,7 @@
                     publicationDate: comment.publicationDate,
                     id: comment.id
                 });
-                //if(validationComments(comment)) {
+                if(validationComments(comment.commentText)) {
                     editComments(comment.id, data).then(() => {
                         getComments(this.$store.state.token, this.book.id).then(result => {
                             this.comments = [];
@@ -96,9 +96,9 @@
                         });
                         this.edit = 0;
                     })
-                /*} else {
+                } else {
                     this.error = true;
-                }*/
+                }
             },
             deleteComment(comment) {
                 deleteComment(comment.id).then(() => {

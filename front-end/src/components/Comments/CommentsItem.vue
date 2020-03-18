@@ -4,11 +4,11 @@
             <router-link class="linkToProfile" :to="'/user/' + comment.commentAuthorId">
                 <div class="header">
                     <div class="avatar">
-                        <img v-if="!comment.commentAuthorAvatar" class="avatar-photo" src="../../assets/none.png.jpg"/>
-                        <img v-else class="avatar-photo" :src="comment.commentAuthorAvatar"/>
+                        <img v-if="!author.avatar" class="avatar-photo" src="../../assets/none.png.jpg"/>
+                        <img v-else class="avatar-photo" :src="author.avatar"/>
                     </div>
                     <div class="author">
-                        {{ comment.commentAuthorName }}
+                        {{ author.name }}
                     </div>
                 </div>
             </router-link>
@@ -74,7 +74,7 @@
     import TextArea from "../templates/TextArea";
     import Like from "../Like";
     import {LikeClass} from "../../helpers/constuctors";
-    import {addLike, deleteLike, getLikes} from "../../helpers/api";
+    import {addLike, deleteLike, getLikes, getUser} from "../../helpers/api";
     import _ from 'lodash';
     import ThreeDots from "../ThreeDots";
 
@@ -90,6 +90,7 @@
         },
         data() {
             return {
+                author: {},
                 classErrorComment: false,
                 likes: [],
                 likeFirstState: false,
@@ -101,6 +102,9 @@
         },
         created() {
             this.debouncedSetLike = _.debounce(this.setLike, 500, {'leading': false, 'trailing': true});
+            getUser(this.$store.state.token).then(result => {
+                this.author = result.data.find(item => item.id === this.comment.commentAuthorId);
+            });
             getLikes(this.$store.state.token, this.comment.id).then(result => {
                 this.likes.push(...result.data.likes);
                 this.likeCounter = this.likes.length;

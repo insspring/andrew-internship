@@ -9,7 +9,7 @@
                         <div class="item name">{{ book.name }}</div>
                         <div v-if="!userBooks" class="item author">
                             {{ $t('author') }}:
-                            <router-link class="linkToProfile" :to="'/user/' + book.authorId">{{ book.author }}</router-link>
+                            <router-link class="linkToProfile" :to="'/user/' + book.authorId" v-if="author(book)">{{ author(book).name }}</router-link>
                         </div>
                         <div class="item">
                             <span class="description">{{ book.description.slice(0,150) }}</span>
@@ -34,6 +34,7 @@
     import Loader from "../Loader";
     import {mapGetters} from "vuex";
     import Rating from "../Rating";
+    import {getUser} from "../../helpers/api";
 
     export default {
         name: "BooksFeed",
@@ -47,11 +48,15 @@
         data() {
             return {
                 bottom: false,
+                users: []
             }
         },
         created() {
             window.addEventListener('scroll', () => {
                 this.bottom = this.bottomVisible()
+            });
+            getUser(this.$store.state.token).then(result => {
+                this.users.push(...result.data);
             });
         },
         watch: {
@@ -71,6 +76,9 @@
             }
         },
         methods: {
+            author(book) {
+                return this.users.find(item => item.id === book.authorId);
+            },
             bottomVisible() {
                 return window.pageYOffset + window.innerHeight + 100 >= document.documentElement.offsetHeight;
             },
