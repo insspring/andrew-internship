@@ -16,7 +16,10 @@
                 <hr>
             </div>
             <div class="searched" v-if="showedResultsConditions">Results: {{nextConditions ? counter*10 : filteredBooks.length}} of {{filteredBooks.length}}</div>
-            <a id="next" v-show="nextConditions" class="nextBtn" @click="searchNext">Next</a>
+            <div class="pagination-btn">
+                <a id="previous" v-show="previousConditions" class="nextBtn" @click="searchPrevious">Previous</a>
+                <a id="next" v-show="nextConditions" class="nextBtn" @click="searchNext">Next</a>
+            </div>
             <div v-if="!books.length && search">
                 <p>Nothing has been found</p>
             </div>
@@ -45,6 +48,9 @@
         computed: {
             filteredBooks() {
                 return this.books.filter((item, index) => this.books.findIndex((x) => x.id === item.id) === index);
+            },
+            previousConditions() {
+                return this.search && this.counter > 1;
             },
             nextConditions() {
                 return this.filteredBooks.length > 10 && this.search && this.counter < Math.ceil(this.filteredBooks.length/10);
@@ -91,6 +97,10 @@
                     }
                 }
             },
+            searchPrevious() {
+                this.counter--;
+                document.getElementById("result").scrollTo(pageXOffset, 0);
+            },
             searchNext() {
                 this.counter++;
                 document.getElementById("result").scrollTo(pageXOffset, 0);
@@ -98,8 +108,11 @@
             clickedOutside() {
                 document.addEventListener("click", (evt) => {
                     const next = document.getElementById("next");
+                    const previous = document.getElementById("previous");
                     let targetElement = evt.target;
                     if (targetElement === next) {
+                        this.search = true;
+                    } else if (targetElement === previous) {
                         this.search = true;
                     } else {
                         this.search = false;
@@ -160,6 +173,11 @@
         text-align: center;
         color: $classic-white;
         background-color: rgb(50, 50, 50);
+    }
+    .pagination-btn {
+        background-color: rgb(50, 50, 50);;
+        display: flex;
+        justify-content: space-around;
     }
     .nextBtn {
         @extend .searched;
