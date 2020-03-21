@@ -29,7 +29,8 @@
         name: "CommentsFeed",
         components: {CommentsItem, Loader},
         props: {
-            book: Object
+            book: Object,
+            createdComment: Object
         },
         data() {
             return {
@@ -51,6 +52,11 @@
             bottom(bottom) {
                 if (bottom && this.totalCount !== 1) {
                     this.loadMore();
+                }
+            },
+            createdComment() {
+                if(Object.keys(this.createdComment).length !== 0) {
+                    this.comments.unshift(this.createdComment);
                 }
             }
         },

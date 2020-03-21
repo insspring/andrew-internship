@@ -24,7 +24,6 @@ export class Book {
     constructor({
                     name = "",
                     description = "",
-                    author = "",
                     authorId = null,
                     bookCover = '',
                     hashtags = [],
@@ -37,7 +36,6 @@ export class Book {
     {
         this.name = name.trim();
         this.description = description.trim();
-        this.author = author;
         this.authorId = authorId;
         this.bookCover = bookCover;
         this.hashtags = [...hashtags];

@@ -14,10 +14,10 @@ export const validation  = (select, param, confirm) => {
 };
 export const validationBooks = (select, param) => {
     if(select === 'name') {
-        let regex = /^[A-Za-z0-9\s\d-_,'".;:()]{3,50}$/;
+        let regex = /[A-Za-z0-9\s\d-_,'".;:()]{3,50}$/;
         return regex.test(param);
     } else if(select === 'description') {
-        let regex = /^[A-Za-z0-9\s\d-_,'".;:()]{50,500}$/;
+        let regex = /[A-Za-z0-9\s\d-_,'".;:()]{50,500}$/;
         return regex.test(param);
     } else if(select === 'tags') {
         let regex = /(?:\s|^)#[A-Za-z0-9\d-._]+(?:\s|$)/g;

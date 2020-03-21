@@ -24,10 +24,6 @@
 </script>
 
 <style scoped>
-    .edit {
-        display: flex;
-        justify-content: center;
-    }
     .settings-menu {
         display: flex;
         flex-direction: column;

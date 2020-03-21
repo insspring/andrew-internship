@@ -108,7 +108,6 @@
                     editBook(this.bookId, new Book ({
                         name: this.book.name,
                         description: this.book.description,
-                        author: this.book.author,
                         authorId: this.book.authorId,
                         bookCover: this.selectedFile ? this.selectedFile : this.book.bookCover,
                         hashtags: this.hashtags.split('#').map(item => item.trim()).filter(item => item !== ''),

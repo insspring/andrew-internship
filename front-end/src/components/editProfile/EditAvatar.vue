@@ -81,9 +81,21 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+
+    @import "../../scss/mixins";
+
+    input {
+        margin-bottom: 1rem;
+
+        @include for-size(phone-only) {
+            width: 12rem;
+        }
+    }
     .main {
+        width: 100%;
         display: flex;
+        justify-content: center;
     }
     .form {
         margin: 1rem;

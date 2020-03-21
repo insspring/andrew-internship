@@ -17,6 +17,7 @@
         </div>
         <CommentsFeed
                 :book="book"
+                :createdComment="createdComment"
         ></CommentsFeed>
     </div>
 </template>
@@ -40,6 +41,7 @@
             return {
                 commentText: '',
                 classErrorComment: false,
+                createdComment: {}
             }
         },
         computed: {
@@ -61,7 +63,14 @@
                         commentText: this.commentText,
                         commentAuthorId: this.user.id,
                         publicationDate: Date().toString().split('').slice(4, Date().toString().split('').length - 36).join('')
-                    })).then(() => {
+                    })).then((result) => {
+                        this.createdComment = new Comment({
+                            bookId: this.book.id,
+                            commentText: this.commentText,
+                            commentAuthorId: this.user.id,
+                            publicationDate: Date().toString().split('').slice(4, Date().toString().split('').length - 36).join(''),
+                            id: result.data
+                        });
                         this.commentText = '';
                     })
                 } else {

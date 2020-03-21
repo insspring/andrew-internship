@@ -80,6 +80,7 @@
                 users: [],
                 user: {},
                 books: [],
+                watchId: null,
             }
         },
         created() {
@@ -91,6 +92,7 @@
             });
             this.debouncedSuscribe = _.debounce(this.subscribe, 500);
             this.debouncedUnsuscribe = _.debounce(this.unsubscribe, 500);
+            this.loadMore();
         },
         computed: {
             profile() {
@@ -108,12 +110,6 @@
             subscribersNum() {
                 return this.users.filter(item => item.subscribes.find(item => item === this.profile.id)).length;
             },
-        },
-        watch: {
-            profile() {
-                this.books = [];
-                this.loadMore();
-            }
         },
         methods: {
             loadMore() {
