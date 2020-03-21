@@ -6,7 +6,7 @@
             <h2>{{ $t('editPassword') }}</h2>
             <form @submit.prevent>
                 <div class="item">
-                    <label>Old password</label>
+                    <label>{{ $t('oldPassword') }}</label>
                     <InputTemplate
                             v-model="oldPassword"
                             :error="{error: classErrorOldPassword}"
@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="item">
-                    <label>New password</label>
+                    <label>{{ $t('newPassword') }}</label>
                     <InputTemplate
                             v-model="newPassword"
                             :error="{error: classErrorNewPassword}"
@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="item">
-                    <label>New password confirm</label>
+                    <label>{{ $t('newPasswordConfirm') }}</label>
                     <InputTemplate
                             v-model="newPasswordConfirm"
                             :error="{error: classErrorPasswordConfirm}"

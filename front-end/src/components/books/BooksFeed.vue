@@ -13,7 +13,7 @@
                         </div>
                         <div class="item">
                             <span class="description">{{ book.description.slice(0,150) }}</span>
-                            <router-link class="router-link" :to="'/book/' + book.id">(Read more...)</router-link>
+                            <router-link class="router-link" :to="'/book/' + book.id">{{ $t('readMore') }}</router-link>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,6 @@
     @import "../../scss/_variables";
 
     .component {
-
     }
     .library {
         display: flex;

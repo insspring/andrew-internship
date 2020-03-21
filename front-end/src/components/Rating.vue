@@ -8,11 +8,11 @@
             <input type="radio" name="rating" value="5" v-model="rate"><i></i>
         </span>
         <span class="votes" v-if="checkRate">
-            Your rate: {{ getUserRate }}
+            {{ $t('yourRate') }}: {{ getUserRate }}
         </span>
         <div class="rate-stats">
-            <span  class="rate" v-if="averageVotes">Rating: {{ averageRate }} / 5</span>
-            <span class="votes">Votes: {{ averageVotes }}</span>
+            <span  class="rate" v-if="averageVotes">{{ $t('rating') }}: {{ averageRate }} / 5</span>
+            <span class="votes">{{ $t('votes') }}: {{ averageVotes }}</span>
         </div>
     </div>
 </template>

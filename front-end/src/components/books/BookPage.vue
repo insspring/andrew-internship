@@ -1,5 +1,6 @@
 <template>
     <div class="book-page" v-if="book.description && user">
+        <Loader></Loader>
         <div class="book">
             <div class="cover">
                 <img class="bookCover" :src="book.bookCover">
@@ -13,24 +14,24 @@
                 <div class="header">
                     <div class="item name">{{ book.name }}</div>
                     <div class="buttons">
-                        <router-link v-if="checkUser" class="btn router-link" :to="'/book/' + book.id + '/edit'">Edit</router-link>
+                        <router-link v-if="checkUser" class="btn router-link" :to="'/book/' + book.id + '/edit'">$t('edit')</router-link>
                         <ButtonTemplate
                                 class="btn"
                                 v-if="checkUser"
-                                :text="'Delete'"
+                                :text="$t('delete')"
                                 :params="[book]"
                                 :method="deleteBook"
                         ></ButtonTemplate>
                         <ButtonTemplate
                                 v-if="!checkUser && !favoritesCheck"
                                 class="btn"
-                                :text="'Add to favorites'"
+                                :text="$t('addToFavorites')"
                                 :method="debouncedToFavorites"
                         ></ButtonTemplate>
                         <ButtonTemplate
                                 v-if="!checkUser && favoritesCheck"
                                 class="btn"
-                                :text="'Remove from favorites'"
+                                :text="$t('removeFromFavorites')"
                                 :method="debouncedFromFavorites"
                         ></ButtonTemplate>
                     </div>
@@ -41,9 +42,9 @@
                 </div>
                 <div class="item description">
                     <span v-if="!readMoreActivated">{{ book.description.slice(0,200) }}</span>
-                       <a class="readMore" v-if="!readMoreActivated && checkLength" @click.prevent="activateReadMore(book.id)" href="#">  (Read more...)</a>
+                       <a class="readMore" v-if="!readMoreActivated && checkLength" @click.prevent="activateReadMore(book.id)" href="#">  {{ $t('readMore') }}</a>
                     <span v-if="readMoreActivated">{{ book.description }}</span>
-                    <a class="readMore" v-if="readMoreActivated && checkLength" @click.prevent="deactivateReadMore" href="#">  (...less)</a>
+                    <a class="readMore" v-if="readMoreActivated && checkLength" @click.prevent="deactivateReadMore" href="#">  {{ $t('readLess') }}</a>
                 </div>
                 <div class="date">
                     <div class="item date">{{ $t('uploaded') }}: {{ book.publicationDate }}</div>
@@ -58,13 +59,13 @@
             <ButtonTemplate
                     v-if="!showCommentsToggle"
                     class="btn"
-                    :text="'Show comments'"
+                    :text="$t('showComments')"
                     :method="showComments"
             ></ButtonTemplate>
             <ButtonTemplate
                     v-else
                     class="btn"
-                    :text="'Hide comments'"
+                    :text="$t('hideComments')"
                     :method="showComments"
             ></ButtonTemplate>
         </div>
@@ -85,10 +86,11 @@
     import Rating from "../Rating";
     import Comments from "../Comments/Comments";
     import _ from 'lodash';
+    import Loader from "../Loader";
 
     export default {
         name: "BookPage",
-        components: {Comments, Rating, ButtonTemplate},
+        components: {Loader, Comments, Rating, ButtonTemplate},
         props: ['bookId'],
         data() {
             return {
@@ -99,13 +101,12 @@
             }
         },
         created() {
-            this.$store.dispatch('loadingProcess',true);
             getBook(this.$store.state.token,this.bookId).then(result => {
                 this.book = result.data[0];
-                this.$store.dispatch('loadingProcess',false);
             });
             getUser(this.$store.state.token).then(result => {
                 this.users = result.data;
+                this.$store.dispatch('loadingProcess',false);
             });
             this.$store.dispatch('discardBooksFeed');
             this.debouncedToFavorites = _.debounce(this.toFavorites, 500);
@@ -132,7 +133,6 @@
             bookId(bookId) {
                 getBook(this.$store.state.token, bookId).then(result => {
                     this.book = result.data[0];
-                    this.$store.dispatch('loadingProcess',false);
                 });
             }
         },
@@ -147,6 +147,7 @@
                 this.readMoreActivated = null;
             },
             toFavorites() {
+                this.$store.dispatch('loadingProcess',true);
                 let book = new Book({
                     name: this.book.name,
                     description: this.book.description,
@@ -165,9 +166,11 @@
                     getBook(this.$store.state.token,this.bookId).then(result => {
                         this.book = result.data[0];
                     });
+                    this.$store.dispatch('loadingProcess',false);
                 });
             },
             fromFavorites() {
+                this.$store.dispatch('loadingProcess',true);
                 editBook(this.book.id, new Book({
                     name: this.book.name,
                     description: this.book.description,
@@ -184,13 +187,16 @@
                     getBook(this.$store.state.token,this.bookId).then(result => {
                         this.book = result.data[0];
                     });
+                    this.$store.dispatch('loadingProcess',false);
                 });
             },
             setBookRate(book) {
+                this.$store.dispatch('loadingProcess',true);
                 editBook(this.book.id, book).then(() => {
                     getBook(this.$store.state.token,this.book.id).then(result => {
                         this.book = result.data[0];
                     });
+                    this.$store.dispatch('loadingProcess',false);
                 });
             },
             deleteBook(book) {

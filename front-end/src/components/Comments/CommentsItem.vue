@@ -37,13 +37,13 @@
                     <div class="dropDown-menu" v-if="menuVisible">
                         <ButtonTemplate
                                 v-if="checkUser()"
-                                :text="'Edit'"
+                                :text="$t('edit')"
                                 :method="editOn"
                                 class="btn"
                         ></ButtonTemplate>
                         <ButtonTemplate
                                 v-if="checkUser()"
-                                :text="'Delete'"
+                                :text="$t('delete')"
                                 :params="[comment]"
                                 :method="deleteComment"
                                 class="btn"

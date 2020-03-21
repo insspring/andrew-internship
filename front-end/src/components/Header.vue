@@ -29,7 +29,7 @@
                             :method="deleteToken"
                     ></ButtonTemplate>
                     <LocaleChange></LocaleChange>
-                    <router-link v-if="flag" class="router-link" to="/favorites">Favorites</router-link>
+                    <router-link v-if="flag" class="router-link" to="/favorites">{{ $t('favorites') }}</router-link>
                     <UserMiniature
                             :user="user"
                     ></UserMiniature>

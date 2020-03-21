@@ -5,6 +5,7 @@
     :placeholder="placeholder"
     @input="$emit('input', $event.target.value)"
     @keyup="mixin_autoResize_resize"
+    @focus="mixin_autoResize_resize"
     @keydown="handlers"
   ></textarea>
 </template>

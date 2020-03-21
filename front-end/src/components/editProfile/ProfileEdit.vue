@@ -3,7 +3,7 @@
         <EditProfileMenu></EditProfileMenu>
 
         <div class="form">
-            <h2>{{ $t('editProfile') }}</h2>
+            <h2>{{ $t('editName') }}</h2>
                 <form @submit.prevent>
                     <div class="item">
                         <label>{{ $t('name') }}</label>

@@ -1,5 +1,6 @@
 <template>
     <div class="main">
+        <Loader></Loader>
         <SubsMenu :userId="userId"></SubsMenu>
         <SubsFeed :subs="subs"></SubsFeed>
     </div>
@@ -9,19 +10,22 @@
     import SubsFeed from "./SubsFeed";
     import SubsMenu from "./SubsMenu";
     import {getUser} from "../../helpers/api";
+    import Loader from "../Loader";
 
     export default {
         name: "Subscribers",
         props: ['userId'],
-        components: {SubsMenu, SubsFeed},
+        components: {Loader, SubsMenu, SubsFeed},
         data() {
             return {
                 users: []
             }
         },
         created() {
+            this.$store.dispatch('loadingProcess',true);
             getUser(this.$store.state.token).then(result => {
                 this.users = result.data;
+                this.$store.dispatch('loadingProcess',false);
             });
         },
         computed: {

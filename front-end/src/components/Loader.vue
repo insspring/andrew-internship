@@ -34,7 +34,7 @@ export default {
 .loader {
   position: fixed;
   z-index: 9;
-  left: calc(50% - 1rem);
+  left: calc(50% - 3rem);
   top: calc(50% - 1rem);
 }
 .lds-default {

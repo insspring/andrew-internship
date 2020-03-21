@@ -1,5 +1,6 @@
 <template>
     <div class="component" v-if="profile">
+        <Loader></Loader>
         <div class="profile">
             <div class="main">
                 <div class="profile-info">
@@ -49,7 +50,7 @@
             </div>
         </div>
         <div class="books" v-if="books.length">
-            <p class="books-header">Recently added books:</p>
+            <p class="books-header">{{ $t('recentlyAddedBooks') }}:</p>
             <BooksFeed
                     :books="books"
                     :loadMore="loadMore"
@@ -69,10 +70,11 @@
     import ButtonTemplate from "./templates/ButtonTemplate";
     import _ from 'lodash';
     import BooksFeed from "./books/BooksFeed";
+    import Loader from "./Loader";
 
     export default {
         name: "Profile",
-        components: {BooksFeed, ButtonTemplate},
+        components: {Loader, BooksFeed, ButtonTemplate},
         props: ['userId'],
         data() {
             return {
@@ -121,6 +123,7 @@
                 });
             },
             subscribe() {
+                this.$store.dispatch('loadingProcess', true);
                 let user = new User({
                     name: this.user.name,
                     email: this.user.email,
@@ -141,10 +144,12 @@
                         this.users = result.data;
                         this.user = result.data.find(item =>
                             item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
+                        this.$store.dispatch('loadingProcess', false);
                     });
                 });
             },
             unsubscribe() {
+                this.$store.dispatch('loadingProcess', true);
                 editUser(this.user.id,
                     new User({
                         name: this.user.name,
@@ -165,6 +170,7 @@
                         this.users = result.data;
                         this.user = result.data.find(item =>
                             item.email === Object.values(this.$store.state.userData)[0] && item.password === Object.values(this.$store.state.userData)[1]);
+                        this.$store.dispatch('loadingProcess', false);
                     });
                 });
             },
@@ -283,7 +289,7 @@
 
         @extend .email;
 
-        white-space: pre;
+        white-space: normal;
         display: block;
         color: $classic-white;
         font-weight: bold;
@@ -291,9 +297,6 @@
         border: none;
         text-align: center;
 
-        @include for-size(phone-only) {
-            white-space: normal;
-        }
     }
     .router-link:hover {
         color: $orange-color;

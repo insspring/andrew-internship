@@ -2,10 +2,10 @@
     <div class="subs">
         <div class="subs-menu">
             <div class="item">
-                <router-link class="router-link" :to="'/user/' + userId + '/subscribers'">Subscribers</router-link>
+                <router-link class="router-link" :to="'/user/' + userId + '/subscribers'">{{ $t('subscribers') }}</router-link>
             </div>
             <div class="item">
-                <router-link class="router-link" :to="'/user/' + userId + '/subscriptions'">Subscriptions</router-link>
+                <router-link class="router-link" :to="'/user/' + userId + '/subscriptions'">{{ $t('subscriptions') }}</router-link>
             </div>
         </div>
     </div>
@@ -22,13 +22,14 @@
 
 <style scoped>
     .subs-menu {
+        position: fixed;
+        left: calc(50% - 11rem);
         display: flex;
         flex-direction: column;
-        width: 10rem;
     }
     .router-link {
         display: block;
-        padding: 1rem;
+        padding: .6rem;
         background-color: rgb(76, 76, 75);
         margin-bottom: 0.1rem;
         cursor: pointer;
