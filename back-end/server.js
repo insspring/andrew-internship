@@ -117,16 +117,6 @@ server.post('/add/likes', (req, res) => {
     res.status(200).json(id)
 });
 
-server.post('/add/hashtags', (req, res) => {
-    const hashtagsdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'));
-    const id = hashtagsdb.hashtags.length == 0 ? 1 : hashtagsdb.hashtags[hashtagsdb.hashtags.length - 1].id + 1;
-    const hashtag = req.body;
-    hashtag.id = id;
-    db.get('hashtags').push(hashtag)
-        .write()
-    res.status(200).json(id)
-});
-
 server.use('/', (req, res, next) => {
     switch(req.path) {
         case '/users':
@@ -136,8 +126,6 @@ server.use('/', (req, res, next) => {
         case '/comments':
             break;
         case '/likes':
-            break;
-        case '/hashtags':
             break;
         default:
             return next();
