@@ -20,7 +20,7 @@
                         class="btn"
                 ></ButtonTemplate>
                 <ButtonTemplate
-                        :text="'Cancel'"
+                        :text="$t('cancel')"
                         :method="editCancel"
                         class="btn"
                 ></ButtonTemplate>

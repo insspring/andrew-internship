@@ -10,15 +10,15 @@
                     <img class="bookCover" :src="book.bookCover">
                     <div class="desc">
                         <div class="name">{{ book.name }}</div>
-                        <div class="name" v-if="author(book)">Author: {{ author(book).name }}</div>
+                        <div class="name" v-if="author(book)">{{ $t('author') }}: {{ author(book).name }}</div>
                     </div>
                 </router-link>
                 <hr>
             </div>
-            <div class="searched" v-if="showedResultsConditions">Results: {{nextConditions ? counter*10 : filteredBooks.length}} of {{filteredBooks.length}}</div>
+            <div class="searched" v-if="showedResultsConditions">{{ $t('results') }}: {{nextConditions ? counter*10 : filteredBooks.length}} {{ $t('of')}} {{filteredBooks.length}}</div>
             <div class="pagination-btn">
-                <a id="previous" v-show="previousConditions" class="nextBtn" @click="searchPrevious">Previous</a>
-                <a id="next" v-show="nextConditions" class="nextBtn" @click="searchNext">Next</a>
+                <a id="previous" v-show="previousConditions" class="nextBtn" @click="searchPrevious">{{ $t('prev') }}</a>
+                <a id="next" v-show="nextConditions" class="nextBtn" @click="searchNext">{{ $t('next') }}</a>
             </div>
             <div v-if="!books.length && search">
                 <p>Nothing has been found</p>
