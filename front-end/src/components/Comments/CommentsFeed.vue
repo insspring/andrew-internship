@@ -2,7 +2,7 @@
     <div>
         <Loader></Loader>
         <ul class="library">
-            <li class="comment" v-for="comment in comments" :key="comment.id">
+            <li class="comment" v-for="comment in filteredComments" :key="comment.id">
                 <CommentsItem
                         :comment="comment"
                         :edit="edit"
@@ -47,6 +47,11 @@
                 this.bottom = this.bottomVisible()
             });
             this.loadMore();
+        },
+        computed: {
+            filteredComments() {
+                return this.comments.filter((item, index) => this.comments.findIndex((x) => x.id === item.id) === index);
+            }
         },
         watch: {
             bottom(bottom) {
