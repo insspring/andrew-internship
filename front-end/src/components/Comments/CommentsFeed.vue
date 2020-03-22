@@ -128,7 +128,7 @@
         list-style: none;
     }
     .comment {
-        max-width: 40rem;
+        width: 40rem;
         padding: 2rem 2.2rem;
         border-radius: 2rem;
         color: rgb(193,193,195);
@@ -137,10 +137,10 @@
         margin: 1rem 0;
 
         @include for-size(tablet-landscape-up) {
-            max-width: 30rem;
+            width: 30rem;
         }
         @include for-size(phone-only) {
-            max-width: 20rem;
+            width: 20rem;
             padding: 1rem 1.2rem;
         }
     }
