@@ -1,15 +1,19 @@
 <template>
     <div class="header">
-        <div class="logo">
-            <img v-if="windowWidth > 500" class="logo__img" src="../assets/logo.png">
-            <img class="logo__img" v-else src="../assets/logo-mini.png">
-        </div>
+        <router-link to="/">
+            <div class="logo">
+                <img v-if="windowWidth > 500" class="logo__img" src="../assets/logo.png">
+                <img class="logo__img" v-else src="../assets/logo-mini.png">
+            </div>
+        </router-link>
         <SignUpIn></SignUpIn>
         <SearchBar v-if="flag"></SearchBar>
         <div id="menu">
             <div id="background" class="burgerMenu" :class="{ active: opened }">
                 <div class="menu-content burgerMenuContent">
-                    <router-link class="router-link" to="/">{{ $t('home') }}</router-link>
+                    <router-link class="router-link" to="/">
+                        <span @click="closeMenu">{{ $t('home') }}</span>
+                    </router-link>
                     <ButtonTemplate
                             class="btn-menu"
                             v-if="!flag"
@@ -29,7 +33,9 @@
                             :method="deleteToken"
                     ></ButtonTemplate>
                     <LocaleChange></LocaleChange>
-                    <router-link v-if="flag" class="router-link" to="/favorites">{{ $t('favorites') }}</router-link>
+                    <router-link v-if="flag" class="router-link" to="/favorites">
+                        <span @click="closeMenu">{{ $t('favorites') }}</span>
+                    </router-link>
                     <UserMiniature
                             :user="user"
                     ></UserMiniature>
@@ -74,6 +80,9 @@
             openMenu() {
                 this.opened = !this.opened;
             },
+            closeMenu() {
+                this.opened = false;
+            },
             clickedOutside() {
                 document.addEventListener("click", (evt) => {
                     const backgroundElement = document.getElementById("background");
@@ -84,12 +93,15 @@
                 });
             },
             visibleIn() {
+                this.opened = false;
                 this.$store.dispatch('visibleIn',true);
             },
             visibleUp() {
+                this.opened = false;
                 this.$store.dispatch('visibleUp',true);
             },
             deleteToken() {
+                this.opened = false;
                 localStorage.removeItem('accessToken');
                 this.$store.dispatch('setFlag',false);
                 this.$store.dispatch('discardBooksFeed');
@@ -105,9 +117,8 @@
 
     @import '../scss/mixins.scss';
     @import "../scss/variables";
-
     .header {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;

@@ -4,7 +4,8 @@
         <ul class="library">
             <li class="book" v-for="book in filteredBooks" :key="book.id">
                 <div class="book-body">
-                    <img class="bookCover" :src="book.bookCover">
+                    <img v-if="book.bookCover" class="bookCover" :src="book.bookCover">
+                    <img v-else class="bookCover" src="../../assets/books.jpg">
                     <div class="desc">
                         <div class="item name">{{ book.name }}</div>
                         <div v-if="!userBooks" class="item author">

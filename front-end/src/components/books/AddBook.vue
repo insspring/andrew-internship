@@ -98,7 +98,7 @@
                 reader.readAsDataURL(e.target.files[0]);
             },
             createBook() {
-                if(validationBooks('name',this.name) && validationBooks('description',this.description) && validationBooks('tags', this.tags) && this.selectedFile !== null) {
+                if(validationBooks('name',this.name) && validationBooks('description',this.description) && validationBooks('tags', this.tags)) {
                     addBook(new Book({
                         name: this.name,
                         description: this.description,
@@ -135,9 +135,6 @@
                     }
                     if(!validationBooks('tags',this.tags)) {
                         this.classErrorTags = true;
-                    }
-                    if(this.selectedFile === null) {
-                        alert('Add book cover!');
                     }
                 }
 

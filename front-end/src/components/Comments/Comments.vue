@@ -1,11 +1,11 @@
 <template>
     <div class="comment-area">
-        <div class="comment-area-write" v-if="!checkUser">
+        <div class="comment-area-write">
             <TextArea
                     class="adaptive"
                     v-model="commentText"
                     :value="commentText"
-                    :placeholder="'Required at least 20 symbol length comment'"
+                    :placeholder="'Leave comment...'"
                     :class="{error: classErrorComment}"
                     :method="startPrintingComment"
             ></TextArea>
@@ -27,7 +27,6 @@
     import ButtonTemplate from "../templates/ButtonTemplate";
     import {Comment} from "../../helpers/constuctors";
     import {addComment} from "../../helpers/api";
-    import {validationComments} from "../../helpers/validation";
     import {mapGetters} from 'vuex';
     import CommentsFeed from "./CommentsFeed";
 
@@ -48,16 +47,13 @@
             ...mapGetters({
                 user: 'getUser'
             }),
-            checkUser() {
-                return this.user.id === this.book.authorId;
-            },
         },
         methods: {
             startPrintingComment() {
                 this.classErrorComment = false;
             },
             createComment() {
-                if(validationComments(this.commentText)) {
+                if(this.commentText.length) {
                     addComment(new Comment({
                         bookId: this.book.id,
                         commentText: this.commentText,

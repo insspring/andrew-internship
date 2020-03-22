@@ -23,7 +23,6 @@
     import {getComments, deleteComment, editComments} from "../../helpers/api";
     import CommentsItem from "./CommentsItem";
     import {Comment} from "../../helpers/constuctors";
-    import {validationComments} from "../../helpers/validation";
 
     export default {
         name: "CommentsFeed",
@@ -97,7 +96,7 @@
                     publicationDate: comment.publicationDate,
                     id: comment.id
                 });
-                if(validationComments(comment.commentText)) {
+                if(comment.commentText.length) {
                     editComments(comment.id, data).then(() => {
                         getComments(this.$store.state.token, this.book.id).then(result => {
                             this.comments = [];

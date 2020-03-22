@@ -3,7 +3,8 @@
         <Loader></Loader>
         <div class="book">
             <div class="cover">
-                <img class="bookCover" :src="book.bookCover">
+                <img v-if="book.bookCover" class="bookCover" :src="book.bookCover">
+                <img v-else class="bookCover" src="../../assets/books.jpg">
                 <Rating
                         :book="book"
                         :bookPage="true"
@@ -14,7 +15,7 @@
                 <div class="header">
                     <div class="item name">{{ book.name }}</div>
                     <div class="buttons">
-                        <router-link v-if="checkUser" class="btn router-link" :to="'/book/' + book.id + '/edit'">$t('edit')</router-link>
+                        <router-link v-if="checkUser" class="btn router-link" :to="'/book/' + book.id + '/edit'">{{ $t('edit') }}</router-link>
                         <ButtonTemplate
                                 class="btn"
                                 v-if="checkUser"
@@ -329,7 +330,6 @@
     .router-link {
         display: block;
         padding: .6rem .8rem .6rem .8rem;
-        width: 2rem;
         border-radius: .5rem;
         font-weight: bold;
         cursor: pointer;

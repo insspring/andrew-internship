@@ -24,7 +24,8 @@ export const validationBooks = (select, param) => {
         return regex.test(param);
     }
 };
+/*
 export const validationComments = (param) => {
     let regex = /^[A-Za-z0-9\s\d-_,'".;/:+=&@#()]{20,150}$/;
     return regex.test(param);
-};
+};*/
