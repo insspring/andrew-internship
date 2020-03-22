@@ -135,6 +135,7 @@
                 getBook(this.$store.state.token, bookId).then(result => {
                     this.book = result.data[0];
                 });
+                this.showComments();
             }
         },
         methods: {
